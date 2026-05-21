@@ -39,6 +39,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Phrase-aware chips**: common words can appear as natural phrases such as `listen to`, `depend on`, and `according to`.
 - **Light and dark themes**: the app opens in dark mode by default and lets learners switch back to a bright reading theme.
 - **One-click en-US pronunciation**: click any colored word chip to hear American pronunciation through the browser Web Speech API.
+- **Phonetic hover titles**: long-hover menus show pronunciation first; business phrases display one phonetic unit per English word instead of internal labels such as `business word`.
 - **Low-friction word actions**: long hover over a word to open actions for favorite, known, and review.
 - **Spaced repetition**: configurable review slots, weighted by due date, favorites, and wrong words.
 - **Local progress**: progress stays in browser `localStorage`; no account or server needed.
@@ -66,6 +67,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **短语感知**：常见词会尽量以真实短语出现，例如 `listen to`、`depend on`、`according to`。
 - **亮暗模式**：默认黑夜版，也可以切换到亮版阅读。
 - **一键美音**：点击任何彩色词或短语，就能通过浏览器 Web Speech API 听美音。
+- **音标优先**：长悬停菜单先显示音标；商务短语会按英文词逐个显示音标，不再显示 `business word` 这类内部标签。
 - **低干扰操作**：长悬停才打开收藏、会了、复习等低频操作。
 - **遗忘曲线复习**：复习槽会根据到期词、收藏词、错词加权出现。
 - **本地进度**：学习记录存在浏览器 `localStorage`，不需要账号或服务器。

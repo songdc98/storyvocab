@@ -183,6 +183,14 @@ if (maintainedOptions.join("|") !== "campus|business") {
   throw new Error(`Expected only maintained story themes in selector. got=${maintainedOptions.join(",")}`);
 }
 
+if (!app.includes("function pronunciationTitle") || !app.includes("pronunciationTitle(item, shown)")) {
+  throw new Error("Hover menu titles must be built from pronunciationTitle.");
+}
+
+if (app.includes("business word ·") || app.includes("${item.pos || \"word\"} · ${item.zh")) {
+  throw new Error("Hover menu title must not expose internal part-of-speech labels.");
+}
+
 const bannedSnippets = [
   "答案在告示牌 ${c(2)}",
   "像 ${c(104)}",

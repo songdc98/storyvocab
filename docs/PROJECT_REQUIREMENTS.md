@@ -36,6 +36,7 @@ This file records the maintainer requirements that should survive context resets
 ## Interaction Requirements
 
 - Clicking a colored word or phrase should immediately play en-US pronunciation.
+- Hover menu titles should show pronunciation first. Business words and phrases must not expose internal labels such as `business word`; multi-word business phrases should show one phonetic unit per English word.
 - Long hover should open lower-priority actions such as favorite, known, and review.
 - Hover menus should open slowly enough to avoid interrupting pronunciation clicks and remain stable long enough to use.
 - When hovering a new chip, any previous chip menu should close immediately.
