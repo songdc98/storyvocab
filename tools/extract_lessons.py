@@ -231,6 +231,14 @@ def mix_words(words: list[str]) -> list[list[str]]:
     return lessons
 
 
+def order_story_words(day: int, day_words: list[str]) -> list[str]:
+    """Keep Day 01 gentle, then raise the visible opening difficulty a little each day."""
+    if day <= 1:
+        return day_words
+    offset = min((day - 1) * 10, 70)
+    return day_words[offset:] + day_words[:offset]
+
+
 def main() -> None:
     source_words = read_word_list()
     dictionary = read_dictionary({word.lower() for word in source_words})
@@ -238,7 +246,7 @@ def main() -> None:
     for day, day_words in enumerate(mix_words(source_words), start=1):
         title_en, title_zh, slug, style, premise = THEMES[day - 1]
         entries = []
-        for rank, word in enumerate(day_words, start=1):
+        for rank, word in enumerate(order_story_words(day, day_words), start=1):
             item = dictionary.get(word.lower(), {})
             zh = item.get("zh") or FALLBACK_ZH.get(word) or "常用词"
             entries.append({

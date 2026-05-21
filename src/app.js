@@ -177,6 +177,49 @@
     }
   };
 
+  const chapterBeats = [
+    {
+      lead: "第一幕先把危险压低，像有人把整座城的声音都调暗了。",
+      close: "她第一次感觉到，这不是偶然，而是一条被故意留下的路。"
+    },
+    {
+      lead: "线索没有断，只是换了一种更狡猾的方式出现。",
+      close: "她把前后的细节连起来，终于听见故事内部轻轻响了一声。"
+    },
+    {
+      lead: "到了第三段，所有人都开始给出解释，可每个解释都缺一角。",
+      close: "这一次，她不再追问答案，而是追问谁最害怕答案。"
+    },
+    {
+      lead: "雨停了几分钟，城市却没有变安静，反而像在等待下一次爆炸。",
+      close: "她明白真正的选择还没到，但代价已经提前站在门口。"
+    },
+    {
+      lead: "中段忽然转向，原本像背景的人开始变得可疑。",
+      close: "她把情绪压下去，只留下足够清醒的一点判断。"
+    },
+    {
+      lead: "第六段里，秘密终于露出边缘，却仍然不肯完整现身。",
+      close: "她知道自己离真相更近了，也离安全更远了。"
+    },
+    {
+      lead: "每个人都在说话，但真正重要的是那些没有被说出口的停顿。",
+      close: "她开始相信，沉默本身也是一种证词。"
+    },
+    {
+      lead: "临近结尾时，所有小线索开始回到同一个房间。",
+      close: "她没有立刻开门，因为门后的人也在等她犯错。"
+    },
+    {
+      lead: "最后的反转来得很轻，轻到旁人几乎错过。",
+      close: "她却在那一秒确定，整件事从一开始就不是误会。"
+    },
+    {
+      lead: "天快亮时，故事把所有人推回最初的地方。",
+      close: "她带着新的答案离开，也把这些词留在了真正有情绪的记忆里。"
+    }
+  ];
+
   function loadState() {
     try {
       return Object.assign({
@@ -278,6 +321,13 @@
     });
   }
 
+  function chineseParagraph(group, selectedTheme, paragraphIndex) {
+    const beat = chapterBeats[paragraphIndex % chapterBeats.length];
+    const profile = themeProfiles[selectedTheme] || themeProfiles.cinematic;
+    const c = (index) => group[index] ? chip(group[index]) : "";
+    return `${beat.lead} ${profile.mixed[paragraphIndex % profile.mixed.length]} 她先注意到 ${c(0)}，又把 ${c(1)} 和 ${c(2)} 放到同一张时间线上。${c(3)} 让她停下，${c(4)} 让她回头，${c(5)} 则像一只藏在抽屉里的手。为了弄清 ${c(6)}，她不得不重新判断 ${c(7)}、${c(8)} 和 ${c(9)}。同伴以为 ${c(10)} 只是细节，可她知道 ${c(11)} 已经改变局面。走廊尽头，${c(12)} 像证词，${c(13)} 像谎言，${c(14)} 像一封没写完的信。她把 ${c(15)} 留给自己，把 ${c(16)} 交给最不该相信的人。直到 ${c(17)} 出现，${c(18)} 和 ${c(19)} 才真正连上。${beat.close}`;
+  }
+
   function adaptiveParagraph(group, selectedTheme, density, paragraphIndex) {
     const profile = themeProfiles[selectedTheme] || themeProfiles.cinematic;
     const c = (index) => group[index] ? chip(group[index]) : "";
@@ -296,7 +346,7 @@
       const group = items.slice(i, i + 20);
       const paragraphIndex = i / 20;
       const html = density <= 30
-        ? fillFrame(frames[paragraphIndex % frames.length], group)
+        ? chineseParagraph(group, theme, paragraphIndex)
         : adaptiveParagraph(group, theme, density, paragraphIndex);
       paragraphs.push(`<p>${html}</p>`);
     }
