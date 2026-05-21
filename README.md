@@ -17,6 +17,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Adjustable daily load**: start from the default 200 new words and 100 review slots, then tune both counts for the day.
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
+- **Authored daily episodes**: Day 02 now continues with a more coherent locked-library campus mystery while keeping all word chips interactive.
 - **Adjustable English density**: switch the story between roughly 30%, 50%, and 90% English for a gradual difficulty climb.
 - **Phrase-aware chips**: common words can appear as natural phrases such as `listen to`, `depend on`, and `according to`.
 - **Light and dark themes**: the app opens in dark mode by default and lets learners switch back to a bright reading theme.
