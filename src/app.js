@@ -503,8 +503,9 @@
     const available = allWords().filter((item) => !item.day || item.day <= state.currentDay);
     available.forEach((item) => {
       const entry = entryFor(item);
+      const tracked = entry.seen > 0 || entry.favorite || entry.review || entry.wrong > 0 || entry.right > 0 || entry.known;
       let weight = 0;
-      if (entry.due <= state.currentDay) weight += 3;
+      if (tracked && entry.due <= state.currentDay) weight += 3;
       if (entry.favorite) weight += 3;
       if (entry.review || entry.wrong > entry.right) weight += 4;
       if (item.day === state.currentDay && entry.seen === 0) weight += 1;
@@ -552,18 +553,18 @@
 
   function renderStats() {
     const availableWords = allWords().filter((item) => !item.day || item.day <= state.currentDay);
-    const entries = availableWords.map(entryFor);
+    const entries = availableWords.map((item) => state.words[wordId(item)]).filter(Boolean);
     const todayItems = currentStudyItems();
     const todayEntries = todayItems.map(entryFor);
     const seen = entries.filter((entry) => entry.seen > 0).length;
     const favorites = entries.filter((entry) => entry.favorite).length;
-    const due = entries.filter((entry) => entry.due <= state.currentDay || entry.review).length;
+    const due = entries.filter((entry) => (entry.seen > 0 || entry.favorite || entry.review || entry.wrong > 0 || entry.right > 0 || entry.known) && (entry.due <= state.currentDay || entry.review)).length;
     document.getElementById("metricNew").textContent = dailyNewCount();
     document.getElementById("metricReview").textContent = reviewSlotCount();
     document.getElementById("metricSeen").textContent = seen;
     document.getElementById("metricFav").textContent = favorites;
     document.getElementById("stateSummary").textContent =
-      `今日已接触 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；复习槽 ${reviewSlotCount()} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
+      `文章新词已写入 ${todayItems.length}/${dailyNewCount()} 个；今日已互动 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；复习槽 ${reviewSlotCount()} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
   }
 
   function renderReview() {

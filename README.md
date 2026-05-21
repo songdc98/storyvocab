@@ -15,6 +15,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 ## Features
 
 - **Adjustable daily load**: start from the default 200 new words and 100 review slots, then tune both counts for the day.
+- **Clear coverage status**: the page separates words written into the story from words the learner has clicked or reviewed.
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
 - **Authored daily episodes**: Day 02 now continues with a more coherent locked-library campus mystery while keeping all word chips interactive.
