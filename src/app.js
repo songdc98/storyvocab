@@ -8,6 +8,7 @@
   const MENU_CLOSE_DELAY = 820;
   const REVIEW_SLOTS = 100;
   const DEFAULT_DENSITY = 30;
+  const DEFAULT_COLOR_MODE = "dark";
 
   const PHRASE_OVERRIDES = {
     listen: "listen to",
@@ -226,14 +227,22 @@
         currentDay: 1,
         theme: "cinematic",
         englishDensity: DEFAULT_DENSITY,
+        colorMode: DEFAULT_COLOR_MODE,
         reviewSeed: 0,
         words: {},
         customWords: [],
         completedDays: {}
       }, JSON.parse(localStorage.getItem(STORE_KEY) || "{}"));
     } catch {
-      return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
+      return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, colorMode: DEFAULT_COLOR_MODE, reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
     }
+  }
+
+  function applyColorMode() {
+    const mode = state.colorMode === "light" ? "light" : "dark";
+    state.colorMode = mode;
+    document.documentElement.dataset.colorMode = mode;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", mode === "light" ? "#f7f3ec" : "#101626");
   }
 
   function saveState() {
@@ -462,6 +471,11 @@
     select.value = String(state.currentDay);
   }
 
+  function renderPreferences() {
+    applyColorMode();
+    document.getElementById("colorModeSelect").value = state.colorMode;
+  }
+
   function renderStory() {
     const data = lesson();
     const items = data.words.map((item) => ({ ...item, day: data.day, id: `d${data.day}-${item.word}` }));
@@ -556,6 +570,7 @@
   }
 
   function renderAll() {
+    renderPreferences();
     renderDayOptions();
     renderStory();
     renderStats();
@@ -745,6 +760,13 @@
   document.getElementById("densitySelect").addEventListener("change", (event) => {
     state.englishDensity = Number(event.target.value) || DEFAULT_DENSITY;
     saveAndRender(`英文占比已切换到 ${state.englishDensity}%。`);
+  });
+
+  document.getElementById("colorModeSelect").addEventListener("change", (event) => {
+    state.colorMode = event.target.value === "light" ? "light" : "dark";
+    saveState();
+    renderPreferences();
+    toast(state.colorMode === "dark" ? "已切换到黑夜版。" : "已切换到亮版。");
   });
 
   document.getElementById("wordSearch").addEventListener("input", renderWordbook);

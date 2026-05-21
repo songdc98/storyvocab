@@ -1,15 +1,24 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-color-mode="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>StoryVocab 3000 | 15 天故事化英语高频词学习</title>
   <meta name="description" content="一个零依赖、可离线使用的互动英语 3000 高频词学习网页：15 天故事文章、200 个每日新词、100 个复习槽、美音朗读、收藏错词、遗忘曲线和自定义词本。">
   <meta name="keywords" content="English 3000,英语单词,高频词,美音发音,spaced repetition,English vocabulary,GitHub Pages,英语学习工具">
-  <meta name="theme-color" content="#f7f3ec">
+  <meta name="theme-color" content="#101626">
   <meta property="og:title" content="StoryVocab 3000">
   <meta property="og:description" content="用连续 15 天的生动故事学习 3000 个美国英语高频词。">
   <meta property="og:type" content="website">
+  <script>
+    try {
+      const saved = JSON.parse(localStorage.getItem("storyvocab3000.progress.v2") || "{}");
+      document.documentElement.dataset.colorMode = saved.colorMode === "light" ? "light" : "dark";
+      document.querySelector('meta[name="theme-color"]').setAttribute("content", saved.colorMode === "light" ? "#f7f3ec" : "#101626");
+    } catch {
+      document.documentElement.dataset.colorMode = "dark";
+    }
+  </script>
   <link rel="stylesheet" href="styles.css">
   <script type="application/ld+json">
     {
@@ -32,8 +41,19 @@
         <p class="hero-copy">每天 200 个新词，100 个复习槽。单击单词直接发美音，长悬停再打开收藏、错词、会了等低频操作。所有进度保存在浏览器本地，不需要登录，也不依赖 Codex。</p>
       </div>
       <div class="hero-card">
-        <label for="daySelect">选择课程</label>
-        <select id="daySelect" class="select"></select>
+        <div class="hero-controls">
+          <div>
+            <label for="daySelect">选择课程</label>
+            <select id="daySelect" class="select"></select>
+          </div>
+          <div>
+            <label for="colorModeSelect">显示模式</label>
+            <select id="colorModeSelect" class="select">
+              <option value="dark">黑夜版</option>
+              <option value="light">亮版</option>
+            </select>
+          </div>
+        </div>
         <div class="hero-day">
           <span id="heroDay">Day 01</span>
           <strong id="heroTitle">暴雨夜的假婚约</strong>
