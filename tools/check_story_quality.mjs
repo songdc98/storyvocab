@@ -1,6 +1,7 @@
 import fs from "node:fs";
 
 const app = fs.readFileSync("src/app.js", "utf8");
+const indexHtml = fs.readFileSync("index.html", "utf8");
 const lessonsText = fs.readFileSync("src/lessons.js", "utf8");
 const lessonsMatch = lessonsText.match(/window\.LESSONS = (.*);\s*$/s);
 
@@ -69,11 +70,13 @@ function isLowValue(item, lowValueWords) {
   return lowValueWords.has(word) || /^\d/.test(word) || /^[a-z]'/.test(word) || /^[a-z]$/i.test(word);
 }
 
-const dayOneBlock = blockBetween("function dayOneCampusStory", "function dayTwoLockedLibraryStory");
+const dayOneCampusBlock = blockBetween("function dayOneCampusStory", "function dayOneBusinessStory");
+const dayOneBusinessBlock = blockBetween("function dayOneBusinessStory", "function dayTwoLockedLibraryStory");
 const dayTwoBlock = blockBetween("function dayTwoLockedLibraryStory", "function dayThreeRoadTripStory");
 const dayThreeBlock = blockBetween("function dayThreeRoadTripStory", "function buildStory");
 
-checkCoverage("Day 01", dayOneBlock);
+checkCoverage("Day 01 campus", dayOneCampusBlock);
+checkCoverage("Day 01 business", dayOneBusinessBlock);
 checkCoverage("Day 02", dayTwoBlock);
 checkCoverage("Day 03", dayThreeBlock);
 
@@ -106,9 +109,32 @@ const dayOneRequiredSnippets = [
 ];
 
 for (const snippet of dayOneRequiredSnippets) {
-  if (!dayOneBlock.includes(snippet)) {
+  if (!dayOneCampusBlock.includes(snippet)) {
     throw new Error(`Missing Day 01 campus-story phrase: ${snippet}`);
   }
+}
+
+const dayOneBusinessRequiredSnippets = [
+  "morning standup",
+  "follow-up email",
+  "Let's align",
+  "traffic",
+  "the note ${c(175)} the signature line",
+  "US workplace business English"
+];
+
+for (const snippet of dayOneBusinessRequiredSnippets) {
+  if (!dayOneBusinessBlock.includes(snippet) && !app.includes(snippet)) {
+    throw new Error(`Missing Day 01 business-English phrase: ${snippet}`);
+  }
+}
+
+const maintainedOptions = [...indexHtml.matchAll(/<option value="([^"]+)">([^<]+)<\/option>/g)]
+  .filter((match) => ["campus", "business", "startup", "cinematic", "travel", "comedy"].includes(match[1]))
+  .map((match) => match[1]);
+
+if (maintainedOptions.join("|") !== "campus|business") {
+  throw new Error(`Expected only maintained story themes in selector. got=${maintainedOptions.join(",")}`);
 }
 
 const bannedSnippets = [

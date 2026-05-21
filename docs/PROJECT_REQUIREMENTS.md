@@ -4,8 +4,10 @@ This file records the maintainer requirements that should survive context resets
 
 ## Core Learning Experience
 
-- The built-in authored course focuses on one maintained American-campus storyline first.
+- The built-in authored course maintains two official tracks: American-campus story learning and US workplace/business English.
 - Other genres or topics are extension interfaces for custom wordbooks or optional LLM connectors, not promises that every theme is fully authored.
+- Future authored-story updates should update both maintained tracks when the changed lesson or behavior affects story content.
+- The business English track should cover US workplace communication, tech-industry collaboration, overseas work settings, commute/traffic, meetings, daily professional phrases, follow-up emails, ownership, alignment, and escalation language.
 - Daily reading should feel like a vivid chapter, not a mechanical list of words.
 - Stories may be romantic, scheming, dramatic, absurd, or exaggerated, but every target word must still belong naturally to the sentence logic.
 - Avoid flat narration. Prefer conflict, suspense, emotional stakes, visual scenes, memorable behavior, and coherent cause-and-effect.

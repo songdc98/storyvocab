@@ -13,6 +13,7 @@
   const DEFAULT_COLOR_MODE = "dark";
   const HARD_WORD_SHARE = 0.3;
   const HARD_WORD_FALLBACK_RANK = 1800;
+  const MAINTAINED_THEMES = new Set(["campus", "business"]);
 
   const LOW_VALUE_WORDS = new Set([
     "the", "a", "an", "of", "and", "to", "in", "is", "are", "was", "were", "be", "been", "being", "am",
@@ -145,6 +146,10 @@
       "校园钟声停在半夜，图书馆里只剩一盏灯。她先在借书卡上看到 {0}，又在座位下面找到 {1}。管理员说 {2} 很普通，可学生们都在传 {3}。她和朋友把 {4} 贴到白板上，用 {5} 标出可疑时间。窗外有人喊 {6}，楼梯口却只留下 {7}。她想问 {8}，却收到一条关于 {9} 的匿名消息。为了保护 {10}，她必须学会看懂 {11}。夜越来越深，{12}、{13}、{14} 排成一条线索。她把 {15} 放进口袋，带着 {16} 冲出阅览室，直到 {17}、{18}、{19} 一起指向被锁住的地下室。",
       "第二天，老师宣布一切只是误会。她不信，因为 {0} 的位置变了，{1} 的字迹也变了。朋友建议从 {2} 查起，校报却突然刊出 {3}。她在走廊里听见 {4}，在公告栏上看见 {5}。每个人都想隐藏 {6}，每个人又都需要 {7}。她把 {8} 和 {9} 做了比较，发现真正的答案藏在 {10} 后面。到黄昏时，{11} 成了证据，{12} 成了动机，{13} 成了最后一把钥匙。她不再害怕 {14}，也不再等待 {15}。她写下 {16}，说出 {17}，让 {18} 和 {19} 重新回到光下。"
     ],
+    business: [
+      "周一早高峰，通勤路上已经开始排队。她在公司门口先听见 {0}，又在前台看到 {1}。经理说 {2} 只是普通需求，可客户邮件里藏着 {3}。她把 {4} 放进 standup agenda，用 {5} 标出风险。电梯里有人问 {6}，会议室门口却只留下 {7}。为了按时交付 {8}，她必须弄清 {9}、{10} 和 {11}。午餐前，{12}、{13}、{14} 变成一组待确认事项；下班前，{15}、{16}、{17} 又把她拉回同一个问题：谁应该 own {18} and fix the {19}?",
+      "下午的 client sync 更像压力测试。她把 {0} 写进 meeting notes，把 {1} 标成 blocker。法务关心 {2}，产品关心 {3}，工程只想知道 {4}。如果今天不 clarify {5}，明天的 roadmap 就会被 {6} 改写。她先 ping {7}，再 loop in {8}，最后把 {9} 放进 follow-up email。每个部门都在争 {10}，但真正影响上线的是 {11}。当经理说 let's align, 她已经把 {12}、{13}、{14} 写成 action items，并把 {15}、{16}、{17}、{18}、{19} 分给对应 owner。"
+    ],
     startup: [
       "发布会开始前十分钟，大屏忽然黑掉。工程师在后台喊着 {0}，运营团队忙着解释 {1}，创始人却盯着日志里的 {2}。有人把 {3} 当成小错误，没人知道它会引爆 {4}。她打开控制台，看见 {5} 和 {6} 连在一起。投资人等着 {7}，媒体追问 {8}，用户只关心 {9}。她必须在 {10} 前做决定：公开 {11}，还是继续掩盖 {12}。当倒计时跳到最后一分钟，{13}、{14}、{15} 全部失控。她按下按钮，让 {16} 上线，也让 {17} 曝光。掌声停下后，真正改变公司的，是 {18} 和 {19}。",
       "凌晨两点，办公室只剩咖啡和警报声。她把 {0} 写进事故报告，又把 {1} 标成高危。老板希望用 {2} 稳住舆论，可团队知道 {3} 才是根本。前端在修 {4}，后端在追 {5}，法务在讨论 {6}。她忽然发现 {7} 不是漏洞，而是人为留下的门。要抓住内鬼，她需要 {8}、{9} 和一点运气。天亮前，{10} 变成公开声明，{11} 变成用户信任，{12} 变成团队边界。她终于敢说：{13} 可以失败，{14} 可以重来，但 {15}、{16}、{17}、{18}、{19} 不能再被牺牲。"
@@ -180,6 +185,16 @@
       english: [
         "At the edge of campus, the library kept one light on as if it knew the truth would return.",
         "By morning, every hallway had a rumor, every locker had a mark, and every friendly face looked rehearsed."
+      ]
+    },
+    business: {
+      mixed: [
+        "周一的办公室安静得太快，standup 还没开始，Slack 上的 red dot 已经像警报。",
+        "客户会议刚结束，traffic 还堵在窗外，every follow-up email already sounded like a deadline."
+      ],
+      english: [
+        "On Monday morning, every calendar invite looked polite, but every hidden agenda had teeth.",
+        "By the afternoon sync, the team was no longer discussing a product; they were negotiating trust."
       ]
     },
     startup: {
@@ -428,6 +443,27 @@
       .join("");
   }
 
+  function dayOneBusinessStory(items, density) {
+    if (density >= 90) return "";
+    const c = (index) => items[index] ? chip(items[index]) : "";
+    const paragraphs = [
+      `周一早高峰，湾区通勤车厢里的 ${c(0)} 混着咖啡味，站台广播的 ${c(1)} 像已经开始催 KPI。林夏从合租 ${c(2)} 的 east ${c(3)} 冲出来，手机上还开着 ${c(4)} dashboard；昨 ${c(5)} 她几乎睡在 conference ${c(6)}。公司 CFO 留下一条消息：missing client ${c(7)} must be explained before the board。她刚推开玻璃 ${c(8)}，VP 就让她 ${c(9)} the morning standup。${c(10)} desk 前，meeting had already ${c(11)}；窗外的 ${c(12)} 把外卖袋吹到路边，Bay Bridge traffic 已经堵成红线。${c(13)} 只是普通事故，可一个陌生 ${c(14)} 已经把 termination ${c(15)} 贴在白板上。第一 ${c(16)} funding review 要开始，她和两个 work ${c(17)} 都被拖进来。拖得 ${c(18)}，expense ${c(19)} 会自动锁账。`,
+      `她要 ${c(20)} with the agenda，产品总监 ${c(21)} 两台电脑冲进总部 ${c(22)}。一楼信号很 ${c(23)}，她边 ${c(24)} backlog，边把咖啡的 ${c(25)} 捂在手心。下周的 ${c(26)} budget 被暂停，连她散乱的 ${c(27)} 和发抖的 ${c(28)} 都来不及管；她 ${c(29)} 想先把局面稳住。三个 contractor 的 ${c(30)} 被这笔款项影响，她一边 ${c(31)}，一边把最 ${c(32)} 的客户投诉写到屏幕上：who can ${c(33)} the broken invoice？invoice 的 ${c(34)} 不对，deadline 只差 one ${c(35)}。公司史上 ${c(36)} 的 churn risk ${c(37)} straight to a ${c(38)} counsel call。她换上备用 ${c(39)}，准备进第一场 escalation meeting。`,
+      `Scrum master 早就 ${c(40)} office politics，没人愿意承认自己 ${c(41)} escalation。客户邮件写得 ${c(42)} polite，却和上周 case ${c(43)} to an old complaint。客服经理 ${c(44)} the account history，整个 room 安静得 ${c(45)}。西 ${c(46)} office 刚 ${c(47)} a revised deck，一位 senior ${c(48)} 故意吸走所有 ${c(49)}，又 ${c(50)} a slide under the keyboard。slide 上画着 project ${c(51)}，背面却是 legal ${c(52)} 的门牌。林夏沿走廊 ${c(53)}，手里攥着一条 badge ${c(54)}，穿过 downtown ${c(55)}。${c(56)} to the note, someone would get ${c(57)} if the contract's four core ${c(58)} were not signed before the team crossed the market ${c(59)}。`,
+      `她给在纽约分部的 ${c(60)} 发消息，对方立刻 ${c(61)} to a broken spreadsheet。共享表里的 ${c(62)} 被雨水泡坏的笔记本误同步，字段名还是 ${c(63)} 的。她揉了揉 ${c(64)}，用 ${c(65)} 点开 audit log：someone was ${c(66)} fake discounts into the frame。要救这单，不只需要 executive ${c(67)}，还要知道 each team's ${c(68)} response time。林夏的海外项目 ${c(69)} 终于派上用场；不同 ${c(70)}、供应商、客户成功群突然变得 ${c(71)}。她必须 ${c(72)} capture next steps。会议桌上的 ${c(73)} cable、${c(74)} wrong assumptions、dashboard 上 sudden ${c(75)}，全部指向 the ${c(76)} quarter。她先 ${c(77)} the account；usage ${c(78)} fast toward a bad ${c(79)}。`,
+      `客户的 onboarding ${c(80)} 映着她最 ${c(81)} 的一句商务英语：Could you clarify the owner？可 sales ${c(82)} 正逼她五分钟内给答案。Berlin office from ${c(83)} 也加入电话，工程师揉着 ${c(84)}，讨论 incident ${c(85)}。屏幕上是一片 ${c(86)} market map，林夏咬住 ${c(87)}，终于找到一个 quiet ${c(88)} analyst who kept ${c(89)} up during calls and never touched his coffee ${c(90)}。他的 dashboard 几乎 ${c(91)}，甚至把 climate ${c(92)} demo 和 employee ${c(93)} survey 拼在一起。legal review 被人 ${c(94)} across the table，HR 只说了一声 ${c(95)}，training deck 里的 ${c(96)} exercise 就变成了暗号。大厅里那只 inflatable ${c(97)} mascot 挡住 security ${c(98)}，门外 ${c(99)} 已经堵成一条线。`,
+      `林夏 ${c(100)} understood the pattern：finance ${c(101)} closed the account，因为付款流始终保持 ${c(102)}。真正的问题不是某个 ${c(103)}，而是整个 ${c(104)}。投影灯的 ${c(105)} 刺得人眼疼，她仍保留 ${c(106)}，直到 audit trail ${c(107)} the hidden approval flow。server ${c(108)} 忽然报警，a ${c(109)} freeze hit production。碳排项目里的 ${c(110)} credit 被错误 ${c(111)} as marketing spend，旁边一张 ${c(112)} sticky note 指向 ${c(113)} revenue。这个客户原本来自 Texas ${c(114)} project，contract 上 ${c(115)} a strip of email，说明账不是 ${c(116)} lost。那条 ${c(117)} of evidence、刺耳的 ${c(118)} hold music，和必须 ${c(119)} exact timing 的 release window，把所有人绑在同一个 call 里。`,
+      `她刚冲进 finance war room，脚下一滑，差点 ${c(120)}。问题 ${c(121)} of three refunds, two reversed invoices, and one hidden procurement note。文件作者 ${c(122)} 没有签名，folders were ${c(123)} by quarter。会议室里的 chair ${c(124)} 自己晃动，CEO 的声音突然变得 ${c(125)}。几个 accounting ${c(126)} 后，controller ${c(127)}，把装着 stress ${c(128)} 的袋子推给她。袋底 ${c(129)} 了一张总部 ${c(130)} 照片，照片背面写着一个 negotiation ${c(131)}。原来新人虽然受过 ${c(132)}，性格也够 ${c(133)}，却不懂这套老 ${c(134)}。他们把所有 ${c(135)} 摊开，发现被 ${c(136)} 的不只是发票：隔壁 ${c(137)} 的 inbox 也有提醒，company ${c(138)} 写过一首讽刺 bonus ${c(139)} 的短诗。`,
+      `关键 access 是谁 ${c(140)} 的？答案 ${c(141)} 指向 ${c(142)} security ${c(143)}。摄像头里有个像 office mascot 的 ${c(144)}，背着 ${c(145)} laptop bag，还 ${c(146)} a story about escaped ${c(147)} from a biotech client。包里没有蛇，只有 ${c(148)} signed copies、一只 brass ${c(149)}、一只旧 ${c(150)}，和一盒被 ${c(151)} 的 keycards。每个 folder 都画着小 ${c(152)}，最后一个地址却指向 employee ${c(153)}。晚上十点，她 ${c(154)} the last shuttle；车厢四个 ${c(155)} 都贴着 camera labels。她决定 ${c(156)} a final negotiation in ${c(157)}。地上有一张 ${c(158)} of paper，边缘 ${c(159)} like a mountain road。`,
+      `客户 VP ${c(160)} accepted the call，因为 missing context was ${c(161)}。internal memo ${c(162)} three risks, but someone hid it in a shared storage ${c(163)} behind the office。这套 workaround was ${c(164)}，even the Egypt market lead from ${c(165)} and account manager ${c(166)} joined。CFO 的手一直 ${c(167)}，大家的 ${c(168)} 都像被 deadline 揪住。她打开 ${c(169)} incident board，发现 backup in a private ${c(170)}，允许 team ${c(171)} the workflow without approval。午夜前，路径终于清楚：${c(172)} sign-off、emergency ${c(173)} plan、一条 approval ${c(174)}，and the note ${c(175)} the signature line。${c(176)} that note, nobody should edit the ${c(177)}。她按 ${c(178)} checklist 找到 original ${c(179)}，把 follow-up email 草稿压在键盘下，决定 ${c(180)} one clean close。`,
+      `窗外的 fog 像黑 ${c(181)}，她把 budget ${c(182)} open，发现几 ${c(183)} vendor fees were ${c(184)} risks。最有用的 ${c(185)} 是：the flagged ${c(186)} were not random。她 was ${c(187)} who owned the decision；conference room 热得 ${c(188)}，但全 ${c(189)} 都等她开口。灯光变 ${c(190)}，第一阵 ${c(191)} wind seemed to ${c(192)} in the missing stakeholder from the lobby。${c(193)} finally beat rumor：same email ${c(194)}，same approval ${c(195)}，same unanswered ${c(196)}。Who ${c(197)} could approve payment before procurement？窗外雨点开始 ${c(198)}，Slack 里的 panic ${c(199)} into one sentence: Let's align, send the recap, and move forward。`
+    ];
+    return paragraphs
+      .filter((_, paragraphIndex) => items[paragraphIndex * 20])
+      .map((paragraph) => `<p>${paragraph}</p>`)
+      .join("");
+  }
+
   function dayTwoLockedLibraryStory(items, density) {
     if (density >= 90) return "";
     const c = (index) => items[index] ? chip(items[index]) : "";
@@ -471,13 +507,15 @@
   }
 
   function buildStory(items, selectedTheme, selectedDensity = state.englishDensity) {
-    const theme = "campus";
+    const theme = MAINTAINED_THEMES.has(selectedTheme) ? selectedTheme : "campus";
     const density = Number(selectedDensity) || DEFAULT_DENSITY;
-    const authored = state.currentDay === 1
+    const authored = state.currentDay === 1 && theme === "business"
+      ? dayOneBusinessStory(items, density)
+      : state.currentDay === 1
       ? dayOneCampusStory(items, density)
-      : state.currentDay === 2
+      : state.currentDay === 2 && theme === "campus"
         ? dayTwoLockedLibraryStory(items, density)
-        : state.currentDay === 3
+        : state.currentDay === 3 && theme === "campus"
           ? dayThreeRoadTripStory(items, density)
           : "";
     if (authored) return authored;
@@ -654,8 +692,22 @@
     return slots;
   }
 
-  function lessonDisplayMeta(data) {
+  function safeTheme(theme) {
+    return MAINTAINED_THEMES.has(theme) ? theme : "campus";
+  }
+
+  function lessonDisplayMeta(data, selectedTheme = state.theme) {
+    const theme = safeTheme(selectedTheme);
     if (data.day !== 1) return data;
+    if (theme === "business") {
+      return {
+        ...data,
+        titleZh: "周一早高峰的跨国会议",
+        titleEn: "The Monday Pipeline",
+        style: "US workplace business English",
+        premise: "a Bay Area tech team handles commute chaos, client pressure, meetings, and a hidden approval problem"
+      };
+    }
     return {
       ...data,
       titleZh: "暴雨夜的奖学金赌约",
@@ -668,7 +720,7 @@
   function renderDayOptions() {
     const select = document.getElementById("daySelect");
     select.innerHTML = LESSONS.map((item) => {
-      const meta = lessonDisplayMeta(item);
+      const meta = lessonDisplayMeta(item, state.theme);
       return `<option value="${item.day}">Day ${String(item.day).padStart(2, "0")} · ${escapeHtml(meta.titleZh)}</option>`;
     }).join("");
     select.value = String(state.currentDay);
@@ -680,15 +732,15 @@
   }
 
   function renderStory() {
-    state.theme = "campus";
+    state.theme = safeTheme(state.theme);
     const data = lesson();
-    const meta = lessonDisplayMeta(data);
+    const meta = lessonDisplayMeta(data, state.theme);
     const items = currentStudyItems();
     document.getElementById("heroDay").textContent = `Day ${String(data.day).padStart(2, "0")}`;
     document.getElementById("heroTitle").textContent = meta.titleZh;
     document.getElementById("storyHeading").textContent = `Story ${String(data.day).padStart(2, "0")}: ${meta.titleEn}`;
     document.getElementById("storyStyle").textContent = `${meta.style} · ${meta.premise}`;
-    document.getElementById("themeSelect").value = "campus";
+    document.getElementById("themeSelect").value = state.theme;
     document.getElementById("densitySelect").value = String(state.englishDensity || DEFAULT_DENSITY);
     const newCountInput = document.getElementById("newCountInput");
     newCountInput.max = String(data.words.length);
