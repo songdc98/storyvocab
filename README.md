@@ -2,7 +2,7 @@
 
 StoryVocab is an offline-first, zero-dependency web app for learning English vocabulary through vivid daily stories, colorful word chips, one-click American pronunciation, spaced repetition, and custom wordbooks.
 
-It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. The default pack includes a 15-day high-frequency vocabulary course, but the format is intentionally flexible: you can swap in custom words, themes, and cloud-generated stories.
+It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. The default pack includes a 15-day high-frequency vocabulary course. The built-in authored path now focuses on one American-campus continuity so the story can stay coherent; custom words, custom prompts, and cloud-generated rewrites remain open extension points.
 
 Live demo: https://songdc98.github.io/storyvocab/
 
@@ -17,8 +17,10 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Adjustable daily load**: start from the default 200 new words and 100 review slots, then tune both counts for the day.
 - **Clear coverage status**: the page separates words written into the story from words the learner has clicked or reviewed.
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
+- **Low-value target filtering**: Day 01 no longer treats glue words like `the`, `what`, `this`, single letters, or standalone names as the main learning chips.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
-- **Authored daily episodes**: Day 02 now continues with a more coherent locked-library campus mystery while keeping all word chips interactive.
+- **Focused campus storyline**: the maintained built-in course uses an American-campus mystery as the main authored path instead of claiming every optional theme is fully written.
+- **Authored daily episodes**: Day 01 now starts with a storm-night scholarship mystery, and Day 02 continues the campus investigation in the locked library while keeping all word chips interactive.
 - **Hard-word quota**: Day 03 and later lessons front-load at least 30% harder words in the daily study set, so a 200-word day includes at least 60 challenge words.
 - **Continuous-story direction**: if learners keep the same style, daily lessons should feel like chapters of one long vivid story rather than unrelated daily themes.
 - **Usage-aware contexts**: story sentences should place words in natural grammar, for example `below the notice board` instead of treating `below` as a standalone label.
@@ -113,7 +115,7 @@ Expected request shape:
 {
   "app": "StoryVocab",
   "day": 1,
-  "theme": "cinematic",
+  "theme": "campus",
   "englishDensity": 30,
   "words": [
     { "word": "listen", "display": "listen to", "zh": "听" }

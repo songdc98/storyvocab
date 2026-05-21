@@ -14,6 +14,22 @@
   const HARD_WORD_SHARE = 0.3;
   const HARD_WORD_FALLBACK_RANK = 1800;
 
+  const LOW_VALUE_WORDS = new Set([
+    "the", "a", "an", "of", "and", "to", "in", "is", "are", "was", "were", "be", "been", "being", "am",
+    "i", "you", "he", "she", "it", "we", "they", "me", "him", "her", "them", "my", "your", "his", "its", "our", "their",
+    "this", "that", "these", "those", "what", "which", "who", "whom", "whose", "where", "when", "why", "how",
+    "as", "at", "by", "for", "from", "with", "on", "into", "onto", "over", "under", "above", "up", "down", "out", "off",
+    "about", "after", "before", "between", "through", "during", "because", "if", "then", "so", "than",
+    "very", "just", "only", "ever", "already", "now", "here", "there", "not", "no", "yes",
+    "do", "does", "did", "done", "doing", "will", "would", "can", "could", "should", "may", "might", "must", "shall",
+    "have", "has", "had", "having", "get", "got", "make", "made", "go", "went", "gone", "come", "came",
+    "see", "saw", "seen", "look", "looks", "looked", "looking", "say", "said", "tell", "told", "ask", "asked",
+    "use", "used", "using", "let", "lets", "let's", "like", "such", "some", "any", "all", "each", "every", "other", "another",
+    "one", "two", "first", "second", "third", "more", "most", "many", "much", "few", "little", "long", "short", "good", "bad", "great", "big", "small", "old", "new", "same", "different",
+    "but", "also", "it's", "thats", "that's", "don't", "didn't", "can't", "couldn't", "wasn't", "we'll", "we've", "i'm", "you're", "he's", "she's", "they're", "there's",
+    "per", "nor", "oh", "f", "t", "thy", "jane", "betsy", "jeff", "you've", "1/2", "2", "5", "12", "17", "18", "30", "60", "70", "90", "200", "500", "etc."
+  ]);
+
   const DAY_DIFFICULT_WORDS = {
     3: [
       "California", "fishing", "member", "degrees", "captain", "hunting", "fence", "explained", "rolled", "laws",
@@ -246,7 +262,7 @@
       const saved = localStorage.getItem(STORE_KEY) || LEGACY_STORE_KEYS.map((key) => localStorage.getItem(key)).find(Boolean) || "{}";
       return Object.assign({
         currentDay: 1,
-        theme: "cinematic",
+        theme: "campus",
         englishDensity: DEFAULT_DENSITY,
         colorMode: DEFAULT_COLOR_MODE,
         dailyNewCount: DEFAULT_NEW_WORDS,
@@ -258,7 +274,7 @@
         completedDays: {}
       }, JSON.parse(saved));
     } catch {
-      return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, colorMode: DEFAULT_COLOR_MODE, dailyNewCount: DEFAULT_NEW_WORDS, reviewSlotCount: DEFAULT_REVIEW_SLOTS, connectorEndpoint: "", reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
+      return { currentDay: 1, theme: "campus", englishDensity: DEFAULT_DENSITY, colorMode: DEFAULT_COLOR_MODE, dailyNewCount: DEFAULT_NEW_WORDS, reviewSlotCount: DEFAULT_REVIEW_SLOTS, connectorEndpoint: "", reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
     }
   }
 
@@ -391,6 +407,27 @@
     return `${profile.mixed[paragraphIndex % profile.mixed.length]} ${c(0)} 先把场景点亮，and ${c(1)} pushed the story forward. 她在 ${c(2)} 和 ${c(3)} 之间做选择，while ${c(4)} kept changing the room. Someone tried to explain ${c(5)}，可真正的问题是 ${c(6)}. Then ${c(7)} became a promise, ${c(8)} became a warning, and ${c(9)} made everyone quiet. 她把 ${c(10)} 写在便签上，把 ${c(11)} 藏进口袋。By the time ${c(12)} appeared, she had to keep ${c(13)} close, test ${c(14)}, and follow the trace of ${c(15)}. 最后一段路上，${c(16)}, ${c(17)}, ${c(18)}, and ${c(19)} together turned the story into a choice.`;
   }
 
+  function dayOneCampusStory(items, density) {
+    if (density >= 90) return "";
+    const c = (index) => items[index] ? chip(items[index]) : "";
+    const paragraphs = [
+      `九月的第一场暴雨让校园里的 ${c(0)} 像被冰水洗过，排水管的 ${c(1)} 沿着 West Hall 那栋老 ${c(2)} 的东 ${c(3)} 敲个不停。今晚本来是 ${c(4)} orientation ${c(5)}，苏念薇刚把箱子推进自己的 ${c(6)}，就在床底发现一封写着 missing scholarship ${c(7)} 的信。信上说：如果宿舍 ${c(8)} 再响一次，她必须 ${c(9)} to the ${c(10)} desk。七点刚 ${c(11)}，窗外的 ${c(12)} 把传单吹得像白鸟。${c(13)} 这只是恶作剧，可监控里有一个陌生 ${c(14)} 在公告栏前贴出 ${c(15)}，绕大厅走了一 ${c(16)}，连她刚认识的 ${c(17)} 都看见了。要是拖得 ${c(18)}，campus card ${c(19)} 就会覆盖今晚的记录。`,
+      `她决定从图书馆电脑 ${c(20)} 查起。那封信显然被人 ${c(21)} across campus，最后出现在化学 ${c(22)} 的地下室。地下室灯光很 ${c(23)}，一个助教一边 ${c(24)} lab report，一边抱怨暖气的 ${c(25)} 不够。苏念薇原计划周末 ${c(26)}，连行李箱里的 ${c(27)} 都没梳；可她的 ${c(28)} 因冷风发抖，心里 ${c(29)} 想留下来。她知道四个学生的 ${c(30)} 已经被这笔钱改变，于是站在白板前 ${c(31)}，把校园里最 ${c(32)} 的传闻写下：谁能 ${c(33)} the receipt？账单的 ${c(34)} 像被剪过，时间差不到一 ${c(35)}，学校 ${c(36)} 的异常记录却 ${c(37)} straight to the bursar's office。连校警的 ${c(38)} channel 都沉默了，大家只好换上干 ${c(39)}，假装继续上课。`,
+      `第二天清晨，室友在草坪上 ${c(40)} frisbee，苏念薇却很 ${c(41)}：如果她猜错，就会被当成那个 ${c(42)} but troublesome transfer student。奇怪的是，两张报销单 ${c(43)} almost identical，只有签名不同。会计老师 ${c(44)} the old stamp，办公室却突然变得 ${c(45)} 到让人不安；从东 ${c(46)} 吹来的雾掩住钟楼，打印机刚刚 ${c(47)} another copy。一个年长 ${c(48)} 在门口停下，故意吸引她的 ${c(49)}，又把一张纸 ${c(50)} under a folder。纸上画着解剖课用的 ${c(51)}，背面却是学生 ${c(52)} 的门牌。她沿走廊 ${c(53)}，手里攥着一截蓝 ${c(54)}，穿过几条湿漉漉的 ${c(55)}。${c(56)} to the note, the next clue would appear only if someone got ${c(57)} near the cabinet labeled four basic ${c(58)}；窗外的 back ${c(59)} 被雾盖住。`,
+      `午后，苏念薇收到短信：her ${c(60)} may know the truth。她追到宿舍，看见对方正 ${c(61)} at an old microscope photo。照片里的 ${c(62)} 因窗台太 ${c(63)} 变了颜色；女孩抬起 ${c(64)}，用 ${c(65)} 点着照片边角：someone was ${c(66)} a fake receipt into the frame。她说需要的不只是 ${c(67)}，还要知道全校学生的 ${c(68)} grant amount。苏念薇第一次觉得自己的 ${c(69)} 派上用场；校园里的 ${c(70)}、旧剧场和食堂后门突然变得 ${c(71)}，但她必须 ${c(72)} read the room。地上的 ${c(73)} stopper、门边 ${c(74)} wet footprints、以及从四楼 ${c(75)} 下来的水，都指向 ${c(76)} floor。她决定先 ${c(77)} the student's file；雨水从排水沟 ${c(78)} 出来，像催促故事走向 ${c(79)}。`,
+      `食堂旁的 ${c(80)} tank 映着她最 ${c(81)} 的校园长椅，可校董会的 ${c(82)} 正逼她交出证据。公告栏上贴着来自 ${c(83)} 的交换项目海报，海报旁体育馆里有人练 ${c(84)}。心理学教授讲 investigation ${c(85)}，屏幕上却闪过一片 ${c(86)} database。苏念薇咬住 ${c(87)}，终于在名单里找到一个 quiet ${c(88)} who kept ${c(89)} to himself and never touched the coffee ${c(90)} at meetings。他的计划几乎 ${c(91)}，甚至把天文社的 ${c(92)} 模型改成藏钥匙的盒子。健康中心的 ${c(93)} report 被人 ${c(94)} across a desk，护士只喊了一声 ${c(95)}，语法课上的 ${c(96)} exercise 就变成了密码表。门口那只橡胶 ${c(97)} 是海洋社道具，她从旁边的 ${c(98)} 进楼，避开下课后的 ${c(99)}。`,
+      `她 ${c(100)} understood the pattern：偷钱的人 ${c(101)} taken everything at once, but lowered each transfer by a few dollars。证人的声音很 ${c(102)}，不像撒谎；她描述的 ${c(103)} 和整件 ${c(104)} 正好吻合。电脑屏幕的蓝色 ${c(105)} 刺眼得像警告，可苏念薇仍保留一丝 ${c(106)}。箭头 ${c(107)} the route to the old engineering garage；那里停着几台坏掉的 ${c(108)}，空气里有一阵 ${c(109)} smoke。墙上贴着 ${c(110)} emissions 的实验图，旁边校徽 ${c(111)} the donor group。粉 ${c(112)} 粉笔画出一条 ${c(113)} line，通往曾经属于校外 ${c(114)} 的仓库。门把手上 ${c(115)} a strip of tape，说明这里 ${c(116)} was not a joke. 那一 ${c(117)} black tape、坏掉的 ${c(118)} keyboard，和必须 ${c(119)} on exact timing 的脚本，终于把骗局连起来。`,
+      `苏念薇刚踏进仓库，脚下一滑，差点 ${c(120)}。脚本说明这套骗局 ${c(121)} of fake club payments, bookstore refunds, and scholarship edits。文件夹里有一位校园报 ${c(122)} 的草稿，资料被 ${c(123)} by week，像谁做过长期计划。窗边的 ${c(124)} 自己晃动，风声突然变得 ${c(125)}。一个学生冲进来，说这些账单跨过好几个 ${c(126)}；他 ${c(127)}，把装着球赛 ${c(128)} 的袋子递给她。袋底 ${c(129)} 了一张钟楼照片，照片里的 ${c(130)} 顶端有个机关，像一场精心设计的 ${c(131)}。原来嫌疑人接受过计算机社 ${c(132)}，性格很 ${c(133)}，还懂旧 ${c(134)} 的锁。他们把所有 ${c(135)} 放上桌，发现被 ${c(136)} 的并不只是账单：隔壁 ${c(137)} 的邮箱也有同样信封，校报的 ${c(138)} 甚至写过一首关于失踪 ${c(139)} 的短诗。`,
+      `第一笔钱是谁 ${c(140)} 的？答案 ${c(141)} 指向 ${c(142)} security ${c(143)}：有人穿着像校园吉祥物的 ${c(144)}，拖着 ${c(145)} bag，嘴里还 ${c(146)} a fake story about escaped ${c(147)} from biology class。包里没有蛇，只有 ${c(148)} envelopes、一只铜 ${c(149)}、一只旧 ${c(150)}，和一盒被 ${c(151)} 的钥匙。每个信封都画着小 ${c(152)}，最后一个地址却指向校 ${c(153)}。晚上十点，她 ${c(154)} the campus shuttle，车厢四个 ${c(155)} 都没有人说话。整场追查像一次失败的 ${c(156)}，日期偏偏写着 ${c(157)}；地上有一张 ${c(158)} of paper，边缘 ${c(159)} like gravel。`,
+      `看到证据后，证人竟然 ${c(160)} laughed，因为最 ${c(161)} 的线索不是金库，而是护士 ${c(162)} 的值班表。小 ${c(163)} 后面藏着一台 ${c(164)} scanner，标签来自 ${c(165)} 文物展；柜台上留着 ${c(166)} 的旧名牌。风扇开始 ${c(167)}，苏念薇觉得自己的 ${c(168)} 都紧了。她打开 ${c(169)} log，发现备份在一个 private ${c(170)} 里，说明有人想 ${c(171)} the evidence before morning。午夜前，她终于找到钱的路径：student government ${c(172)}、一次 fake ${c(173)}、一条 red ${c(174)}，and a note taped ${c(175)} the water fountain。没有老师 ${c(176)} permission，她也翻到了缺页的 ${c(177)}；按 ${c(178)} instruction 找到原始 ${c(179)} 后，她知道必须再 ${c(180)} once。`,
+      `窗外像黑 ${c(181)}，她把账单 ${c(182)} open，发现几 ${c(183)} scholarships 都被标成 ${c(184)} donor gifts。最危险的 ${c(185)} 很简单：这些 ${c(186)} were not random。她已经 ${c(187)} who was responsible；礼堂里热得 ${c(188)}，但她没有退回 ${c(189)}。当灯光变 ${c(190)}，第一阵 ${c(191)} wind seemed to ${c(192)} back the missing witness from the stairwell。事实是 ${c(193)} in plain sight：the same ${c(194)} style, the same transfer ${c(195)}, and one unanswered ${c(196)}。还有谁 ${c(197)} could have entered the office before the alarm？外面雨点开始 ${c(198)}，人群里的怀疑却 ${c(199)} louder。美国校园第一夜结束时，故事终于有了一个能继续追下去的方向。`
+    ];
+    return paragraphs
+      .filter((_, paragraphIndex) => items[paragraphIndex * 20])
+      .map((paragraph) => `<p>${paragraph}</p>`)
+      .join("");
+  }
+
   function dayTwoLockedLibraryStory(items, density) {
     if (density >= 90) return "";
     const c = (index) => items[index] ? chip(items[index]) : "";
@@ -434,13 +471,15 @@
   }
 
   function buildStory(items, selectedTheme, selectedDensity = state.englishDensity) {
-    const theme = selectedTheme || state.theme || frameCycle[state.currentDay - 1] || "cinematic";
+    const theme = "campus";
     const density = Number(selectedDensity) || DEFAULT_DENSITY;
-    const authored = state.currentDay === 2
-      ? dayTwoLockedLibraryStory(items, density)
-      : state.currentDay === 3
-        ? dayThreeRoadTripStory(items, density)
-        : "";
+    const authored = state.currentDay === 1
+      ? dayOneCampusStory(items, density)
+      : state.currentDay === 2
+        ? dayTwoLockedLibraryStory(items, density)
+        : state.currentDay === 3
+          ? dayThreeRoadTripStory(items, density)
+          : "";
     if (authored) return authored;
     const frames = storyFrames[theme] || storyFrames.cinematic;
     const paragraphs = [];
@@ -460,10 +499,30 @@
     return data.words.map((item) => ({ ...item, day: data.day, id: `d${data.day}-${item.word}` }));
   }
 
+  function isLowValueWord(item) {
+    const word = String(item.word || "").toLowerCase();
+    return LOW_VALUE_WORDS.has(word) || /^\d/.test(word) || /^[a-z]'/.test(word) || /^[a-z]$/i.test(word);
+  }
+
   function isDifficultWord(item, day) {
     const curated = DIFFICULT_WORD_SETS[String(day)];
     if (curated?.has(String(item.word || "").toLowerCase())) return true;
     return Number(item.globalRank) >= HARD_WORD_FALLBACK_RANK;
+  }
+
+  function lowValueFilteredItems(data, items, count) {
+    if (data.day !== 1) return items;
+    const selected = items.filter((item) => !isLowValueWord(item));
+    const selectedWords = new Set(selected.map((item) => String(item.word).toLowerCase()));
+    for (const item of allWords()) {
+      const key = String(item.word || "").toLowerCase();
+      if (selected.length >= count) break;
+      if (!selectedWords.has(key) && !isLowValueWord(item)) {
+        selected.push(item);
+        selectedWords.add(key);
+      }
+    }
+    return selected;
   }
 
   function difficultyBalancedItems(data, items, count) {
@@ -484,7 +543,8 @@
   function currentStudyItems() {
     const data = lesson();
     const count = dailyNewCount();
-    return difficultyBalancedItems(data, currentLessonItems(), count).slice(0, count);
+    const valueFiltered = lowValueFilteredItems(data, currentLessonItems(), count);
+    return difficultyBalancedItems(data, valueFiltered, count).slice(0, count);
   }
 
   function allWords() {
@@ -594,9 +654,23 @@
     return slots;
   }
 
+  function lessonDisplayMeta(data) {
+    if (data.day !== 1) return data;
+    return {
+      ...data,
+      titleZh: "暴雨夜的奖学金谜案",
+      titleEn: "The Storm Scholarship",
+      style: "campus mystery",
+      premise: "a stormy dorm night turns a missing scholarship into a campus chase"
+    };
+  }
+
   function renderDayOptions() {
     const select = document.getElementById("daySelect");
-    select.innerHTML = LESSONS.map((item) => `<option value="${item.day}">Day ${String(item.day).padStart(2, "0")} · ${escapeHtml(item.titleZh)}</option>`).join("");
+    select.innerHTML = LESSONS.map((item) => {
+      const meta = lessonDisplayMeta(item);
+      return `<option value="${item.day}">Day ${String(item.day).padStart(2, "0")} · ${escapeHtml(meta.titleZh)}</option>`;
+    }).join("");
     select.value = String(state.currentDay);
   }
 
@@ -606,13 +680,15 @@
   }
 
   function renderStory() {
+    state.theme = "campus";
     const data = lesson();
+    const meta = lessonDisplayMeta(data);
     const items = currentStudyItems();
     document.getElementById("heroDay").textContent = `Day ${String(data.day).padStart(2, "0")}`;
-    document.getElementById("heroTitle").textContent = data.titleZh;
-    document.getElementById("storyHeading").textContent = `Story ${String(data.day).padStart(2, "0")}: ${data.titleEn}`;
-    document.getElementById("storyStyle").textContent = `${data.style} · ${data.premise}`;
-    document.getElementById("themeSelect").value = state.theme;
+    document.getElementById("heroTitle").textContent = meta.titleZh;
+    document.getElementById("storyHeading").textContent = `Story ${String(data.day).padStart(2, "0")}: ${meta.titleEn}`;
+    document.getElementById("storyStyle").textContent = `${meta.style} · ${meta.premise}`;
+    document.getElementById("themeSelect").value = "campus";
     document.getElementById("densitySelect").value = String(state.englishDensity || DEFAULT_DENSITY);
     const newCountInput = document.getElementById("newCountInput");
     newCountInput.max = String(data.words.length);

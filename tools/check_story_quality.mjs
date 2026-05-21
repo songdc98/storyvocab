@@ -40,11 +40,74 @@ function extractDayThreeDifficultWords() {
   return [...match[1].matchAll(/"([^"]+)"/g)].map((matchItem) => matchItem[1].toLowerCase());
 }
 
+function extractLowValueWords() {
+  const match = app.match(/const LOW_VALUE_WORDS = new Set\(\[([\s\S]*?)\]\);/);
+  if (!match) throw new Error("Could not find low-value word list.");
+  return new Set([...match[1].matchAll(/"([^"]+)"/g)].map((matchItem) => matchItem[1].toLowerCase()));
+}
+
+function currentDayOneWords(count = 200) {
+  const lowValueWords = extractLowValueWords();
+  const allWords = lessons.flatMap((day) => day.words.map((word) => ({ ...word, day: day.day })));
+  const selected = lessons[0].words.filter((item) => !isLowValue(item, lowValueWords));
+  const selectedWords = new Set(selected.map((item) => String(item.word).toLowerCase()));
+
+  for (const item of allWords) {
+    const key = String(item.word || "").toLowerCase();
+    if (selected.length >= count) break;
+    if (!selectedWords.has(key) && !isLowValue(item, lowValueWords)) {
+      selected.push(item);
+      selectedWords.add(key);
+    }
+  }
+
+  return selected.slice(0, count);
+}
+
+function isLowValue(item, lowValueWords) {
+  const word = String(item.word || "").toLowerCase();
+  return lowValueWords.has(word) || /^\d/.test(word) || /^[a-z]'/.test(word) || /^[a-z]$/i.test(word);
+}
+
+const dayOneBlock = blockBetween("function dayOneCampusStory", "function dayTwoLockedLibraryStory");
 const dayTwoBlock = blockBetween("function dayTwoLockedLibraryStory", "function dayThreeRoadTripStory");
 const dayThreeBlock = blockBetween("function dayThreeRoadTripStory", "function buildStory");
 
+checkCoverage("Day 01", dayOneBlock);
 checkCoverage("Day 02", dayTwoBlock);
 checkCoverage("Day 03", dayThreeBlock);
+
+const expectedDayOneOpening = [
+  "air", "sound", "house", "side", "live", "night", "room", "money", "door", "run",
+  "front", "started", "wind", "perhaps", "person", "notice", "round", "friends", "longer", "system"
+];
+
+const dayOneWords = currentDayOneWords();
+const actualDayOneOpening = dayOneWords.slice(0, expectedDayOneOpening.length).map((item) => item.word);
+if (actualDayOneOpening.join("|") !== expectedDayOneOpening.join("|")) {
+  throw new Error(`Day 01 opening filter changed. got=${actualDayOneOpening.join(",")}`);
+}
+
+const lowValueBlockedWords = ["the", "as", "but", "will", "into", "its", "this", "what", "f", "t", "thy", "jane", "betsy", "jeff"];
+const blockedDayOneWords = dayOneWords.filter((item) => lowValueBlockedWords.includes(String(item.word).toLowerCase())).map((item) => item.word);
+if (blockedDayOneWords.length) {
+  throw new Error(`Day 01 still contains low-value target chips: ${blockedDayOneWords.join(",")}`);
+}
+
+const dayOneRequiredSnippets = [
+  "West Hall",
+  "missing scholarship ${c(7)}",
+  "campus card ${c(19)}",
+  "${c(101)} taken everything at once",
+  "taped ${c(175)} the water fountain",
+  "美国校园第一夜结束时"
+];
+
+for (const snippet of dayOneRequiredSnippets) {
+  if (!dayOneBlock.includes(snippet)) {
+    throw new Error(`Missing Day 01 campus-story phrase: ${snippet}`);
+  }
+}
 
 const bannedSnippets = [
   "答案在告示牌 ${c(2)}",
