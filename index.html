@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>StoryVocab 3000 | 15 天故事化英语高频词学习</title>
-  <meta name="description" content="一个零依赖、可离线使用的互动英语 3000 高频词学习网页：15 天故事文章、200 个每日新词、100 个复习槽、美音朗读、收藏错词、遗忘曲线和自定义词本。">
-  <meta name="keywords" content="English 3000,英语单词,高频词,美音发音,spaced repetition,English vocabulary,GitHub Pages,英语学习工具,LLM connector,cloud function,story-based learning">
+  <title>StoryVocab | 故事化互动英语词汇学习</title>
+  <meta name="description" content="一个零依赖、可离线使用的互动英语词汇学习网页：用生动故事、彩色词块、美音朗读、收藏错词、遗忘曲线和自定义词本记单词。">
+  <meta name="keywords" content="StoryVocab,英语单词,高频词,美音发音,spaced repetition,English vocabulary,GitHub Pages,英语学习工具,LLM connector,cloud function,story-based learning">
   <meta name="theme-color" content="#101626">
-  <meta property="og:title" content="StoryVocab 3000">
-  <meta property="og:description" content="用连续 15 天的生动故事学习 3000 个美国英语高频词。">
+  <meta property="og:title" content="StoryVocab">
+  <meta property="og:description" content="用生动故事和彩色词块学习英语词汇，默认内置 15 天高频词课程，也支持自定义词本。">
   <meta property="og:type" content="website">
   <script>
     try {
-      const saved = JSON.parse(localStorage.getItem("storyvocab3000.progress.v2") || "{}");
+      const saved = JSON.parse(localStorage.getItem("storyvocab.progress.v3") || localStorage.getItem("storyvocab3000.progress.v2") || "{}");
       document.documentElement.dataset.colorMode = saved.colorMode === "light" ? "light" : "dark";
       document.querySelector('meta[name="theme-color"]').setAttribute("content", saved.colorMode === "light" ? "#f7f3ec" : "#101626");
     } catch {
@@ -24,7 +24,7 @@
     {
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "StoryVocab 3000",
+      "name": "StoryVocab",
       "learningResourceType": "Interactive vocabulary web app",
       "teaches": "American English high-frequency vocabulary",
       "inLanguage": ["zh-CN", "en-US"],
@@ -36,9 +36,9 @@
   <div class="app-shell">
     <header class="hero">
       <div>
-        <p class="kicker">StoryVocab 3000 · open source · offline first</p>
-        <h1>用故事把 3000 个英语高频词见一遍</h1>
-        <p class="hero-copy">每天 200 个新词，100 个复习槽。单击单词直接发美音，长悬停再打开收藏、错词、会了等低频操作。所有进度保存在浏览器本地，不需要登录，也不依赖 Codex。</p>
+        <p class="kicker">StoryVocab · open source · offline first</p>
+        <h1>用故事把英语词汇真正记住</h1>
+        <p class="hero-copy">默认内置 15 天高频词故事课程，也可以导入任意自定义词本。单击单词直接发美音，长悬停再打开收藏、错词、会了等低频操作。所有进度保存在浏览器本地，不需要登录，也不依赖 Codex。</p>
       </div>
       <div class="hero-card">
         <div class="hero-controls">
@@ -152,7 +152,7 @@
       <section class="panel" id="wordbookPanel">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">3000 + custom words</p>
+            <p class="eyebrow">built-in + custom words</p>
             <h2>词本搜索</h2>
           </div>
           <input id="wordSearch" class="search" type="search" placeholder="搜索英文、中文、音标或标签">
@@ -218,8 +218,8 @@ request: {
   "theme": "cinematic",
   "englishDensity": 30,
   "words": [{ "word": "listen", "display": "listen to", "zh": "听" }],
-  "favorites": ["listen"],
-  "reviewWords": ["depend"]
+  "favorites": ["listen to"],
+  "reviewWords": ["depend on"]
 }
 
 response: {
@@ -242,7 +242,7 @@ window.StoryVocabAPI.speak("listen to");</code></pre>
         <div class="about-grid">
           <section class="info-box wide">
             <h2>项目定位</h2>
-            <p>StoryVocab 3000 是一个可公开部署到 GitHub Pages 的英语高频词学习工具。核心目标是把词放进有画面、有冲突、有情绪的文章里，而不是把词按字母表机械排列。</p>
+            <p>StoryVocab 是一个可公开部署到 GitHub Pages 的故事化英语词汇学习工具。核心目标是把词放进有画面、有冲突、有情绪的文章里，而不是把词按字母表机械排列。</p>
             <ul>
               <li>15 天，每天 200 个混排新词。</li>
               <li>浏览器本地保存收藏、错词、熟悉度和复习日程。</li>

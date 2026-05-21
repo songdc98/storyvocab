@@ -1,4 +1,4 @@
-// Optional StoryVocab 3000 cloud endpoint template.
+// Optional StoryVocab cloud endpoint template.
 // Deploy this shape to your own server, Cloudflare Worker, Vercel Function, or
 // any platform that can receive POST JSON and call your preferred model provider.
 // Keep provider API keys on the server side only. Do not put secret keys in the browser.

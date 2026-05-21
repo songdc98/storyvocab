@@ -3,7 +3,8 @@
 
   const LESSONS = window.LESSONS || [];
   const DATA_LICENSES = window.DATA_LICENSES || {};
-  const STORE_KEY = "storyvocab3000.progress.v2";
+  const STORE_KEY = "storyvocab.progress.v3";
+  const LEGACY_STORE_KEYS = ["storyvocab3000.progress.v2"];
   const MENU_OPEN_DELAY = 620;
   const MENU_CLOSE_DELAY = 820;
   const REVIEW_SLOTS = 100;
@@ -223,6 +224,7 @@
 
   function loadState() {
     try {
+      const saved = localStorage.getItem(STORE_KEY) || LEGACY_STORE_KEYS.map((key) => localStorage.getItem(key)).find(Boolean) || "{}";
       return Object.assign({
         currentDay: 1,
         theme: "cinematic",
@@ -233,7 +235,7 @@
         words: {},
         customWords: [],
         completedDays: {}
-      }, JSON.parse(localStorage.getItem(STORE_KEY) || "{}"));
+      }, JSON.parse(saved));
     } catch {
       return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, colorMode: DEFAULT_COLOR_MODE, connectorEndpoint: "", reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
     }
@@ -590,7 +592,7 @@
       };
     });
     return {
-      app: "StoryVocab 3000",
+      app: "StoryVocab",
       version: 1,
       mode: "optional-cloud",
       day: data.day,
@@ -840,7 +842,7 @@
     if (action === "reset-view") window.scrollTo({ top: 0, behavior: "smooth" });
     if (action === "speak-paragraph") {
       const openingWords = Array.from(document.querySelectorAll("#storyText .word-en")).slice(0, 24).map((node) => node.textContent.trim()).join(", ");
-      speak(openingWords || "StoryVocab 3000");
+      speak(openingWords || "StoryVocab");
     }
     if (action === "import-custom") {
       const imported = parseCustom(document.getElementById("customInput").value);

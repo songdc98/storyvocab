@@ -1,13 +1,14 @@
 {
-  "name": "english-3000-story-learning",
+  "name": "storyvocab",
   "version": "1.0.0",
-  "description": "Offline-first interactive story-based English 3000 vocabulary learning app with spaced repetition and en-US speech.",
+  "description": "Offline-first interactive story-based English vocabulary learning app with spaced repetition and en-US speech.",
   "private": false,
   "license": "MIT",
   "keywords": [
     "english",
     "vocabulary",
-    "english-3000",
+    "storyvocab",
+    "story-based-learning",
     "spaced-repetition",
     "language-learning",
     "github-pages",

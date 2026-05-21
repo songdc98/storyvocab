@@ -1,16 +1,16 @@
-# StoryVocab 3000
+# StoryVocab
 
-StoryVocab 3000 is an offline-first, zero-dependency web app for learning 3000 high-frequency English words through vivid daily stories.
+StoryVocab is an offline-first, zero-dependency web app for learning English vocabulary through vivid daily stories.
 
-It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. Each lesson mixes frequent words by rank and scene, embeds them in a story, and adds spaced repetition, favorites, wrong-word tracking, and one-click American English pronunciation.
+It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. The default pack includes a 15-day high-frequency vocabulary course, but the learning format is flexible: you can swap in custom words, themes, and cloud-generated stories.
 
-Live demo: https://songdc98.github.io/english-3000-story-learning/
+Live demo: https://songdc98.github.io/storyvocab/
 
 ![Story view](docs/screenshots/story.png)
 
 ## Features
 
-- **15-day learning plan**: 200 new words per day, 3000 words total.
+- **Default 15-day learning plan**: 200 new words per day from the bundled high-frequency word pack.
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
 - **Adjustable English density**: switch the story between roughly 30%, 50%, and 90% English for a gradual difficulty climb.
@@ -49,7 +49,7 @@ Live demo: https://songdc98.github.io/english-3000-story-learning/
 Open `index.html` directly in a browser:
 
 ```text
-file:///path/to/english_3000_daily/index.html
+file:///path/to/storyvocab/index.html
 ```
 
 Or host the folder with any static server:
@@ -95,7 +95,7 @@ Expected request shape:
 
 ```json
 {
-  "app": "StoryVocab 3000",
+  "app": "StoryVocab",
   "day": 1,
   "theme": "cinematic",
   "englishDensity": 30,
@@ -155,4 +155,4 @@ MIT License. See [LICENSE](LICENSE).
 
 ## Keywords
 
-English vocabulary, English 3000, 高频词, 英语单词, 美音发音, spaced repetition, story-based learning, Web Speech API, GitHub Pages, Chinese English learning, LLM connector, cloud function, offline English learning.
+English vocabulary, StoryVocab, 高频词, 英语单词, 美音发音, spaced repetition, story-based learning, Web Speech API, GitHub Pages, Chinese English learning, LLM connector, cloud function, offline English learning.

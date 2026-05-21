@@ -1,13 +1,13 @@
-# English 3000 Daily Plan
+# StoryVocab Daily Plan
 
 Start date: 2026-05-21
 
-Goal: finish first exposure to about 3000 common American English words in 15 days.
+Goal: use a vivid story-first format for vocabulary learning. The default pack gives first exposure to about 3000 common American English words in 15 days, but the system should also support custom word sets.
 
 Daily structure:
 
 - 200 new words embedded in one story page.
-- Do not group words alphabetically. Mix the 3000-word pool by scene, emotion, action, object, relationship, time, place, and abstract idea so the story can stay alive.
+- Do not group words alphabetically. Mix the active word pool by scene, emotion, action, object, relationship, time, place, and abstract idea so the story can stay alive.
 - 100 review slots generated from due words, favorites, and wrong words.
 - Favorites and wrong words receive higher review weight.
 - Browser localStorage stores progress, favorites, known words, wrong counts, and next due day.
@@ -51,7 +51,7 @@ Suggested story arcs:
 
 Implementation notes for future pages:
 
-- Keep `STORAGE_KEY = "english3000.daily.progress.v1"` unchanged.
-- Increment `CURRENT_DAY`.
-- Add the next 200 words to `WORD_ROWS`.
+- Preserve progress across storage-key migrations.
+- Update the active day through app state.
+- Add or regenerate lesson words in `src/lessons.js`.
 - Keep the same interaction pattern: hover options, American pronunciation, favorites, wrong-word review, 100 review slots.
