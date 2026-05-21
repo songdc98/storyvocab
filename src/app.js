@@ -7,7 +7,8 @@
   const LEGACY_STORE_KEYS = ["storyvocab3000.progress.v2"];
   const MENU_OPEN_DELAY = 620;
   const MENU_CLOSE_DELAY = 820;
-  const REVIEW_SLOTS = 100;
+  const DEFAULT_NEW_WORDS = 200;
+  const DEFAULT_REVIEW_SLOTS = 100;
   const DEFAULT_DENSITY = 30;
   const DEFAULT_COLOR_MODE = "dark";
 
@@ -230,6 +231,8 @@
         theme: "cinematic",
         englishDensity: DEFAULT_DENSITY,
         colorMode: DEFAULT_COLOR_MODE,
+        dailyNewCount: DEFAULT_NEW_WORDS,
+        reviewSlotCount: DEFAULT_REVIEW_SLOTS,
         connectorEndpoint: "",
         reviewSeed: 0,
         words: {},
@@ -237,8 +240,23 @@
         completedDays: {}
       }, JSON.parse(saved));
     } catch {
-      return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, colorMode: DEFAULT_COLOR_MODE, connectorEndpoint: "", reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
+      return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, colorMode: DEFAULT_COLOR_MODE, dailyNewCount: DEFAULT_NEW_WORDS, reviewSlotCount: DEFAULT_REVIEW_SLOTS, connectorEndpoint: "", reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
     }
+  }
+
+  function clampNumber(value, fallback, min, max) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return fallback;
+    return Math.min(max, Math.max(min, Math.round(number)));
+  }
+
+  function dailyNewCount() {
+    const max = Math.max(1, lesson().words.length);
+    return clampNumber(state.dailyNewCount, DEFAULT_NEW_WORDS, Math.min(20, max), max);
+  }
+
+  function reviewSlotCount() {
+    return clampNumber(state.reviewSlotCount, DEFAULT_REVIEW_SLOTS, 0, 200);
   }
 
   function applyColorMode() {
@@ -370,6 +388,10 @@
     return data.words.map((item) => ({ ...item, day: data.day, id: `d${data.day}-${item.word}` }));
   }
 
+  function currentStudyItems() {
+    return currentLessonItems().slice(0, dailyNewCount());
+  }
+
   function allWords() {
     return LESSONS.flatMap((day) => day.words.map((word) => ({ ...word, day: day.day, id: `d${day.day}-${word.word}` }))).concat(state.customWords);
   }
@@ -452,6 +474,8 @@
   }
 
   function buildReviewSlots() {
+    const targetCount = reviewSlotCount();
+    if (targetCount <= 0) return [];
     const pool = [];
     const available = allWords().filter((item) => !item.day || item.day <= state.currentDay);
     available.forEach((item) => {
@@ -463,11 +487,12 @@
       if (item.day === state.currentDay && entry.seen === 0) weight += 1;
       for (let i = 0; i < Math.max(weight, 0); i += 1) pool.push(item);
     });
-    const fallback = lesson().words.map((item) => ({ ...item, day: lesson().day, id: `d${lesson().day}-${item.word}` }));
-    const source = pool.length ? pool : fallback.slice(0, REVIEW_SLOTS);
+    const fallback = currentStudyItems();
+    const source = pool.length ? pool : fallback.slice(0, targetCount);
+    if (!source.length) return [];
     const slots = [];
     const offset = state.reviewSeed % source.length;
-    while (slots.length < REVIEW_SLOTS) {
+    while (slots.length < targetCount) {
       slots.push(source[(offset + slots.length) % source.length]);
     }
     return slots;
@@ -486,13 +511,17 @@
 
   function renderStory() {
     const data = lesson();
-    const items = currentLessonItems();
+    const items = currentStudyItems();
     document.getElementById("heroDay").textContent = `Day ${String(data.day).padStart(2, "0")}`;
     document.getElementById("heroTitle").textContent = data.titleZh;
     document.getElementById("storyHeading").textContent = `Story ${String(data.day).padStart(2, "0")}: ${data.titleEn}`;
     document.getElementById("storyStyle").textContent = `${data.style} · ${data.premise}`;
     document.getElementById("themeSelect").value = state.theme;
     document.getElementById("densitySelect").value = String(state.englishDensity || DEFAULT_DENSITY);
+    const newCountInput = document.getElementById("newCountInput");
+    newCountInput.max = String(data.words.length);
+    newCountInput.value = String(dailyNewCount());
+    document.getElementById("reviewCountInput").value = String(reviewSlotCount());
     const storyText = document.getElementById("storyText");
     storyText.dataset.density = String(state.englishDensity || DEFAULT_DENSITY);
     storyText.innerHTML = buildStory(items, state.theme, state.englishDensity);
@@ -501,22 +530,25 @@
   function renderStats() {
     const availableWords = allWords().filter((item) => !item.day || item.day <= state.currentDay);
     const entries = availableWords.map(entryFor);
-    const todayEntries = lesson().words.map((item) => entryFor({ ...item, id: `d${lesson().day}-${item.word}` }));
+    const todayItems = currentStudyItems();
+    const todayEntries = todayItems.map(entryFor);
     const seen = entries.filter((entry) => entry.seen > 0).length;
     const favorites = entries.filter((entry) => entry.favorite).length;
     const due = entries.filter((entry) => entry.due <= state.currentDay || entry.review).length;
-    document.getElementById("metricNew").textContent = lesson().words.length;
-    document.getElementById("metricReview").textContent = REVIEW_SLOTS;
+    document.getElementById("metricNew").textContent = dailyNewCount();
+    document.getElementById("metricReview").textContent = reviewSlotCount();
     document.getElementById("metricSeen").textContent = seen;
     document.getElementById("metricFav").textContent = favorites;
     document.getElementById("stateSummary").textContent =
-      `今日已接触 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
+      `今日已接触 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；复习槽 ${reviewSlotCount()} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
   }
 
   function renderReview() {
     const grid = document.getElementById("reviewGrid");
+    const total = reviewSlotCount();
+    document.querySelector("#reviewPanel h2").textContent = `${total} 个复习槽`;
     grid.innerHTML = buildReviewSlots().map((item, index) => `<article class="review-card">
-      <span class="slot">slot ${String(index + 1).padStart(2, "0")} / ${REVIEW_SLOTS}</span>
+      <span class="slot">slot ${String(index + 1).padStart(2, "0")} / ${total}</span>
       <span class="review-word">${escapeHtml(displayWord(item))}</span>
       <span class="answer hidden">${escapeHtml(item.zh)} ${item.phonetic ? " /" + escapeHtml(item.phonetic) + "/" : ""}</span>
       <div class="card-actions">
@@ -529,7 +561,7 @@
         <button class="tiny-button good" data-action="rate" data-rating="good" data-id="${escapeHtml(wordId(item))}">记得</button>
         <button class="tiny-button good" data-action="rate" data-rating="easy" data-id="${escapeHtml(wordId(item))}">秒懂</button>
       </div>
-    </article>`).join("");
+    </article>`).join("") || "<p class=\"muted-story\">复习槽当前设为 0。把复习槽调高后，这里会重新生成复习卡片。</p>";
   }
 
   function renderWordbook() {
@@ -564,7 +596,7 @@
 
   function renderCustomStory() {
     const theme = document.getElementById("customTheme").value.trim() || "自定义主题";
-    const items = state.customWords.slice(0, 200);
+    const items = state.customWords.slice(0, dailyNewCount());
     if (!items.length) {
       document.getElementById("customStory").innerHTML = "<p>先导入一些自定义词，再生成阅读。</p>";
       return;
@@ -575,7 +607,7 @@
 
   function connectorPayload() {
     const data = lesson();
-    const words = currentLessonItems().map((item) => {
+    const words = currentStudyItems().map((item) => {
       const entry = entryFor(item);
       return {
         id: wordId(item),
@@ -601,6 +633,8 @@
       premise: data.premise,
       theme: state.theme,
       englishDensity: state.englishDensity || DEFAULT_DENSITY,
+      newWordCount: dailyNewCount(),
+      reviewSlotCount: reviewSlotCount(),
       words,
       favorites: words.filter((item) => item.favorite).map((item) => item.display),
       reviewWords: words.filter((item) => item.review).map((item) => item.display),
@@ -781,7 +815,7 @@
     version: "1.0.0",
     getState: () => JSON.parse(JSON.stringify(state)),
     getCurrentLesson: () => JSON.parse(JSON.stringify(lesson())),
-    getCurrentWords: () => JSON.parse(JSON.stringify(currentLessonItems().map((item) => ({ ...item, display: displayWord(item) })))),
+    getCurrentWords: () => JSON.parse(JSON.stringify(currentStudyItems().map((item) => ({ ...item, display: displayWord(item) })))),
     buildConnectorPayload: () => JSON.parse(JSON.stringify(connectorPayload())),
     buildConnectorRequestExample,
     renderExternalStory,
@@ -828,8 +862,7 @@
       saveAndRender("复习顺序已重排。");
     }
     if (action === "complete-day") {
-      lesson().words.forEach((word) => {
-        const item = { ...word, day: lesson().day, id: `d${lesson().day}-${word.word}` };
+      currentStudyItems().forEach((item) => {
         const entry = entryFor(item);
         if (entry.seen === 0) entry.seen = 1;
         if (entry.interval === 0) entry.interval = 1;
@@ -899,6 +932,16 @@
   document.getElementById("densitySelect").addEventListener("change", (event) => {
     state.englishDensity = Number(event.target.value) || DEFAULT_DENSITY;
     saveAndRender(`英文占比已切换到 ${state.englishDensity}%。`);
+  });
+
+  document.getElementById("newCountInput").addEventListener("change", (event) => {
+    state.dailyNewCount = clampNumber(event.target.value, DEFAULT_NEW_WORDS, 20, lesson().words.length);
+    saveAndRender(`今日新词已调整为 ${dailyNewCount()} 个。`);
+  });
+
+  document.getElementById("reviewCountInput").addEventListener("change", (event) => {
+    state.reviewSlotCount = clampNumber(event.target.value, DEFAULT_REVIEW_SLOTS, 0, 200);
+    saveAndRender(`复习槽已调整为 ${reviewSlotCount()} 个。`);
   });
 
   document.getElementById("colorModeSelect").addEventListener("change", (event) => {

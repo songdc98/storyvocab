@@ -37,7 +37,7 @@
     <header class="hero">
       <div>
         <p class="kicker">StoryVocab · open source · offline first</p>
-        <h1>用故事把英语词汇真正记住</h1>
+        <h1>用故事把英语词汇记住</h1>
         <p class="hero-copy">默认内置 15 天高频词故事课程，也可以导入任意自定义词本。单击单词直接发美音，长悬停再打开收藏、错词、会了等低频操作。所有进度保存在浏览器本地，不需要登录，也不依赖 Codex。</p>
       </div>
       <div class="hero-card">
@@ -114,13 +114,21 @@
                   <option value="90">90% 沉浸</option>
                 </select>
               </div>
+              <div class="control-field">
+                <label for="newCountInput">今日新词</label>
+                <input id="newCountInput" class="number-input compact" type="number" min="20" max="200" step="10">
+              </div>
+              <div class="control-field">
+                <label for="reviewCountInput">复习槽</label>
+                <input id="reviewCountInput" class="number-input compact" type="number" min="0" max="200" step="10">
+              </div>
             </div>
             <div id="storyText" class="story-text"></div>
           </article>
           <aside class="side-stack">
             <section class="info-box">
               <h3>今日玩法</h3>
-              <p>直接点彩色单词或短语听美音。常见搭配会优先显示成 listen to、depend on 这类真实用法；英文占比可以从 30% 调到 90%。</p>
+              <p>直接点彩色单词或短语听美音。今日新词和复习槽都可以调节；常见搭配会优先显示成 listen to、depend on 这类真实用法，英文占比可以从 30% 调到 90%。</p>
             </section>
             <section class="info-box">
               <h3>遗忘曲线</h3>
@@ -142,7 +150,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">spaced repetition</p>
-            <h2>100 个复习槽</h2>
+            <h2>复习槽</h2>
           </div>
           <button class="button" data-action="shuffle-review">重排复习</button>
         </div>
@@ -180,7 +188,7 @@
           </section>
           <section class="info-box wide">
             <h2>自定义主题阅读</h2>
-            <p>不接任何外部 AI，也能把你的自定义词用模板串成一篇可读短文。想要真正重写成长文，可以复制生成提示给任意 AI。</p>
+            <p>不接任何外部 AI，也能把你的自定义词用模板串成一篇可读短文。想要重写成长文，可以复制生成提示给任意 AI。</p>
             <input id="customTheme" class="search" placeholder="例如：赛博朋克便利店、纽约校园悬疑、科研实验室冒险">
             <div class="button-row">
               <button class="button primary" data-action="render-custom-story">生成自定义阅读</button>

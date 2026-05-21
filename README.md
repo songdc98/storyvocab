@@ -14,7 +14,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 
 ## Features
 
-- **Default 15-day learning plan**: 200 new words per day from the bundled high-frequency word pack.
+- **Adjustable daily load**: start from the default 200 new words and 100 review slots, then tune both counts for the day.
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
 - **Adjustable English density**: switch the story between roughly 30%, 50%, and 90% English for a gradual difficulty climb.
@@ -22,7 +22,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Light and dark themes**: the app opens in dark mode by default and lets learners switch back to a bright reading theme.
 - **One-click en-US pronunciation**: click any colored word chip to hear American pronunciation through the browser Web Speech API.
 - **Low-friction word actions**: long hover over a word to open actions for favorite, known, and review.
-- **Spaced repetition**: 100 review slots per day, weighted by due date, favorites, and wrong words.
+- **Spaced repetition**: configurable review slots, weighted by due date, favorites, and wrong words.
 - **Local progress**: progress stays in browser `localStorage`; no account or server needed.
 - **Custom wordbook**: import your own words with `word,中文释义,pos` lines.
 - **Custom theme reading**: turn imported words into a themed reading passage without external services.
