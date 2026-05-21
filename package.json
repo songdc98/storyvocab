@@ -4,6 +4,15 @@
   "description": "Offline-first interactive story-based English vocabulary learning app with spaced repetition and en-US speech.",
   "private": false,
   "license": "MIT",
+  "author": "Dachuan Song <dsong25@gmu.edu>",
+  "homepage": "https://songdc98.github.io/storyvocab/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/songdc98/storyvocab.git"
+  },
+  "bugs": {
+    "url": "https://github.com/songdc98/storyvocab/issues"
+  },
   "keywords": [
     "english",
     "vocabulary",

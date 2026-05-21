@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-This project is MIT licensed. It includes derived offline vocabulary data from the following MIT-licensed sources:
+StoryVocab code is MIT licensed. It includes derived offline vocabulary data from the following MIT-licensed sources. Keep these notices when redistributing the bundled data or a modified build that includes it.
 
 ## 3000-words-list
 
@@ -19,3 +19,5 @@ This project is MIT licensed. It includes derived offline vocabulary data from t
 - Copyright notice in upstream license: Copyright (c) 2025 Linwei
 
 Generated project data lives in `src/lessons.js`. The generation script is `tools/extract_lessons.py`.
+
+The optional cloud connector template does not bundle a model provider SDK or provider data. Users are responsible for the terms, privacy policy, and costs of any provider they connect.

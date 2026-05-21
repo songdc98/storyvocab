@@ -1,12 +1,16 @@
 # StoryVocab
 
-StoryVocab is an offline-first, zero-dependency web app for learning English vocabulary through vivid daily stories.
+StoryVocab is an offline-first, zero-dependency web app for learning English vocabulary through vivid daily stories, colorful word chips, one-click American pronunciation, spaced repetition, and custom wordbooks.
 
-It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. The default pack includes a 15-day high-frequency vocabulary course, but the learning format is flexible: you can swap in custom words, themes, and cloud-generated stories.
+It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. The default pack includes a 15-day high-frequency vocabulary course, but the format is intentionally flexible: you can swap in custom words, themes, and cloud-generated stories.
 
 Live demo: https://songdc98.github.io/storyvocab/
 
 ![Story view](docs/screenshots/story.png)
+
+## Why StoryVocab
+
+Most vocabulary tools make learners stare at isolated words. StoryVocab puts words back into scenes, conflict, emotion, and repeated choices. The goal is simple: make word memory feel closer to reading a vivid story than grinding a list.
 
 ## Features
 
@@ -43,6 +47,10 @@ Live demo: https://songdc98.github.io/storyvocab/
 ### Optional Connector
 
 ![Optional connector](docs/screenshots/connector.png)
+
+### Privacy, Contact, And Support
+
+![About and support](docs/screenshots/about.png)
 
 ## Quick Start
 
@@ -126,6 +134,28 @@ window.StoryVocabAPI.renderExternalStory("A custom generated story");
 window.StoryVocabAPI.speak("listen to");
 ```
 
+## Privacy And Safety
+
+- StoryVocab does not require login, analytics, cookies, or a database.
+- Learning progress, favorites, wrong words, custom words, and connector URL are saved locally in your browser.
+- The browser Web Speech API may use the speech engine provided by your browser or operating system.
+- If you configure a cloud endpoint, StoryVocab sends the current lesson payload to that endpoint. Only connect endpoints you control and trust.
+- Do not paste private API keys, passwords, private learning data, or confidential material into the static frontend.
+
+See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md) for the full project policy.
+
+## Community Files
+
+This repository includes the standard public-project files people expect when contributing:
+
+- [LICENSE](LICENSE): MIT License for the project code.
+- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md): bundled vocabulary data attribution.
+- [CONTRIBUTING.md](CONTRIBUTING.md): how to propose changes safely.
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md): expected behavior for public collaboration.
+- [SECURITY.md](SECURITY.md): how to report vulnerabilities or secret-handling issues.
+- [SUPPORT.md](SUPPORT.md): where to ask questions, collaborate, or contact the author.
+- [PRIVACY.md](PRIVACY.md): local-storage and optional connector privacy notes.
+
 ## Data Sources
 
 The offline word data is generated from MIT-licensed sources:
@@ -149,9 +179,37 @@ The generated file is:
 src/lessons.js
 ```
 
-## License
+Before opening a pull request, check:
 
-MIT License. See [LICENSE](LICENSE).
+```bash
+node --check src/app.js
+node --check examples/cloud-endpoint-template.js
+git diff --check
+```
+
+If a change affects UI, public wording, screenshots, deployment, privacy, or security behavior, update the matching docs and screenshots in the same pull request.
+
+## License, Attribution, And Brand Use
+
+StoryVocab code is released under the MIT License. See [LICENSE](LICENSE).
+
+The bundled vocabulary data keeps third-party notices in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). If you redistribute a modified version, keep the MIT copyright notices and third-party attributions required by the relevant licenses.
+
+The project name, author identity, screenshots, and contact information should not be used to imply endorsement of unrelated products, services, or commercial offerings.
+
+## Author, Contact, And Support
+
+Created and maintained by Dachuan Song.
+
+For collaboration, research/product ideas, educational partnerships, internship/job opportunities, or referral conversations, contact:
+
+dsong25@gmu.edu
+
+If StoryVocab helps you, please star the repository:
+
+https://github.com/songdc98/storyvocab
+
+Stars, thoughtful issues, documentation improvements, and introductions to teams working on language learning, education tools, or human-centered AI all help the project and the author.
 
 ## Keywords
 
