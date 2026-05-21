@@ -97,10 +97,12 @@ if (blockedDayOneWords.length) {
 const dayOneRequiredSnippets = [
   "West Hall",
   "missing scholarship ${c(7)}",
-  "campus card ${c(19)}",
+  "campus CEO",
+  "假订婚赌局",
   "${c(101)} taken everything at once",
+  "those ${c(186)} were not random",
   "taped ${c(175)} the water fountain",
-  "美国校园第一夜结束时"
+  "赌约才刚刚开始"
 ];
 
 for (const snippet of dayOneRequiredSnippets) {

@@ -20,12 +20,13 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Low-value target filtering**: Day 01 no longer treats glue words like `the`, `what`, `this`, single letters, or standalone names as the main learning chips.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
 - **Focused campus storyline**: the maintained built-in course uses an American-campus mystery as the main authored path instead of claiming every optional theme is fully written.
-- **Authored daily episodes**: Day 01 now starts with a storm-night scholarship mystery, and Day 02 continues the campus investigation in the locked library while keeping all word chips interactive.
+- **Authored daily episodes**: Day 01 now starts with a storm-night scholarship gamble, fake-engagement tension, and scheming campus romance; Day 02 continues the campus investigation in the locked library while keeping all word chips interactive.
 - **Hard-word quota**: Day 03 and later lessons front-load at least 30% harder words in the daily study set, so a 200-word day includes at least 60 challenge words.
 - **Continuous-story direction**: if learners keep the same style, daily lessons should feel like chapters of one long vivid story rather than unrelated daily themes.
 - **Usage-aware contexts**: story sentences should place words in natural grammar, for example `below the notice board` instead of treating `below` as a standalone label.
 - **Semantic-fit story writing**: unusual or abstract scenes are allowed, but each word chip must still belong to the sentence logic instead of being dropped in as decoration.
 - **Story quality gate**: authored lessons are checked for word coverage, known awkward usage patterns, and repeated Chinese-English phrasing before release.
+- **Maintainer requirements**: product/story rules are tracked in [docs/PROJECT_REQUIREMENTS.md](docs/PROJECT_REQUIREMENTS.md) so future edits preserve the same expectations.
 - **Adjustable English density**: switch the story between roughly 30%, 50%, and 90% English for a gradual difficulty climb.
 - **Phrase-aware chips**: common words can appear as natural phrases such as `listen to`, `depend on`, and `according to`.
 - **Light and dark themes**: the app opens in dark mode by default and lets learners switch back to a bright reading theme.
