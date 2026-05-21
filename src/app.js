@@ -97,6 +97,7 @@
   const state = loadState();
   const menuTimers = new WeakMap();
   let activeFilter = "all";
+  let activeChip = null;
 
   const storyFrames = {
     cinematic: [
@@ -526,15 +527,34 @@
     clearTimeout(timers.close);
   }
 
-  function scheduleChipMenuOpen(chipNode) {
+  function closeChipMenuNow(chipNode) {
+    if (!chipNode) return;
     clearChipMenuTimers(chipNode);
-    const open = setTimeout(() => chipNode.classList.add("open"), MENU_OPEN_DELAY);
+    chipNode.classList.remove("open");
+    if (activeChip === chipNode) activeChip = null;
+  }
+
+  function closeOtherChipMenus(currentChip) {
+    if (activeChip && activeChip !== currentChip) closeChipMenuNow(activeChip);
+    document.querySelectorAll(".word-chip.open").forEach((chipNode) => {
+      if (chipNode !== currentChip) closeChipMenuNow(chipNode);
+    });
+  }
+
+  function scheduleChipMenuOpen(chipNode) {
+    closeOtherChipMenus(chipNode);
+    clearChipMenuTimers(chipNode);
+    const open = setTimeout(() => {
+      closeOtherChipMenus(chipNode);
+      chipNode.classList.add("open");
+      activeChip = chipNode;
+    }, MENU_OPEN_DELAY);
     menuTimers.set(chipNode, { open, close: null });
   }
 
   function scheduleChipMenuClose(chipNode) {
     clearChipMenuTimers(chipNode);
-    const close = setTimeout(() => chipNode.classList.remove("open"), MENU_CLOSE_DELAY);
+    const close = setTimeout(() => closeChipMenuNow(chipNode), MENU_CLOSE_DELAY);
     menuTimers.set(chipNode, { open: null, close });
   }
 
@@ -650,12 +670,16 @@
 
   document.addEventListener("focusin", (event) => {
     const chipNode = event.target.closest(".word-chip");
-    if (chipNode) chipNode.classList.add("open");
+    if (chipNode) {
+      closeOtherChipMenus(chipNode);
+      chipNode.classList.add("open");
+      activeChip = chipNode;
+    }
   });
 
   document.addEventListener("focusout", (event) => {
     const chipNode = event.target.closest(".word-chip");
-    if (chipNode) chipNode.classList.remove("open");
+    if (chipNode) closeChipMenuNow(chipNode);
   });
 
   document.getElementById("daySelect").addEventListener("change", (event) => {
