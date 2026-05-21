@@ -547,6 +547,7 @@ p {
 }
 
 .custom-layout,
+.connector-layout,
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -569,6 +570,47 @@ p {
 
 .custom-story {
   margin-top: 14px;
+}
+
+.connector-layout .wide:nth-child(3) {
+  grid-column: 1 / -1;
+  min-height: 0;
+}
+
+.field-label {
+  display: block;
+  margin: 10px 0 8px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 850;
+}
+
+.connector-status {
+  margin: 12px 0 0;
+  color: var(--muted);
+}
+
+.code-block {
+  overflow: auto;
+  margin: 10px 0 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.code-block code {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  white-space: pre;
+}
+
+.muted-story {
+  color: var(--muted);
+  line-height: 1.65;
 }
 
 .toast {
@@ -603,6 +645,7 @@ p {
   .hero,
   .reader-layout,
   .custom-layout,
+  .connector-layout,
   .about-grid {
     grid-template-columns: 1fr;
   }

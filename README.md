@@ -22,6 +22,8 @@ Live demo: https://songdc98.github.io/english-3000-story-learning/
 - **Local progress**: progress stays in browser `localStorage`; no account or server needed.
 - **Custom wordbook**: import your own words with `word,中文释义,pos` lines.
 - **Custom theme reading**: turn imported words into a themed reading passage without external services.
+- **Optional cloud/LLM connector**: keep the app fully static by default, or connect your own endpoint to rewrite lessons with any model provider.
+- **Developer API**: `window.StoryVocabAPI` exposes lesson state, current words, connector payloads, external story rendering, and pronunciation helpers.
 - **GitHub Pages ready**: static files only, no build step required for deployment.
 
 ## Screenshots
@@ -37,6 +39,10 @@ Live demo: https://songdc98.github.io/english-3000-story-learning/
 ### Wordbook Search
 
 ![Wordbook search](docs/screenshots/wordbook.png)
+
+### Optional Connector
+
+![Optional connector](docs/screenshots/connector.png)
 
 ## Quick Start
 
@@ -79,6 +85,47 @@ evidence,证据,n.
 
 Then click **导入自定义词**. Imported words can be searched, favorited, reviewed, exported, and used in custom themed readings.
 
+## Optional Cloud / LLM Connector
+
+The app works without any backend. If you want model-generated stories, open **接口**, paste your own endpoint URL, and click **云端重写当前故事**.
+
+Security rule: do not put model provider API keys in this static frontend. Put keys in your own server, Cloudflare Worker, Vercel Function, or other cloud function, then let StoryVocab call that endpoint.
+
+Expected request shape:
+
+```json
+{
+  "app": "StoryVocab 3000",
+  "day": 1,
+  "theme": "cinematic",
+  "englishDensity": 30,
+  "words": [
+    { "word": "listen", "display": "listen to", "zh": "听" }
+  ],
+  "favorites": ["listen to"],
+  "reviewWords": ["depend on"]
+}
+```
+
+Expected response shape:
+
+```json
+{
+  "storyText": "一篇新的故事...",
+  "notes": "Optional note"
+}
+```
+
+The returned text is displayed in the connector preview and does not overwrite the built-in 15-day static lessons. A starter endpoint template is available at [examples/cloud-endpoint-template.js](examples/cloud-endpoint-template.js).
+
+Developers can also extend the page directly:
+
+```js
+const payload = window.StoryVocabAPI.buildConnectorPayload();
+window.StoryVocabAPI.renderExternalStory("A custom generated story");
+window.StoryVocabAPI.speak("listen to");
+```
+
 ## Data Sources
 
 The offline word data is generated from MIT-licensed sources:
@@ -108,4 +155,4 @@ MIT License. See [LICENSE](LICENSE).
 
 ## Keywords
 
-English vocabulary, English 3000, 高频词, 英语单词, 美音发音, spaced repetition, story-based learning, Web Speech API, GitHub Pages, Chinese English learning.
+English vocabulary, English 3000, 高频词, 英语单词, 美音发音, spaced repetition, story-based learning, Web Speech API, GitHub Pages, Chinese English learning, LLM connector, cloud function, offline English learning.

@@ -228,13 +228,14 @@
         theme: "cinematic",
         englishDensity: DEFAULT_DENSITY,
         colorMode: DEFAULT_COLOR_MODE,
+        connectorEndpoint: "",
         reviewSeed: 0,
         words: {},
         customWords: [],
         completedDays: {}
       }, JSON.parse(localStorage.getItem(STORE_KEY) || "{}"));
     } catch {
-      return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, colorMode: DEFAULT_COLOR_MODE, reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
+      return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, colorMode: DEFAULT_COLOR_MODE, connectorEndpoint: "", reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
     }
   }
 
@@ -362,6 +363,11 @@
     return paragraphs.join("");
   }
 
+  function currentLessonItems() {
+    const data = lesson();
+    return data.words.map((item) => ({ ...item, day: data.day, id: `d${data.day}-${item.word}` }));
+  }
+
   function allWords() {
     return LESSONS.flatMap((day) => day.words.map((word) => ({ ...word, day: day.day, id: `d${day.day}-${word.word}` }))).concat(state.customWords);
   }
@@ -478,7 +484,7 @@
 
   function renderStory() {
     const data = lesson();
-    const items = data.words.map((item) => ({ ...item, day: data.day, id: `d${data.day}-${item.word}` }));
+    const items = currentLessonItems();
     document.getElementById("heroDay").textContent = `Day ${String(data.day).padStart(2, "0")}`;
     document.getElementById("heroTitle").textContent = data.titleZh;
     document.getElementById("storyHeading").textContent = `Story ${String(data.day).padStart(2, "0")}: ${data.titleEn}`;
@@ -565,6 +571,68 @@
     document.getElementById("customStory").innerHTML = `<p class="eyebrow">${escapeHtml(theme)} · English ${state.englishDensity || DEFAULT_DENSITY}%</p>${buildStory(normalized, state.theme, state.englishDensity)}`;
   }
 
+  function connectorPayload() {
+    const data = lesson();
+    const words = currentLessonItems().map((item) => {
+      const entry = entryFor(item);
+      return {
+        id: wordId(item),
+        word: item.word,
+        display: displayWord(item),
+        zh: item.zh || "",
+        shortZh: shortZh(item.zh),
+        pos: item.pos || "",
+        phonetic: item.phonetic || "",
+        day: item.day,
+        favorite: Boolean(entry.favorite),
+        review: Boolean(entry.review || entry.wrong > entry.right),
+        known: Boolean(entry.known)
+      };
+    });
+    return {
+      app: "StoryVocab 3000",
+      version: 1,
+      mode: "optional-cloud",
+      day: data.day,
+      titleEn: data.titleEn,
+      titleZh: data.titleZh,
+      premise: data.premise,
+      theme: state.theme,
+      englishDensity: state.englishDensity || DEFAULT_DENSITY,
+      words,
+      favorites: words.filter((item) => item.favorite).map((item) => item.display),
+      reviewWords: words.filter((item) => item.review).map((item) => item.display),
+      instruction: "Write one vivid, coherent English-learning story for Chinese-speaking learners. Use the provided display phrases naturally, keep the Chinese meaning near each target word, and return plain text in storyText."
+    };
+  }
+
+  function buildConnectorRequestExample() {
+    const endpoint = state.connectorEndpoint || "https://your-domain.example/storyvocab/generate";
+    const payload = connectorPayload();
+    return `const endpoint = ${JSON.stringify(endpoint)};\nconst request = ${JSON.stringify(payload, null, 2)};\n\nconst response = await fetch(endpoint, {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify(request)\n});\n\nconst data = await response.json();\nconsole.log(data.storyText || data.text || data.notes);`;
+  }
+
+  function renderExternalStory(content, notes = "") {
+    const node = document.getElementById("connectorPreview");
+    if (!node) return;
+    const text = typeof content === "string" ? content : JSON.stringify(content, null, 2);
+    const paragraphs = text.split(/\n{2,}/).map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br>")}</p>`).join("");
+    node.classList.remove("muted-story");
+    node.innerHTML = `${paragraphs || "<p>接口没有返回故事文本。</p>"}${notes ? `<p class="connector-status">${escapeHtml(notes)}</p>` : ""}`;
+  }
+
+  function renderConnector() {
+    const input = document.getElementById("connectorEndpoint");
+    if (!input) return;
+    if (document.activeElement !== input) input.value = state.connectorEndpoint || "";
+    const status = document.getElementById("connectorStatus");
+    if (status) {
+      status.textContent = state.connectorEndpoint
+        ? `已配置接口：${state.connectorEndpoint}`
+        : "当前是纯静态模式。配置接口后，才会向你的云端发送请求。";
+    }
+  }
+
   function renderAbout() {
     document.getElementById("licenseSummary").textContent = `${DATA_LICENSES.wordList || ""}；${DATA_LICENSES.dictionary || ""}`;
   }
@@ -576,6 +644,7 @@
     renderStats();
     renderReview();
     renderWordbook();
+    renderConnector();
     renderAbout();
   }
 
@@ -653,6 +722,70 @@
     });
   }
 
+  function saveConnector() {
+    const input = document.getElementById("connectorEndpoint");
+    state.connectorEndpoint = input.value.trim();
+    saveState();
+    renderConnector();
+    toast(state.connectorEndpoint ? "接口已保存，本地课程仍可离线使用。" : "接口已清空，继续使用纯静态模式。");
+  }
+
+  function clearConnector() {
+    state.connectorEndpoint = "";
+    saveState();
+    renderConnector();
+    toast("已清除接口，回到纯静态模式。");
+  }
+
+  function copyConnectorExample() {
+    const example = buildConnectorRequestExample();
+    navigator.clipboard?.writeText(example).then(() => toast("接口请求示例已复制。")).catch(() => {
+      exportFile("storyvocab-connector-example.js", example, "text/javascript;charset=utf-8");
+      toast("无法复制，已下载请求示例。");
+    });
+  }
+
+  async function runConnector() {
+    const endpoint = (document.getElementById("connectorEndpoint")?.value.trim() || state.connectorEndpoint || "").trim();
+    const status = document.getElementById("connectorStatus");
+    if (!endpoint) {
+      if (status) status.textContent = "未配置接口。当前页面会继续使用内置的纯静态故事。";
+      toast("先填入你自己的云端接口。");
+      return;
+    }
+    state.connectorEndpoint = endpoint;
+    saveState();
+    if (status) status.textContent = "正在请求你的云端接口...";
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(connectorPayload())
+      });
+      const contentType = response.headers.get("content-type") || "";
+      const data = contentType.includes("application/json") ? await response.json() : { storyText: await response.text() };
+      if (!response.ok) throw new Error(data.error || data.message || `HTTP ${response.status}`);
+      const story = data.storyText || data.text || data.story || data.html || data.storyHtml || "";
+      renderExternalStory(story, data.notes || "已由你的云端接口返回。");
+      if (status) status.textContent = "接口返回成功。结果只显示在预览区，不覆盖本地课程。";
+      toast("云端故事已返回。");
+    } catch (error) {
+      if (status) status.textContent = `接口请求失败：${error.message}`;
+      toast("接口请求失败，已保留纯静态课程。");
+    }
+  }
+
+  window.StoryVocabAPI = {
+    version: "1.0.0",
+    getState: () => JSON.parse(JSON.stringify(state)),
+    getCurrentLesson: () => JSON.parse(JSON.stringify(lesson())),
+    getCurrentWords: () => JSON.parse(JSON.stringify(currentLessonItems().map((item) => ({ ...item, display: displayWord(item) })))),
+    buildConnectorPayload: () => JSON.parse(JSON.stringify(connectorPayload())),
+    buildConnectorRequestExample,
+    renderExternalStory,
+    speak
+  };
+
   document.addEventListener("click", (event) => {
     const tab = event.target.closest(".tab");
     if (tab) {
@@ -719,6 +852,10 @@
     }
     if (action === "render-custom-story") renderCustomStory();
     if (action === "copy-ai-prompt") copyAiPrompt();
+    if (action === "save-connector") saveConnector();
+    if (action === "clear-connector") clearConnector();
+    if (action === "copy-connector-example") copyConnectorExample();
+    if (action === "run-connector") runConnector();
   });
 
   document.addEventListener("mouseover", (event) => {

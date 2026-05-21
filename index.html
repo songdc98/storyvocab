@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>StoryVocab 3000 | 15 天故事化英语高频词学习</title>
   <meta name="description" content="一个零依赖、可离线使用的互动英语 3000 高频词学习网页：15 天故事文章、200 个每日新词、100 个复习槽、美音朗读、收藏错词、遗忘曲线和自定义词本。">
-  <meta name="keywords" content="English 3000,英语单词,高频词,美音发音,spaced repetition,English vocabulary,GitHub Pages,英语学习工具">
+  <meta name="keywords" content="English 3000,英语单词,高频词,美音发音,spaced repetition,English vocabulary,GitHub Pages,英语学习工具,LLM connector,cloud function,story-based learning">
   <meta name="theme-color" content="#101626">
   <meta property="og:title" content="StoryVocab 3000">
   <meta property="og:description" content="用连续 15 天的生动故事学习 3000 个美国英语高频词。">
@@ -74,6 +74,7 @@
         <button class="tab" data-panel="reviewPanel">复习</button>
         <button class="tab" data-panel="wordbookPanel">词本</button>
         <button class="tab" data-panel="customPanel">自定义</button>
+        <button class="tab" data-panel="connectorPanel">接口</button>
         <button class="tab" data-panel="aboutPanel">关于</button>
       </div>
       <div class="toolbar-actions">
@@ -186,6 +187,53 @@
               <button class="button" data-action="copy-ai-prompt">复制 AI 重写提示</button>
             </div>
             <div id="customStory" class="custom-story"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel" id="connectorPanel">
+        <div class="connector-layout">
+          <section class="info-box wide">
+            <p class="eyebrow">optional llm / cloud connector</p>
+            <h2>可选大模型接口</h2>
+            <p>默认模式仍然是纯静态：直接打开 <code>index.html</code> 就能学习 15 天课程。这里留给会部署云函数或会写代码的人，把当前课程、词表、英文占比和收藏错词发给自己的后端，让后端调用任意大模型重写故事。</p>
+            <label class="field-label" for="connectorEndpoint">Cloud endpoint URL</label>
+            <input id="connectorEndpoint" class="search" type="url" placeholder="https://your-domain.example/storyvocab/generate">
+            <div class="button-row">
+              <button class="button primary" data-action="save-connector">保存接口</button>
+              <button class="button" data-action="run-connector">云端重写当前故事</button>
+              <button class="button" data-action="copy-connector-example">复制请求示例</button>
+              <button class="button" data-action="clear-connector">清除接口</button>
+            </div>
+            <p id="connectorStatus" class="connector-status">当前是纯静态模式。配置接口后，才会向你的云端发送请求。</p>
+          </section>
+          <section class="info-box wide">
+            <h2>接口契约</h2>
+            <p>前端只发送学习上下文，不保存也不暴露任何大模型密钥。请把 API key 放在你自己的云函数或服务器环境变量里。</p>
+            <pre class="code-block"><code>POST /storyvocab/generate
+Content-Type: application/json
+
+request: {
+  "day": 1,
+  "theme": "cinematic",
+  "englishDensity": 30,
+  "words": [{ "word": "listen", "display": "listen to", "zh": "听" }],
+  "favorites": ["listen"],
+  "reviewWords": ["depend"]
+}
+
+response: {
+  "storyText": "一篇新的故事...",
+  "notes": "可选说明"
+}</code></pre>
+            <div id="connectorPreview" class="custom-story muted-story">接口返回的故事会显示在这里，不会覆盖本地固定课程。</div>
+          </section>
+          <section class="info-box wide">
+            <h2>代码接口</h2>
+            <p>开发者可以在自己的脚本里读取 <code>window.StoryVocabAPI</code>。它提供当前状态、当前课程词表、请求载荷构造、外部故事渲染和美音朗读入口。</p>
+            <pre class="code-block"><code>const payload = window.StoryVocabAPI.buildConnectorPayload();
+window.StoryVocabAPI.renderExternalStory("My generated story");
+window.StoryVocabAPI.speak("listen to");</code></pre>
           </section>
         </div>
       </section>
