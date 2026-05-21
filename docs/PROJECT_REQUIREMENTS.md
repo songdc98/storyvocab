@@ -49,6 +49,8 @@ This file records the maintainer requirements that should survive context resets
 
 - License is MIT.
 - Keep README, screenshots, and public-facing docs aligned with each meaningful UI, content, or behavior update.
+- Keep README bilingual. Each substantial English paragraph, list, or explanation should be followed by its Chinese counterpart, and future README updates must update both languages together.
+- Do not fragment README Chinese translations into many tiny sentence-by-sentence pieces; use readable Chinese blocks that correspond to the English blocks.
 - Refresh `docs/screenshots/story.png` when the story UI changes.
 - Commit and push code, documentation, and screenshot changes together.
 - Verify GitHub Pages after pushing when practical.
