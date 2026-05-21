@@ -7,6 +7,92 @@
   const MENU_OPEN_DELAY = 620;
   const MENU_CLOSE_DELAY = 820;
   const REVIEW_SLOTS = 100;
+  const DEFAULT_DENSITY = 30;
+
+  const PHRASE_OVERRIDES = {
+    listen: "listen to",
+    listened: "listened to",
+    listening: "listening to",
+    looks: "looks at",
+    look: "look at",
+    looked: "looked at",
+    looking: "looking at",
+    wait: "wait for",
+    waited: "waited for",
+    waiting: "waiting for",
+    talk: "talk to",
+    talked: "talked to",
+    talking: "talking to",
+    speak: "speak to",
+    spoke: "spoke to",
+    speaking: "speaking to",
+    belong: "belong to",
+    belongs: "belongs to",
+    belonged: "belonged to",
+    depend: "depend on",
+    depends: "depends on",
+    depended: "depended on",
+    according: "according to",
+    based: "based on",
+    interested: "interested in",
+    afraid: "afraid of",
+    similar: "similar to",
+    different: "different from",
+    responsible: "responsible for",
+    full: "full of",
+    proud: "proud of",
+    aware: "aware of",
+    capable: "capable of",
+    ask: "ask for",
+    asked: "asked for",
+    asking: "asking for",
+    pay: "pay for",
+    paid: "paid for",
+    paying: "paying for",
+    care: "care about",
+    cared: "cared about",
+    caring: "caring about",
+    think: "think about",
+    thought: "thought about",
+    thinking: "thinking about",
+    deal: "deal with",
+    dealt: "dealt with",
+    dealing: "dealing with",
+    agree: "agree with",
+    agreed: "agreed with",
+    agreeing: "agreeing with",
+    arrive: "arrive at",
+    arrived: "arrived at",
+    arriving: "arriving at",
+    search: "search for",
+    searched: "searched for",
+    searching: "searching for",
+    focus: "focus on",
+    focused: "focused on",
+    focusing: "focusing on",
+    turn: "turn into",
+    turned: "turned into",
+    turning: "turning into",
+    lead: "lead to",
+    led: "led to",
+    leading: "leading to",
+    consist: "consist of",
+    consists: "consists of",
+    consisted: "consisted of",
+    prepare: "prepare for",
+    prepared: "prepared for",
+    preparing: "preparing for",
+    protect: "protect from",
+    protected: "protected from",
+    suffer: "suffer from",
+    suffered: "suffered from",
+    reply: "reply to",
+    replied: "replied to",
+    replying: "replying to",
+    refer: "refer to",
+    referred: "referred to",
+    referring: "referring to"
+  };
 
   const state = loadState();
   const menuTimers = new WeakMap();
@@ -37,18 +123,72 @@
 
   const frameCycle = ["cinematic", "campus", "travel", "cinematic", "startup", "campus", "cinematic", "startup", "cinematic", "travel", "cinematic", "campus", "travel", "cinematic", "cinematic"];
 
+  const themeProfiles = {
+    cinematic: {
+      mixed: [
+        "雨夜像一部快速剪辑的悬疑片。每个 clue 都带一点 danger, every choice 都像在倒计时。",
+        "镜头切到走廊尽头，灯忽明忽暗。She was no longer just reading words; she was reading a threat."
+      ],
+      english: [
+        "In the rain-cut city, every reflection looked like evidence and every sound arrived late.",
+        "The second scene moved faster: a locked door, a hidden file, and a voice that refused to explain itself."
+      ]
+    },
+    campus: {
+      mixed: [
+        "午夜校园安静得不正常，library light still burned, and every note on the desk felt suspicious.",
+        "第二天的走廊像一条长长的 puzzle. Students smiled in Chinese, but their secrets moved in English."
+      ],
+      english: [
+        "At the edge of campus, the library kept one light on as if it knew the truth would return.",
+        "By morning, every hallway had a rumor, every locker had a mark, and every friendly face looked rehearsed."
+      ]
+    },
+    startup: {
+      mixed: [
+        "发布会前十分钟，dashboard went dark. Everyone wanted a clean story, but the logs told another one.",
+        "凌晨办公室只剩 keyboard sound 和冷掉的咖啡。The product was live, yet the real problem was human."
+      ],
+      english: [
+        "Ten minutes before launch, the screen went black and the quiet office became a courtroom.",
+        "At 2:00 a.m., the team stopped selling a product and started defending a promise."
+      ]
+    },
+    comedy: {
+      mixed: [
+        "这场混乱本来只需要一个 explanation, but everyone tried to be clever at the same time.",
+        "午饭后，事情越来越离谱。The office wanted order; the story preferred jokes."
+      ],
+      english: [
+        "The disaster began politely, which made it much worse when everybody tried to help.",
+        "After lunch, common sense left the room and the meeting became a small public experiment."
+      ]
+    },
+    travel: {
+      mixed: [
+        "公路一直向西，the map was old, the sky was wide, and every stop changed the meaning of the trip.",
+        "清晨的加油站像一个 checkpoint. They bought coffee, lost the route, and found a new clue."
+      ],
+      english: [
+        "The road crossed a wide plain where every town looked ordinary until the old letter named it.",
+        "By sunrise, the map had failed, the radio had gone silent, and the journey finally became honest."
+      ]
+    }
+  };
+
   function loadState() {
     try {
       return Object.assign({
         currentDay: 1,
         theme: "cinematic",
+        englishDensity: DEFAULT_DENSITY,
         reviewSeed: 0,
         words: {},
         customWords: [],
         completedDays: {}
       }, JSON.parse(localStorage.getItem(STORE_KEY) || "{}"));
     } catch {
-      return { currentDay: 1, theme: "cinematic", reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
+      return { currentDay: 1, theme: "cinematic", englishDensity: DEFAULT_DENSITY, reviewSeed: 0, words: {}, customWords: [], completedDays: {} };
     }
   }
 
@@ -90,19 +230,38 @@
       .replace(/"/g, "&quot;");
   }
 
+  function phraseFor(item) {
+    const phrase = PHRASE_OVERRIDES[String(item.word || "").toLowerCase()];
+    return phrase ? { root: item.word, text: phrase } : null;
+  }
+
+  function displayWord(item) {
+    return phraseFor(item)?.text || item.word;
+  }
+
+  function spokenText(item) {
+    return typeof item === "string" ? item : displayWord(item);
+  }
+
   function chip(item) {
     const entry = entryFor(item);
+    const phrase = phraseFor(item);
+    const shown = displayWord(item);
     const classes = ["word-chip"];
+    if (phrase) classes.push("phrase");
     if (entry.favorite) classes.push("favorite");
     if (entry.review) classes.push("review");
     if (entry.known) classes.push("known");
-    return `<span class="${classes.join(" ")}" tabindex="0" data-word="${escapeHtml(item.word)}" data-id="${escapeHtml(wordId(item))}">
-      <span class="word-en">${escapeHtml(item.word)}</span>
+    const menuTitle = phrase
+      ? `${item.phonetic ? "/" + item.phonetic + "/ · " : ""}phrase · ${item.word} -> ${shown} · ${item.zh || "常用词"}`
+      : `${item.phonetic ? "/" + item.phonetic + "/ · " : ""}${item.pos || "word"} · ${item.zh || "常用词"}`;
+    return `<span class="${classes.join(" ")}" tabindex="0" data-word="${escapeHtml(item.word)}" data-say="${escapeHtml(shown)}" data-id="${escapeHtml(wordId(item))}">
+      <span class="word-en">${escapeHtml(shown)}</span>
       <span class="word-zh">${escapeHtml(shortZh(item.zh))}</span>
       <span class="word-menu" role="tooltip">
-        <span class="menu-title">${escapeHtml(item.phonetic ? "/" + item.phonetic + "/ · " : "")}${escapeHtml(item.pos || "word")} · ${escapeHtml(item.zh || "常用词")}</span>
+        <span class="menu-title">${escapeHtml(menuTitle)}</span>
         <span class="menu-actions">
-          <button data-action="say" data-id="${escapeHtml(wordId(item))}">美音</button>
+          <button data-action="say" data-id="${escapeHtml(wordId(item))}" data-say="${escapeHtml(shown)}">美音</button>
           <button data-action="favorite" data-id="${escapeHtml(wordId(item))}">收藏</button>
           <button data-action="known" data-id="${escapeHtml(wordId(item))}">会了</button>
           <button data-action="review" data-id="${escapeHtml(wordId(item))}">复习</button>
@@ -118,12 +277,27 @@
     });
   }
 
-  function buildStory(items, selectedTheme) {
+  function adaptiveParagraph(group, selectedTheme, density, paragraphIndex) {
+    const profile = themeProfiles[selectedTheme] || themeProfiles.cinematic;
+    const c = (index) => group[index] ? chip(group[index]) : "";
+    if (density >= 90) {
+      return `${profile.english[paragraphIndex % profile.english.length]} ${c(0)} was the first signal, and ${c(1)} changed the room before anyone could breathe. She read the mark ${c(2)}, tested the warning ${c(3)}, and kept the clue ${c(4)} close. In the next minute, ${c(5)} sounded ordinary, but ${c(6)} felt dangerous; ${c(7)} opened one door while ${c(8)} closed another. Nobody wanted to admit ${c(9)}. She kept moving because the clue ${c(10)} mattered, because ${c(11)} was missing, and because ${c(12)} pointed to the person behind the plan. Near the end, ${c(13)}, ${c(14)}, and ${c(15)} collided in one bright second. She chose the path marked ${c(16)}, carried the clue ${c(17)} through the noise, and let ${c(18)} and ${c(19)} decide what happened next.`;
+    }
+    return `${profile.mixed[paragraphIndex % profile.mixed.length]} ${c(0)} 先把场景点亮，and ${c(1)} pushed the story forward. 她在 ${c(2)} 和 ${c(3)} 之间做选择，while ${c(4)} kept changing the room. Someone tried to explain ${c(5)}，可真正的问题是 ${c(6)}. Then ${c(7)} became a promise, ${c(8)} became a warning, and ${c(9)} made everyone quiet. 她把 ${c(10)} 写在便签上，把 ${c(11)} 藏进口袋。By the time ${c(12)} appeared, she had to keep ${c(13)} close, test ${c(14)}, and follow the trace of ${c(15)}. 最后一段路上，${c(16)}, ${c(17)}, ${c(18)}, and ${c(19)} together turned the story into a choice.`;
+  }
+
+  function buildStory(items, selectedTheme, selectedDensity = state.englishDensity) {
     const theme = selectedTheme || state.theme || frameCycle[state.currentDay - 1] || "cinematic";
+    const density = Number(selectedDensity) || DEFAULT_DENSITY;
     const frames = storyFrames[theme] || storyFrames.cinematic;
     const paragraphs = [];
     for (let i = 0; i < items.length; i += 20) {
-      paragraphs.push(`<p>${fillFrame(frames[(i / 20) % frames.length], items.slice(i, i + 20))}</p>`);
+      const group = items.slice(i, i + 20);
+      const paragraphIndex = i / 20;
+      const html = density <= 30
+        ? fillFrame(frames[paragraphIndex % frames.length], group)
+        : adaptiveParagraph(group, theme, density, paragraphIndex);
+      paragraphs.push(`<p>${html}</p>`);
     }
     return paragraphs.join("");
   }
@@ -137,7 +311,7 @@
   }
 
   function speak(word) {
-    const text = typeof word === "string" ? word : word.word;
+    const text = spokenText(word);
     if (!("speechSynthesis" in window)) {
       toast("这个浏览器不支持语音合成。");
       return;
@@ -245,11 +419,15 @@
     document.getElementById("storyHeading").textContent = `Story ${String(data.day).padStart(2, "0")}: ${data.titleEn}`;
     document.getElementById("storyStyle").textContent = `${data.style} · ${data.premise}`;
     document.getElementById("themeSelect").value = state.theme;
-    document.getElementById("storyText").innerHTML = buildStory(items, state.theme);
+    document.getElementById("densitySelect").value = String(state.englishDensity || DEFAULT_DENSITY);
+    const storyText = document.getElementById("storyText");
+    storyText.dataset.density = String(state.englishDensity || DEFAULT_DENSITY);
+    storyText.innerHTML = buildStory(items, state.theme, state.englishDensity);
   }
 
   function renderStats() {
-    const entries = allWords().map(entryFor);
+    const availableWords = allWords().filter((item) => !item.day || item.day <= state.currentDay);
+    const entries = availableWords.map(entryFor);
     const todayEntries = lesson().words.map((item) => entryFor({ ...item, id: `d${lesson().day}-${item.word}` }));
     const seen = entries.filter((entry) => entry.seen > 0).length;
     const favorites = entries.filter((entry) => entry.favorite).length;
@@ -259,17 +437,17 @@
     document.getElementById("metricSeen").textContent = seen;
     document.getElementById("metricFav").textContent = favorites;
     document.getElementById("stateSummary").textContent =
-      `今日已接触 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个。`;
+      `今日已接触 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
   }
 
   function renderReview() {
     const grid = document.getElementById("reviewGrid");
     grid.innerHTML = buildReviewSlots().map((item, index) => `<article class="review-card">
       <span class="slot">slot ${String(index + 1).padStart(2, "0")} / ${REVIEW_SLOTS}</span>
-      <span class="review-word">${escapeHtml(item.word)}</span>
+      <span class="review-word">${escapeHtml(displayWord(item))}</span>
       <span class="answer hidden">${escapeHtml(item.zh)} ${item.phonetic ? " /" + escapeHtml(item.phonetic) + "/" : ""}</span>
       <div class="card-actions">
-        <button class="tiny-button" data-action="say" data-id="${escapeHtml(wordId(item))}">美音</button>
+        <button class="tiny-button" data-action="say" data-id="${escapeHtml(wordId(item))}" data-say="${escapeHtml(displayWord(item))}">美音</button>
         <button class="tiny-button" data-action="show-answer">看释义</button>
       </div>
       <div class="rate-row">
@@ -285,7 +463,7 @@
     const query = document.getElementById("wordSearch").value.trim().toLowerCase();
     const words = allWords().filter((item) => {
       const entry = entryFor(item);
-      const text = `${item.word} ${item.zh} ${item.pos} ${item.phonetic}`.toLowerCase();
+      const text = `${item.word} ${displayWord(item)} ${item.zh} ${item.pos} ${item.phonetic}`.toLowerCase();
       if (query && !text.includes(query)) return false;
       if (activeFilter === "favorite") return entry.favorite;
       if (activeFilter === "review") return entry.review || entry.wrong > entry.right;
@@ -297,11 +475,12 @@
       const entry = entryFor(item);
       return `<article class="word-card">
         <span class="meta">${item.custom ? "custom" : "day " + String(item.day).padStart(2, "0")} · ${escapeHtml(item.pos || "word")}</span>
-        <strong>${escapeHtml(item.word)}</strong>
+        <strong>${escapeHtml(displayWord(item))}</strong>
         <span>${escapeHtml(item.zh)}</span>
+        ${phraseFor(item) ? `<span class="meta">root word: ${escapeHtml(item.word)}</span>` : ""}
         <span class="meta">${item.phonetic ? "/" + escapeHtml(item.phonetic) + "/" : "en-US speech"}</span>
         <div class="card-actions">
-          <button class="tiny-button" data-action="say" data-id="${escapeHtml(wordId(item))}">美音</button>
+          <button class="tiny-button" data-action="say" data-id="${escapeHtml(wordId(item))}" data-say="${escapeHtml(displayWord(item))}">美音</button>
           <button class="tiny-button ${entry.favorite ? "warn" : ""}" data-action="favorite" data-id="${escapeHtml(wordId(item))}">${entry.favorite ? "已收藏" : "收藏"}</button>
           <button class="tiny-button good" data-action="known" data-id="${escapeHtml(wordId(item))}">会了</button>
           <button class="tiny-button warn" data-action="review" data-id="${escapeHtml(wordId(item))}">复习</button>
@@ -318,7 +497,7 @@
       return;
     }
     const normalized = items.map((item, index) => ({ ...item, id: item.id || `custom-${index}` }));
-    document.getElementById("customStory").innerHTML = `<p class="eyebrow">${escapeHtml(theme)}</p>${buildStory(normalized, state.theme)}`;
+    document.getElementById("customStory").innerHTML = `<p class="eyebrow">${escapeHtml(theme)} · English ${state.englishDensity || DEFAULT_DENSITY}%</p>${buildStory(normalized, state.theme, state.englishDensity)}`;
   }
 
   function renderAbout() {
@@ -382,7 +561,7 @@
   function copyAiPrompt() {
     const customWords = state.customWords.slice(0, 200).map((item) => `${item.word}|${item.zh}|${item.pos}`).join("\n");
     const theme = document.getElementById("customTheme").value.trim() || "任意吸引人的故事主题";
-    const prompt = `请用以下自定义词写一篇中文为主、英文词嵌入的英语学习故事。主题：${theme}。每个英文词都要自然出现，并在词后给中文提示。\n\n${customWords}`;
+    const prompt = `请用以下自定义词写一篇中文为主、英文词嵌入的英语学习故事。主题：${theme}。英文占比约 ${state.englishDensity || DEFAULT_DENSITY}%。常见搭配请尽量显示为短语，例如 listen 写成 listen to，depend 写成 depend on。每个英文词或短语都要自然出现，并在词后给中文提示。\n\n${customWords}`;
     navigator.clipboard?.writeText(prompt).then(() => toast("AI 重写提示已复制。")).catch(() => {
       exportFile("storyvocab-ai-prompt.txt", prompt, "text/plain;charset=utf-8");
       toast("无法复制，已下载提示文件。");
@@ -399,7 +578,7 @@
 
     const chipNode = event.target.closest(".word-chip");
     if (chipNode && !event.target.closest("button")) {
-      speak(chipNode.dataset.word);
+      speak(chipNode.dataset.say || chipNode.dataset.word);
       const item = findWord(chipNode.dataset.id);
       if (item) {
         entryFor(item).seen += 1;
@@ -414,7 +593,7 @@
     const action = actionNode.dataset.action;
     const item = actionNode.dataset.id ? findWord(actionNode.dataset.id) : null;
 
-    if (action === "say" && item) speak(item);
+    if (action === "say" && item) speak(actionNode.dataset.say || item);
     if (action === "favorite" && item) markFavorite(item);
     if (action === "known" && item) markKnown(item);
     if (action === "review" && item) markReview(item);
@@ -441,6 +620,10 @@
     }
     if (action === "export-progress") exportFile("storyvocab-progress.json", JSON.stringify(state, null, 2));
     if (action === "reset-view") window.scrollTo({ top: 0, behavior: "smooth" });
+    if (action === "speak-paragraph") {
+      const openingWords = Array.from(document.querySelectorAll("#storyText .word-en")).slice(0, 24).map((node) => node.textContent.trim()).join(", ");
+      speak(openingWords || "StoryVocab 3000");
+    }
     if (action === "import-custom") {
       const imported = parseCustom(document.getElementById("customInput").value);
       state.customWords.push(...imported);
@@ -483,6 +666,11 @@
   document.getElementById("themeSelect").addEventListener("change", (event) => {
     state.theme = event.target.value;
     saveAndRender("写作主题已切换。");
+  });
+
+  document.getElementById("densitySelect").addEventListener("change", (event) => {
+    state.englishDensity = Number(event.target.value) || DEFAULT_DENSITY;
+    saveAndRender(`英文占比已切换到 ${state.englishDensity}%。`);
   });
 
   document.getElementById("wordSearch").addEventListener("input", renderWordbook);

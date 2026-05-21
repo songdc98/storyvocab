@@ -106,7 +106,7 @@ p {
 }
 
 .hero-card label,
-.theme-row label {
+.control-field label {
   display: block;
   margin-bottom: 8px;
   color: var(--muted);
@@ -254,11 +254,17 @@ p {
   font-size: 1.45rem;
 }
 
-.theme-row {
+.reader-controls {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 12px;
+  align-items: end;
+  flex-wrap: wrap;
   margin-bottom: 12px;
+}
+
+.control-field {
+  display: grid;
+  gap: 6px;
 }
 
 .story-text p {
@@ -314,12 +320,23 @@ p {
 }
 
 .word-en {
-  font-size: 1.05em;
+  font-size: 1.07em;
 }
 
 .word-zh {
-  color: rgba(17, 24, 39, 0.72);
-  font-weight: 750;
+  color: rgba(17, 24, 39, 0.58);
+  font-size: 0.72em;
+  font-weight: 720;
+  transform: translateY(0.04em);
+}
+
+.word-chip.phrase .word-en {
+  letter-spacing: 0;
+}
+
+.story-text[data-density="90"] .word-zh {
+  color: rgba(17, 24, 39, 0.48);
+  font-size: 0.66em;
 }
 
 .word-menu {
@@ -551,7 +568,7 @@ p {
   }
 
   .section-heading,
-  .theme-row {
+  .reader-controls {
     flex-direction: column;
     align-items: stretch;
   }

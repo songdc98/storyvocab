@@ -74,22 +74,32 @@
               </div>
               <button class="button" data-action="speak-paragraph">朗读开头</button>
             </div>
-            <div class="theme-row">
-              <label for="themeSelect">写作主题</label>
-              <select id="themeSelect" class="select compact">
-                <option value="cinematic">电影悬疑</option>
-                <option value="campus">美国校园</option>
-                <option value="startup">科技创业</option>
-                <option value="comedy">幽默对白</option>
-                <option value="travel">公路旅行</option>
-              </select>
+            <div class="reader-controls">
+              <div class="control-field">
+                <label for="themeSelect">写作主题</label>
+                <select id="themeSelect" class="select compact">
+                  <option value="cinematic">电影悬疑</option>
+                  <option value="campus">美国校园</option>
+                  <option value="startup">科技创业</option>
+                  <option value="comedy">幽默对白</option>
+                  <option value="travel">公路旅行</option>
+                </select>
+              </div>
+              <div class="control-field">
+                <label for="densitySelect">英文占比</label>
+                <select id="densitySelect" class="select compact">
+                  <option value="30">30% 入门</option>
+                  <option value="50">50% 均衡</option>
+                  <option value="90">90% 沉浸</option>
+                </select>
+              </div>
             </div>
             <div id="storyText" class="story-text"></div>
           </article>
           <aside class="side-stack">
             <section class="info-box">
               <h3>今日玩法</h3>
-              <p>直接点彩色单词听美音。鼠标停留约半秒后出现更多操作：收藏、会了、复习。收藏和错词会在后续复习里加权出现。</p>
+              <p>直接点彩色单词或短语听美音。常见搭配会优先显示成 listen to、depend on 这类真实用法；英文占比可以从 30% 调到 90%。</p>
             </section>
             <section class="info-box">
               <h3>遗忘曲线</h3>

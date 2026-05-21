@@ -12,6 +12,8 @@ Live demo: https://songdc98.github.io/english-3000-story-learning/
 
 - **15-day learning plan**: 200 new words per day, 3000 words total.
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
+- **Adjustable English density**: switch the story between roughly 30%, 50%, and 90% English for a gradual difficulty climb.
+- **Phrase-aware chips**: common words can appear as natural phrases such as `listen to`, `depend on`, and `according to`.
 - **One-click en-US pronunciation**: click any colored word chip to hear American pronunciation through the browser Web Speech API.
 - **Low-friction word actions**: long hover over a word to open actions for favorite, known, and review.
 - **Spaced repetition**: 100 review slots per day, weighted by due date, favorites, and wrong words.
