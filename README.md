@@ -18,7 +18,9 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
 - **Authored daily episodes**: Day 02 now continues with a more coherent locked-library campus mystery while keeping all word chips interactive.
+- **Continuous-story direction**: if learners keep the same style, daily lessons should feel like chapters of one long vivid story rather than unrelated daily themes.
 - **Usage-aware contexts**: story sentences should place words in natural grammar, for example `below the notice board` instead of treating `below` as a standalone label.
+- **Story quality gate**: authored lessons are checked for word coverage, known awkward usage patterns, and repeated Chinese-English phrasing before release.
 - **Adjustable English density**: switch the story between roughly 30%, 50%, and 90% English for a gradual difficulty climb.
 - **Phrase-aware chips**: common words can appear as natural phrases such as `listen to`, `depend on`, and `according to`.
 - **Light and dark themes**: the app opens in dark mode by default and lets learners switch back to a bright reading theme.
@@ -186,8 +188,11 @@ Before opening a pull request, check:
 ```bash
 node --check src/app.js
 node --check examples/cloud-endpoint-template.js
+node tools/check_story_quality.mjs
 git diff --check
 ```
+
+If your environment has `npm`, the same checks are also available as `npm run check`.
 
 If a change affects UI, public wording, screenshots, deployment, privacy, or security behavior, update the matching docs and screenshots in the same pull request.
 

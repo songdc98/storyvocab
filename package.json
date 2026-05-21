@@ -25,6 +25,7 @@
     "chinese"
   ],
   "scripts": {
-    "build:data": "python3 tools/extract_lessons.py"
+    "build:data": "python3 tools/extract_lessons.py",
+    "check": "node --check src/app.js && node --check examples/cloud-endpoint-template.js && node tools/check_story_quality.mjs && git diff --check"
   }
 }
