@@ -19,6 +19,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
 - **Authored daily episodes**: Day 02 now continues with a more coherent locked-library campus mystery while keeping all word chips interactive.
+- **Hard-word quota**: Day 03 and later lessons front-load at least 30% harder words in the daily study set, so a 200-word day includes at least 60 challenge words.
 - **Continuous-story direction**: if learners keep the same style, daily lessons should feel like chapters of one long vivid story rather than unrelated daily themes.
 - **Usage-aware contexts**: story sentences should place words in natural grammar, for example `below the notice board` instead of treating `below` as a standalone label.
 - **Semantic-fit story writing**: unusual or abstract scenes are allowed, but each word chip must still belong to the sentence logic instead of being dropped in as decoration.

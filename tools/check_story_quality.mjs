@@ -1,26 +1,50 @@
 import fs from "node:fs";
 
 const app = fs.readFileSync("src/app.js", "utf8");
-const storyStart = app.indexOf("function dayTwoLockedLibraryStory");
-const storyEnd = app.indexOf("function buildStory", storyStart);
+const lessonsText = fs.readFileSync("src/lessons.js", "utf8");
+const lessonsMatch = lessonsText.match(/window\.LESSONS = (.*);\s*$/s);
 
-if (storyStart === -1 || storyEnd === -1) {
-  throw new Error("Could not find the authored Day 02 story block.");
+if (!lessonsMatch) {
+  throw new Error("Could not parse lesson data.");
 }
 
-const storyBlock = app.slice(storyStart, storyEnd);
-const refs = [...storyBlock.matchAll(/c\((\d+)\)/g)].map((match) => Number(match[1]));
-const uniqueRefs = new Set(refs);
-const missing = [];
-const duplicated = [...uniqueRefs].filter((index) => refs.filter((ref) => ref === index).length > 1);
+const lessons = JSON.parse(lessonsMatch[1]);
 
-for (let index = 0; index < 200; index += 1) {
-  if (!uniqueRefs.has(index)) missing.push(index);
+function blockBetween(startNeedle, endNeedle) {
+  const start = app.indexOf(startNeedle);
+  const end = app.indexOf(endNeedle, start);
+  if (start === -1 || end === -1) {
+    throw new Error(`Could not find story block: ${startNeedle}`);
+  }
+  return app.slice(start, end);
 }
 
-if (missing.length || duplicated.length || refs.length !== 200) {
-  throw new Error(`Day 02 word coverage failed. refs=${refs.length}, missing=${missing.join(",") || "none"}, duplicated=${duplicated.join(",") || "none"}`);
+function checkCoverage(label, storyBlock, expectedCount = 200) {
+  const refs = [...storyBlock.matchAll(/c\((\d+)\)/g)].map((match) => Number(match[1]));
+  const uniqueRefs = new Set(refs);
+  const missing = [];
+  const duplicated = [...uniqueRefs].filter((index) => refs.filter((ref) => ref === index).length > 1);
+
+  for (let index = 0; index < expectedCount; index += 1) {
+    if (!uniqueRefs.has(index)) missing.push(index);
+  }
+
+  if (missing.length || duplicated.length || refs.length !== expectedCount) {
+    throw new Error(`${label} word coverage failed. refs=${refs.length}, missing=${missing.join(",") || "none"}, duplicated=${duplicated.join(",") || "none"}`);
+  }
 }
+
+function extractDayThreeDifficultWords() {
+  const match = app.match(/3:\s*\[([\s\S]*?)\n\s*\]/);
+  if (!match) throw new Error("Could not find Day 03 difficult-word list.");
+  return [...match[1].matchAll(/"([^"]+)"/g)].map((matchItem) => matchItem[1].toLowerCase());
+}
+
+const dayTwoBlock = blockBetween("function dayTwoLockedLibraryStory", "function dayThreeRoadTripStory");
+const dayThreeBlock = blockBetween("function dayThreeRoadTripStory", "function buildStory");
+
+checkCoverage("Day 02", dayTwoBlock);
+checkCoverage("Day 03", dayThreeBlock);
 
 const bannedSnippets = [
   "答案在告示牌 ${c(2)}",
@@ -37,7 +61,7 @@ const bannedSnippets = [
 ];
 
 for (const snippet of bannedSnippets) {
-  if (storyBlock.includes(snippet)) {
+  if (dayTwoBlock.includes(snippet)) {
     throw new Error(`Found known awkward usage pattern: ${snippet}`);
   }
 }
@@ -56,8 +80,41 @@ const requiredSnippets = [
 ];
 
 for (const snippet of requiredSnippets) {
-  if (!storyBlock.includes(snippet)) {
+  if (!dayTwoBlock.includes(snippet)) {
     throw new Error(`Missing expected usage-aware phrase: ${snippet}`);
+  }
+}
+
+const dayThreeDifficultWords = new Set(extractDayThreeDifficultWords());
+const dayThreeWords = lessons[2].words;
+const priorityWords = dayThreeWords.filter((item) => dayThreeDifficultWords.has(item.word.toLowerCase())).slice(0, 60);
+
+if (priorityWords.length < 60) {
+  throw new Error(`Day 03 difficult-word target failed. expected at least 60, got ${priorityWords.length}.`);
+}
+
+const expectedDayThreeOpening = [
+  "California", "fishing", "member", "degrees", "captain", "hunting", "fence", "explained", "rolled", "laws",
+  "spelling", "climate", "atmosphere", "dictionary", "serve", "struck", "kill", "style", "nations", "brain"
+];
+
+const actualDayThreeOpening = priorityWords.slice(0, expectedDayThreeOpening.length).map((item) => item.word);
+if (actualDayThreeOpening.join("|") !== expectedDayThreeOpening.join("|")) {
+  throw new Error(`Day 03 opening difficulty order changed. got=${actualDayThreeOpening.join(",")}`);
+}
+
+const dayThreeRequiredSnippets = [
+  "${c(11)} 异常",
+  "空气里的 ${c(12)} 像烧焦的纸",
+  "this mark may ${c(14)} as a border code",
+  "裸露的 ${c(29)} wires",
+  "低沉 ${c(48)}：stay still",
+  "搜索框里的 ${c(176)}"
+];
+
+for (const snippet of dayThreeRequiredSnippets) {
+  if (!dayThreeBlock.includes(snippet)) {
+    throw new Error(`Missing Day 03 semantic-fit phrase: ${snippet}`);
   }
 }
 

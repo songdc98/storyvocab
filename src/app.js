@@ -11,6 +11,24 @@
   const DEFAULT_REVIEW_SLOTS = 100;
   const DEFAULT_DENSITY = 30;
   const DEFAULT_COLOR_MODE = "dark";
+  const HARD_WORD_SHARE = 0.3;
+  const HARD_WORD_FALLBACK_RANK = 1800;
+
+  const DAY_DIFFICULT_WORDS = {
+    3: [
+      "California", "fishing", "member", "degrees", "captain", "hunting", "fence", "explained", "rolled", "laws",
+      "spelling", "climate", "atmosphere", "dictionary", "serve", "struck", "kill", "style", "nations", "brain",
+      "fought", "shoulders", "hunt", "successful", "instrument", "supplies", "provided", "prevent", "factor", "bare",
+      "layer", "measured", "underline", "carries", "combine", "religious", "comfortable", "plus", "loss", "perform",
+      "consonant", "airplanes", "owner", "announced", "happening", "package", "positions", "effects", "command", "declared",
+      "chamber", "sources", "captured", "shelter", "opinion", "arrive", "require", "discussion", "satellites", "warning",
+      "floating", "depth", "shallow", "tales", "brick", "rhyme", "keyword", "theme", "culture", "archive"
+    ]
+  };
+
+  const DIFFICULT_WORD_SETS = Object.fromEntries(
+    Object.entries(DAY_DIFFICULT_WORDS).map(([day, words]) => [day, new Set(words.map((word) => word.toLowerCase()))])
+  );
 
   const PHRASE_OVERRIDES = {
     listen: "listen to",
@@ -259,6 +277,10 @@
     return clampNumber(state.reviewSlotCount, DEFAULT_REVIEW_SLOTS, 0, 200);
   }
 
+  function hardWordTarget(count) {
+    return Math.ceil(count * HARD_WORD_SHARE);
+  }
+
   function applyColorMode() {
     const mode = state.colorMode === "light" ? "light" : "dark";
     state.colorMode = mode;
@@ -390,10 +412,35 @@
       .join("");
   }
 
+  function dayThreeRoadTripStory(items, density) {
+    if (density >= 90) return "";
+    const c = (index) => items[index] ? chip(items[index]) : "";
+    const paragraphs = [
+      `苏念薇离开锁住的图书馆后，线索把她推向 ${c(0)} 海岸。旧车停在一个清晨的 ${c(1)} pier，车门上贴着“missing club ${c(2)}”的照片。温度计显示四十几 ${c(3)}，冷得像有人把海风磨成刀。船上的 ${c(4)} 不肯说话，只递给她一张非法 ${c(5)} map；地图边缘画着一道断裂的 ${c(6)}。他终于 ${c(7)}：那晚一辆卡车 ${c(8)} 过公路，违反了三条州 ${c(9)}，车牌的 ${c(10)} 还故意写错。更糟的是，沿途 ${c(11)} 异常，空气里的 ${c(12)} 像烧焦的纸。她翻出旧 ${c(13)}，查到一个词：this mark may ${c(14)} as a border code。她刚读完，a pebble ${c(15)} the car window，远处有人喊：they will ${c(16)} the witness if she keeps that ${c(17)} of investigation. 这不像普通逃亡，像几个 ${c(18)} 的情报部门正在抢同一份 ${c(19)} scan。`,
+      `同行的男孩曾经 ${c(20)} through a custody case，肩上还留着伤；他的 ${c(21)} 一紧，就说明附近有人在 ${c(22)} them。第一次追踪竟然 ${c(23)}：他们在废弃收费站找到一件奇怪 ${c(24)}，旁边堆着 emergency ${c(25)}。纸条写着：${c(26)} you keep the route secret, this will ${c(27)} another disappearance。苏念薇明白，车速不是唯一 ${c(28)}；裸露的 ${c(29)} wires、潮湿的地图 ${c(30)}、被精准 ${c(31)} 的油量，都在说同一件事。她用红笔 ${c(32)} the bridge name，因为那座桥 ${c(33)} the smuggled files。要把线索 ${c(34)} with Day 02 的账本，她必须进入一个废弃 ${c(35)} camp。营地并不 ${c(36)}，只有旧毯子、碎玻璃，${c(37)} 一张写着赔偿 ${c(38)} 的名单。深夜，他们被迫 ${c(39)} a fake ceremony，假装只是游客。`,
+      `营地门口的木牌写着一个奇怪 ${c(40)} code，像有人把辅音当密码。头顶的 ${c(41)} 低低飞过，机身没有编号。旅店 ${c(42)} 终于 ${c(43)}：今晚发生的 ${c(44)} 不是事故，而是一次交换。她收到一个湿透的 ${c(45)}，里面塞着六个 ${c(46)} coordinates 和一张被海水泡皱的财物清单；所有 ${c(47)} 都指向同一个人。对讲机里传来低沉 ${c(48)}：stay still。警方却刚刚 ${c(49)} the road closed，山洞 ${c(50)} 里只剩 echo。她追问 ${c(51)}，可每个来源都被人 ${c(52)} or erased。暴雨把他们逼进临时 ${c(53)}，每个人都有 ${c(54)}，却没人敢说。要在天亮前 ${c(55)} at the border, they would ${c(56)} evidence, ${c(57)}, and one satellite photo. 天空里的 ${c(58)} flickered，手机跳出最后一条 ${c(59)}。`,
+      `这次他们 ${c(60)} wait for permission；该做的事早已 ${c(61)}。苏念薇把图书馆 ${c(62)} 放在膝上，一个 ${c(63)} journalist 的 ${c(64)} came from the road ${c(65)} them。第 ${c(66)} 个隧道口什么都没有，却像藏着 ${c(67)}。风很 ${c(68)}，把一 ${c(69)} torn poster 拍在挡风玻璃上。两个失踪 ${c(70)} 的照片被雨水泡得发 ${c(71)}；旁边有一枚 ${c(72)} charm 和一块坏掉的 ${c(73)}。她知道这是第 ${c(74)} 个标记，也是第一个 ${c(75)} clue。夜空 ${c(76)} 得像一张展开的布，远处 ${c(77)} desert 里闪着 ${c(78)}。路边的 ${c(79)} motel 却挂着“no vacancy”，像专门给他们看的笑话。`,
+      `她让同伴 ${c(80)} to the radio：不同 ${c(81)} 每隔十分钟播一次暗号，每 ${c(82)} mile 改变一个 ${c(83)} grid。车的 ${c(84)} 不能太快，否则前方的 ${c(85)} herd 会惊起来。两张地图的 ${c(86)} 在于，旧地图上标着一篮 ${c(87)}，新地图却把那里改成了 ${c(88)} market。当地 ${c(89)} owner 在镇子 ${c(90)} 等他们，约好 ${c(91)} at midnight。谈话的 ${c(92)} 不是钱，${c(93)} 是安全；没有人想参加这场 ${c(94)}，可几个 ${c(95)} 都被卷进来。最后的 ${c(96)} 很清楚：只要有人还 ${c(97)} in the doorway，仓库就会继续 ${c(98)} false records in neat ${c(99)}。`,
+      `仓库后面堆着 ${c(100)}、褐色 ${c(101)} crates，还有一个自称 ${c(102)} 的司机。苏念薇准备 ${c(103)} the yard，却先 ${c(104)} a warning to the captain。她并不 ${c(105)} about being brave；油箱里的 ${c(106)} 快没了，身边那个已经 ${c(107)} silent 的男孩突然问：do you ever ${c(108)} why the papers were hidden in a ${c(109)}？答案像一把 ${c(110)}，打开的却是 ${c(111)}。她想起自己的 ${c(112)}，想起海盐 ${c(113)} on her coat。门后有人 ${c(114)} down，影子晃了 ${c(115)}。旧 ${c(116)} 正播着事故新闻，主持人用了一个奇怪 ${c(117)}，几乎 ${c(118)} anyone noticed except ${c(119)}。`,
+      `他们的车 ${c(120)} down near a diner，仪表盘只剩 ${c(121)} tank。霓虹 ${c(122)} 在雨里化开，像第五个 ${c(123)}。如果今晚有人 ${c(124)}，明天就没人能作证；如果活到 ${c(125)}，案子就会变成公开记录。苏念薇负责 ${c(126)} the files in ${c(127)}，男孩负责买 ${c(128)}：一个 ${c(129)}、一份还在 ${c(130)} 的 ${c(131)}，以及写着 ${c(132)} route across ${c(133)} 的旧剪报。柜台后的女人笑得很 ${c(134)}，给他们一杯 ${c(135)}，又叫来 ${c(136)}。她说自己来自 ${c(137)}，小时候在 ${c(138)} 边见过同一辆车；车身上喷着 ${c(139)}。`,
+      `${c(140)} 不是他的真名，他的 ${c(141)} 是在州际赛场上把证据藏进 ${c(142)} helmet。路边一根 ${c(143)} 上贴着去 ${c(144)} 的旧船票，背面沾着 ${c(145)} 和 ${c(146)}。有人曾经 ${c(147)} 他们一条安全路线，却在河边被一只 ${c(148)} 惊动。新路比地图短得多，actually ${c(149)}，却要穿过 ${c(150)} repair shop。日期写着 ${c(151)}；男孩跪下检查自己的 ${c(152)}，发现地上散着给 ${c(153)} 的玩具车。旁边的 ${c(154)} 早把真相画成漫画：${c(155)}、black ${c(156)}、a broken ${c(157)}, ${c(158)}. Every clue was ridiculous, but every one was useful, even the ${c(159)} sticker on the wall.`,
+      `太阳 ${c(160)} 时，他们终于赶到夜校。几间 ${c(161)} 还亮着灯，桌上有一只 ${c(162)}、一只冷掉的 ${c(163)}，窗外蹲着一只 ${c(164)}。河边的 ${c(165)} 半沉半浮，记录仪仍在 ${c(166)}。老师让学生测量水的 ${c(167)}，却故意写成 ${c(168)}；她的 ${c(169)} 说，七十年前，${c(170)} 个家庭靠这些 ${c(171)} 活下来。校墙是红 ${c(172)}，黑板上写着一段押 ${c(173)} 的暗号。苏念薇把证据上传到 ${c(174)}，又切到 ${c(175)} backup。搜索框里的 ${c(176)} 是今晚的 ${c(177)}：how a local ${c(178)} became an ${c(179)} nobody could delete.`,
+      `最后一页只写着 ${c(180)} one more thing: the witness kept ${c(181)} promise。${c(182)} roads were ${c(183)} the same crime, but there was ${c(184)} proof ${c(185)} than anyone expected. A ${c(186)} file opened, then ${c(187)} witness added ${c(188)} clue. 苏念薇 ${c(189)} the wheel while three ${c(190)} behind her ${c(191)} up flares。她 ${c(192)} the whole ${c(193)} through the windshield：一个 ${c(194)} who ${c(195)} away, the number ${c(196)} on a bridge, a ${c(197)} road, and a truth her father had ${c(198)} her to keep ${c(199)} the dark. 天亮时，车没有停；故事也没有停。`
+    ];
+    return paragraphs
+      .filter((_, paragraphIndex) => items[paragraphIndex * 20])
+      .map((paragraph) => `<p>${paragraph}</p>`)
+      .join("");
+  }
+
   function buildStory(items, selectedTheme, selectedDensity = state.englishDensity) {
     const theme = selectedTheme || state.theme || frameCycle[state.currentDay - 1] || "cinematic";
     const density = Number(selectedDensity) || DEFAULT_DENSITY;
-    const authored = state.currentDay === 2 ? dayTwoLockedLibraryStory(items, density) : "";
+    const authored = state.currentDay === 2
+      ? dayTwoLockedLibraryStory(items, density)
+      : state.currentDay === 3
+        ? dayThreeRoadTripStory(items, density)
+        : "";
     if (authored) return authored;
     const frames = storyFrames[theme] || storyFrames.cinematic;
     const paragraphs = [];
@@ -413,8 +460,31 @@
     return data.words.map((item) => ({ ...item, day: data.day, id: `d${data.day}-${item.word}` }));
   }
 
+  function isDifficultWord(item, day) {
+    const curated = DIFFICULT_WORD_SETS[String(day)];
+    if (curated?.has(String(item.word || "").toLowerCase())) return true;
+    return Number(item.globalRank) >= HARD_WORD_FALLBACK_RANK;
+  }
+
+  function difficultyBalancedItems(data, items, count) {
+    if (data.day < 3) return items;
+    const target = hardWordTarget(count);
+    const curated = DIFFICULT_WORD_SETS[String(data.day)];
+    const curatedPriority = curated
+      ? items.filter((item) => curated.has(String(item.word || "").toLowerCase()))
+      : [];
+    const curatedIds = new Set(curatedPriority.map(wordId));
+    const fallbackPriority = items.filter((item) => !curatedIds.has(wordId(item)) && isDifficultWord(item, data.day));
+    const priority = curatedPriority.concat(fallbackPriority).slice(0, target);
+    if (!priority.length) return items;
+    const priorityIds = new Set(priority.map(wordId));
+    return priority.concat(items.filter((item) => !priorityIds.has(wordId(item))));
+  }
+
   function currentStudyItems() {
-    return currentLessonItems().slice(0, dailyNewCount());
+    const data = lesson();
+    const count = dailyNewCount();
+    return difficultyBalancedItems(data, currentLessonItems(), count).slice(0, count);
   }
 
   function allWords() {
@@ -558,6 +628,7 @@
     const entries = availableWords.map((item) => state.words[wordId(item)]).filter(Boolean);
     const todayItems = currentStudyItems();
     const todayEntries = todayItems.map(entryFor);
+    const difficultCount = todayItems.filter((item) => isDifficultWord(item, state.currentDay)).length;
     const seen = entries.filter((entry) => entry.seen > 0).length;
     const favorites = entries.filter((entry) => entry.favorite).length;
     const due = entries.filter((entry) => (entry.seen > 0 || entry.favorite || entry.review || entry.wrong > 0 || entry.right > 0 || entry.known) && (entry.due <= state.currentDay || entry.review)).length;
@@ -566,7 +637,7 @@
     document.getElementById("metricSeen").textContent = seen;
     document.getElementById("metricFav").textContent = favorites;
     document.getElementById("stateSummary").textContent =
-      `文章新词已写入 ${todayItems.length}/${dailyNewCount()} 个；今日已互动 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；复习槽 ${reviewSlotCount()} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
+      `文章新词已写入 ${todayItems.length}/${dailyNewCount()} 个；难词 ${difficultCount}/${todayItems.length} 个（目标至少 ${hardWordTarget(todayItems.length)} 个）；今日已互动 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；复习槽 ${reviewSlotCount()} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
   }
 
   function renderReview() {
