@@ -4,6 +4,8 @@ StoryVocab 3000 is an offline-first, zero-dependency web app for learning 3000 h
 
 It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. Each lesson mixes frequent words by rank and scene, embeds them in a story, and adds spaced repetition, favorites, wrong-word tracking, and one-click American English pronunciation.
 
+Live demo: https://songdc98.github.io/english-3000-story-learning/
+
 ![Story view](docs/screenshots/story.png)
 
 ## Features
@@ -58,7 +60,7 @@ http://127.0.0.1:8765
 2. Upload or push this project folder.
 3. In the repository settings, open **Pages**.
 4. Choose **Deploy from a branch**.
-5. Select branch `main` and folder `/root`.
+5. Select branch `main` and folder `/ (root)`.
 6. Save. GitHub will publish the app as a public website.
 
 ## Custom Wordbook Format
