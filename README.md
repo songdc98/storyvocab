@@ -4,9 +4,9 @@ StoryVocab is an offline-first, zero-dependency web app for learning English voc
 
 StoryVocab 是一个离线优先、零依赖的英语词汇学习网页。它用生动故事、彩色单词卡片、一键美音发音、遗忘曲线复习和自定义词本，帮助中文学习者把单词放进更容易记住的语境里。
 
-It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. The default pack includes a 15-day high-frequency vocabulary course. The built-in authored path now maintains two official tracks: an American-campus story line and a US workplace/business English line. Custom words, custom prompts, and cloud-generated rewrites remain open extension points.
+It is designed for Chinese-speaking learners who want a more memorable alternative to alphabetical word lists. The default pack now has two maintained course lines: an American-campus high-frequency vocabulary story line and an independent US workplace/business English line with its own business words, phrases, and sentence patterns. Custom words, custom prompts, and cloud-generated rewrites remain open extension points.
 
-这个项目主要面向中文学习者，目标是替代那种按字母顺序硬背单词的枯燥方式。默认课程包含 15 天高频词学习内容；内置主线现在正式维护两条方向：美国校园故事线和美国职场/商务英语线。自定义词本、自定义主题和云端大模型重写接口仍然保留给需要扩展的人。
+这个项目主要面向中文学习者，目标是替代那种按字母顺序硬背单词的枯燥方式。默认课程现在维护两条课程线：美国校园线继续学习通用高频词，美国职场/商务英语线使用独立商务词表，包含职场词汇、商务短语和常用句式。自定义词本、自定义主题和云端大模型重写接口仍然保留给需要扩展的人。
 
 Live demo: https://songdc98.github.io/storyvocab/
 
@@ -27,8 +27,8 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Story-first reading**: words are mixed by frequency and story context instead of alphabetic order.
 - **Low-value target filtering**: Day 01 no longer treats glue words like `the`, `what`, `this`, single letters, or standalone names as the main learning chips.
 - **Gentle difficulty ramp**: Day 01 stays easy to enter, then later days surface slightly richer words earlier in each story.
-- **Two maintained tracks**: the built-in course now officially maintains American-campus story learning and US workplace/business English, instead of claiming every optional theme is fully written.
-- **Authored daily episodes**: Day 01 includes both a storm-night campus scholarship gamble and a Bay Area tech-workplace business article; Day 02 continues the campus investigation in the locked library while keeping all word chips interactive.
+- **Two maintained course lines**: the campus line uses the original high-frequency vocabulary course, while the business English line uses a separate business vocabulary and sentence-pattern pack.
+- **Authored daily episodes**: Day 01 includes both a storm-night campus scholarship gamble and a Bay Area tech-workplace business article; the business article covers 200 independent workplace targets instead of reusing the campus word list.
 - **Hard-word quota**: Day 03 and later lessons front-load at least 30% harder words in the daily study set, so a 200-word day includes at least 60 challenge words.
 - **Continuous-story direction**: if learners keep the same style, daily lessons should feel like chapters of one long vivid story rather than unrelated daily themes.
 - **Usage-aware contexts**: story sentences should place words in natural grammar, for example `below the notice board` instead of treating `below` as a standalone label.
@@ -54,8 +54,8 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **故事优先**：单词按频率、难度和故事语境混合出现，不按字母顺序硬排。
 - **低价值词过滤**：Day 01 不再把 `the`、`what`、`this`、单个字母或孤立人名当成主要学习卡片。
 - **难度渐进**：第一天容易进入，后面逐渐把更有学习价值、更有挑战的词提前展示。
-- **两条正式维护线**：内置课程现在正式维护美国校园故事学习和美国职场/商务英语，不假装每个可选主题都已经完整写好。
-- **手写章节**：Day 01 同时包含暴雨夜校园奖学金赌约和湾区科技职场商务英语文章；Day 02 延续到锁住的图书馆，并保持所有彩色词可交互。
+- **两条正式课程线**：校园线使用原来的通用高频词课程；商务英语线使用另一套独立商务词汇和句式包，不再只是把同一批词换个故事风格。
+- **手写章节**：Day 01 同时包含暴雨夜校园奖学金赌约和湾区科技职场商务英语文章；商务文章覆盖 200 个独立职场目标词/短语/句式，而不是复用校园词表。
 - **难词比例**：Day 03 及后续课程会优先保证至少 30% 的较难词，一个 200 词日里至少有 60 个挑战词。
 - **连续故事方向**：如果学习者保持同一风格，每天应像同一部长故事的新章节，而不是互不相关的主题短文。
 - **用法贴合**：单词要放在自然语法里，例如 `below the notice board`，而不是把 `below` 当孤立标签。

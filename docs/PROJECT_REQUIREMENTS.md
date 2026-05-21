@@ -4,7 +4,8 @@ This file records the maintainer requirements that should survive context resets
 
 ## Core Learning Experience
 
-- The built-in authored course maintains two official tracks: American-campus story learning and US workplace/business English.
+- The built-in authored course maintains two official course lines: American-campus high-frequency vocabulary and US workplace/business English.
+- The business English course must use an independent business vocabulary, phrase, and sentence-pattern dataset rather than reusing the campus/high-frequency word list with a different story style.
 - Other genres or topics are extension interfaces for custom wordbooks or optional LLM connectors, not promises that every theme is fully authored.
 - Future authored-story updates should update both maintained tracks when the changed lesson or behavior affects story content.
 - The business English track should cover US workplace communication, tech-industry collaboration, overseas work settings, commute/traffic, meetings, daily professional phrases, follow-up emails, ownership, alignment, and escalation language.
@@ -16,6 +17,7 @@ This file records the maintainer requirements that should survive context resets
 ## Vocabulary Policy
 
 - Default daily load is 200 new words plus 100 review slots, and both counts must remain adjustable.
+- Each maintained course line can have its own word source and day count; switching course lines must switch the active vocabulary set, wordbook, review pool, and connector payload.
 - The story status must distinguish words written into the story from words the learner has clicked or reviewed.
 - Avoid alphabetic ordering for learning flow. Mix words by frequency, difficulty, and story usefulness.
 - Do not use low-value glue words such as `the`, `what`, `this`, single letters, standalone names, or obvious function words as primary target chips when better words are available.

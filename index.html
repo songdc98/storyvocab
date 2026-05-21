@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>StoryVocab | 故事化互动英语词汇学习</title>
   <meta name="description" content="一个零依赖、可离线使用的互动英语词汇学习网页：用生动故事、彩色词块、美音朗读、收藏错词、遗忘曲线和自定义词本记单词。">
-  <meta name="keywords" content="StoryVocab,英语单词,高频词,美音发音,spaced repetition,English vocabulary,GitHub Pages,英语学习工具,LLM connector,cloud function,story-based learning">
+  <meta name="keywords" content="StoryVocab,英语单词,高频词,商务英语,美音发音,spaced repetition,business English,English vocabulary,GitHub Pages,英语学习工具,LLM connector,cloud function,story-based learning">
   <meta name="theme-color" content="#101626">
   <meta property="og:title" content="StoryVocab">
-  <meta property="og:description" content="用生动故事和彩色词块学习英语词汇，默认内置 15 天高频词课程，也支持自定义词本。">
+  <meta property="og:description" content="用生动故事和彩色词块学习英语词汇，内置美国校园高频词课程和独立美国商务英语词表，也支持自定义词本。">
   <meta property="og:type" content="website">
   <script>
     try {
@@ -26,7 +26,7 @@
       "@type": "LearningResource",
       "name": "StoryVocab",
       "learningResourceType": "Interactive vocabulary web app",
-      "teaches": "American English high-frequency vocabulary",
+      "teaches": "American English high-frequency vocabulary and US workplace business English",
       "inLanguage": ["zh-CN", "en-US"],
       "license": "https://opensource.org/license/mit/"
     }
@@ -97,7 +97,7 @@
             </div>
             <div class="reader-controls">
               <div class="control-field">
-                <label for="themeSelect">写作主题</label>
+                <label for="themeSelect">课程线</label>
                 <select id="themeSelect" class="select compact">
                   <option value="campus">美国校园</option>
                   <option value="business">美国商务英语</option>
@@ -125,7 +125,7 @@
           <aside class="side-stack">
             <section class="info-box">
               <h3>今日玩法</h3>
-              <p>内置主线正式维护“美国校园”和“美国商务英语”两条线。直接点彩色单词或短语听美音；今日新词、复习槽和英文占比都可以调节。</p>
+              <p>内置课程正式维护两套独立词表：“美国校园”学通用高频词，“美国商务英语”学职场词汇、会议句式、邮件表达和科技行业沟通。直接点彩色单词或短语听美音；今日新词、复习槽和英文占比都可以调节。</p>
             </section>
             <section class="info-box">
               <h3>遗忘曲线</h3>
@@ -295,6 +295,7 @@ window.StoryVocabAPI.speak("listen to");</code></pre>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="src/lessons.js"></script>
+  <script src="src/business-lessons.js"></script>
   <script src="src/app.js"></script>
 </body>
 </html>

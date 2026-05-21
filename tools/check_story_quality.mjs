@@ -3,13 +3,16 @@ import fs from "node:fs";
 const app = fs.readFileSync("src/app.js", "utf8");
 const indexHtml = fs.readFileSync("index.html", "utf8");
 const lessonsText = fs.readFileSync("src/lessons.js", "utf8");
+const businessLessonsText = fs.readFileSync("src/business-lessons.js", "utf8");
 const lessonsMatch = lessonsText.match(/window\.LESSONS = (.*);\s*$/s);
+const businessLessonsMatch = businessLessonsText.match(/window\.BUSINESS_LESSONS = (.*);\s*$/s);
 
-if (!lessonsMatch) {
+if (!lessonsMatch || !businessLessonsMatch) {
   throw new Error("Could not parse lesson data.");
 }
 
 const lessons = JSON.parse(lessonsMatch[1]);
+const businessLessons = JSON.parse(businessLessonsMatch[1]);
 
 function blockBetween(startNeedle, endNeedle) {
   const start = app.indexOf(startNeedle);
@@ -97,6 +100,47 @@ if (blockedDayOneWords.length) {
   throw new Error(`Day 01 still contains low-value target chips: ${blockedDayOneWords.join(",")}`);
 }
 
+const businessDayOneWords = businessLessons[0]?.words || [];
+if (businessDayOneWords.length !== 200) {
+  throw new Error(`Business Day 01 must contain 200 independent business targets. got=${businessDayOneWords.length}`);
+}
+
+const campusDayOneSet = new Set(dayOneWords.map((item) => String(item.word).toLowerCase()));
+const businessOverlap = businessDayOneWords.filter((item) => campusDayOneSet.has(String(item.word).toLowerCase()));
+if (businessOverlap.length > 5) {
+  throw new Error(`Business Day 01 overlaps too much with campus Day 01: ${businessOverlap.map((item) => item.word).join(",")}`);
+}
+
+const requiredBusinessTargets = [
+  "calendar invite",
+  "stand-up",
+  "action item",
+  "stakeholder",
+  "follow-up",
+  "please find attached",
+  "renewal",
+  "customer success",
+  "SLA",
+  "deployment",
+  "Could you clarify",
+  "Let's align",
+  "by end of day",
+  "unit economics",
+  "traffic congestion",
+  "decision maker",
+  "acceptance criteria",
+  "conditional clause",
+  "executive summary",
+  "value proposition"
+];
+
+const businessTargetSet = new Set(businessDayOneWords.map((item) => item.word));
+for (const target of requiredBusinessTargets) {
+  if (!businessTargetSet.has(target)) {
+    throw new Error(`Business Day 01 is missing expected business target: ${target}`);
+  }
+}
+
 const dayOneRequiredSnippets = [
   "West Hall",
   "missing scholarship ${c(7)}",
@@ -119,12 +163,14 @@ const dayOneBusinessRequiredSnippets = [
   "follow-up email",
   "Let's align",
   "traffic",
-  "the note ${c(175)} the signature line",
+  "${c(80)} the owner",
+  "${c(168)} 写成 if the deployment fails",
+  "send it in writing",
   "US workplace business English"
 ];
 
 for (const snippet of dayOneBusinessRequiredSnippets) {
-  if (!dayOneBusinessBlock.includes(snippet) && !app.includes(snippet)) {
+  if (!dayOneBusinessBlock.includes(snippet) && !app.includes(snippet) && !businessLessonsText.includes(snippet)) {
     throw new Error(`Missing Day 01 business-English phrase: ${snippet}`);
   }
 }

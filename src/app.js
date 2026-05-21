@@ -2,6 +2,7 @@
   "use strict";
 
   const LESSONS = window.LESSONS || [];
+  const BUSINESS_LESSONS = window.BUSINESS_LESSONS || [];
   const DATA_LICENSES = window.DATA_LICENSES || {};
   const STORE_KEY = "storyvocab.progress.v3";
   const LEGACY_STORE_KEYS = ["storyvocab3000.progress.v2"];
@@ -327,8 +328,25 @@
     }
   }
 
+  function courseKey(theme = state.theme) {
+    return safeTheme(theme) === "business" && BUSINESS_LESSONS.length ? "business" : "campus";
+  }
+
+  function lessonsForTheme(theme = state.theme) {
+    return courseKey(theme) === "business" ? BUSINESS_LESSONS : LESSONS;
+  }
+
+  function scopedWordId(course, day, item) {
+    const prefix = course === "business" ? "business-" : "";
+    return item.id || `${prefix}d${day}-${item.word}`;
+  }
+
   function lesson() {
-    return LESSONS[state.currentDay - 1] || LESSONS[0];
+    const lessons = lessonsForTheme();
+    const found = lessons.find((item) => item.day === state.currentDay);
+    if (found) return found;
+    state.currentDay = lessons[0]?.day || 1;
+    return lessons[0] || LESSONS[0];
   }
 
   function wordId(item) {
@@ -447,16 +465,16 @@
     if (density >= 90) return "";
     const c = (index) => items[index] ? chip(items[index]) : "";
     const paragraphs = [
-      `周一早高峰，湾区通勤车厢里的 ${c(0)} 混着咖啡味，站台广播的 ${c(1)} 像已经开始催 KPI。林夏从合租 ${c(2)} 的 east ${c(3)} 冲出来，手机上还开着 ${c(4)} dashboard；昨 ${c(5)} 她几乎睡在 conference ${c(6)}。公司 CFO 留下一条消息：missing client ${c(7)} must be explained before the board。她刚推开玻璃 ${c(8)}，VP 就让她 ${c(9)} the morning standup。${c(10)} desk 前，meeting had already ${c(11)}；窗外的 ${c(12)} 把外卖袋吹到路边，Bay Bridge traffic 已经堵成红线。${c(13)} 只是普通事故，可一个陌生 ${c(14)} 已经把 termination ${c(15)} 贴在白板上。第一 ${c(16)} funding review 要开始，她和两个 work ${c(17)} 都被拖进来。拖得 ${c(18)}，expense ${c(19)} 会自动锁账。`,
-      `她要 ${c(20)} with the agenda，产品总监 ${c(21)} 两台电脑冲进总部 ${c(22)}。一楼信号很 ${c(23)}，她边 ${c(24)} backlog，边把咖啡的 ${c(25)} 捂在手心。下周的 ${c(26)} budget 被暂停，连她散乱的 ${c(27)} 和发抖的 ${c(28)} 都来不及管；她 ${c(29)} 想先把局面稳住。三个 contractor 的 ${c(30)} 被这笔款项影响，她一边 ${c(31)}，一边把最 ${c(32)} 的客户投诉写到屏幕上：who can ${c(33)} the broken invoice？invoice 的 ${c(34)} 不对，deadline 只差 one ${c(35)}。公司史上 ${c(36)} 的 churn risk ${c(37)} straight to a ${c(38)} counsel call。她换上备用 ${c(39)}，准备进第一场 escalation meeting。`,
-      `Scrum master 早就 ${c(40)} office politics，没人愿意承认自己 ${c(41)} escalation。客户邮件写得 ${c(42)} polite，却和上周 case ${c(43)} to an old complaint。客服经理 ${c(44)} the account history，整个 room 安静得 ${c(45)}。西 ${c(46)} office 刚 ${c(47)} a revised deck，一位 senior ${c(48)} 故意吸走所有 ${c(49)}，又 ${c(50)} a slide under the keyboard。slide 上画着 project ${c(51)}，背面却是 legal ${c(52)} 的门牌。林夏沿走廊 ${c(53)}，手里攥着一条 badge ${c(54)}，穿过 downtown ${c(55)}。${c(56)} to the note, someone would get ${c(57)} if the contract's four core ${c(58)} were not signed before the team crossed the market ${c(59)}。`,
-      `她给在纽约分部的 ${c(60)} 发消息，对方立刻 ${c(61)} to a broken spreadsheet。共享表里的 ${c(62)} 被雨水泡坏的笔记本误同步，字段名还是 ${c(63)} 的。她揉了揉 ${c(64)}，用 ${c(65)} 点开 audit log：someone was ${c(66)} fake discounts into the frame。要救这单，不只需要 executive ${c(67)}，还要知道 each team's ${c(68)} response time。林夏的海外项目 ${c(69)} 终于派上用场；不同 ${c(70)}、供应商、客户成功群突然变得 ${c(71)}。她必须 ${c(72)} capture next steps。会议桌上的 ${c(73)} cable、${c(74)} wrong assumptions、dashboard 上 sudden ${c(75)}，全部指向 the ${c(76)} quarter。她先 ${c(77)} the account；usage ${c(78)} fast toward a bad ${c(79)}。`,
-      `客户的 onboarding ${c(80)} 映着她最 ${c(81)} 的一句商务英语：Could you clarify the owner？可 sales ${c(82)} 正逼她五分钟内给答案。Berlin office from ${c(83)} 也加入电话，工程师揉着 ${c(84)}，讨论 incident ${c(85)}。屏幕上是一片 ${c(86)} market map，林夏咬住 ${c(87)}，终于找到一个 quiet ${c(88)} analyst who kept ${c(89)} up during calls and never touched his coffee ${c(90)}。他的 dashboard 几乎 ${c(91)}，甚至把 climate ${c(92)} demo 和 employee ${c(93)} survey 拼在一起。legal review 被人 ${c(94)} across the table，HR 只说了一声 ${c(95)}，training deck 里的 ${c(96)} exercise 就变成了暗号。大厅里那只 inflatable ${c(97)} mascot 挡住 security ${c(98)}，门外 ${c(99)} 已经堵成一条线。`,
-      `林夏 ${c(100)} understood the pattern：finance ${c(101)} closed the account，因为付款流始终保持 ${c(102)}。真正的问题不是某个 ${c(103)}，而是整个 ${c(104)}。投影灯的 ${c(105)} 刺得人眼疼，她仍保留 ${c(106)}，直到 audit trail ${c(107)} the hidden approval flow。server ${c(108)} 忽然报警，a ${c(109)} freeze hit production。碳排项目里的 ${c(110)} credit 被错误 ${c(111)} as marketing spend，旁边一张 ${c(112)} sticky note 指向 ${c(113)} revenue。这个客户原本来自 Texas ${c(114)} project，contract 上 ${c(115)} a strip of email，说明账不是 ${c(116)} lost。那条 ${c(117)} of evidence、刺耳的 ${c(118)} hold music，和必须 ${c(119)} exact timing 的 release window，把所有人绑在同一个 call 里。`,
-      `她刚冲进 finance war room，脚下一滑，差点 ${c(120)}。问题 ${c(121)} of three refunds, two reversed invoices, and one hidden procurement note。文件作者 ${c(122)} 没有签名，folders were ${c(123)} by quarter。会议室里的 chair ${c(124)} 自己晃动，CEO 的声音突然变得 ${c(125)}。几个 accounting ${c(126)} 后，controller ${c(127)}，把装着 stress ${c(128)} 的袋子推给她。袋底 ${c(129)} 了一张总部 ${c(130)} 照片，照片背面写着一个 negotiation ${c(131)}。原来新人虽然受过 ${c(132)}，性格也够 ${c(133)}，却不懂这套老 ${c(134)}。他们把所有 ${c(135)} 摊开，发现被 ${c(136)} 的不只是发票：隔壁 ${c(137)} 的 inbox 也有提醒，company ${c(138)} 写过一首讽刺 bonus ${c(139)} 的短诗。`,
-      `关键 access 是谁 ${c(140)} 的？答案 ${c(141)} 指向 ${c(142)} security ${c(143)}。摄像头里有个像 office mascot 的 ${c(144)}，背着 ${c(145)} laptop bag，还 ${c(146)} a story about escaped ${c(147)} from a biotech client。包里没有蛇，只有 ${c(148)} signed copies、一只 brass ${c(149)}、一只旧 ${c(150)}，和一盒被 ${c(151)} 的 keycards。每个 folder 都画着小 ${c(152)}，最后一个地址却指向 employee ${c(153)}。晚上十点，她 ${c(154)} the last shuttle；车厢四个 ${c(155)} 都贴着 camera labels。她决定 ${c(156)} a final negotiation in ${c(157)}。地上有一张 ${c(158)} of paper，边缘 ${c(159)} like a mountain road。`,
-      `客户 VP ${c(160)} accepted the call，因为 missing context was ${c(161)}。internal memo ${c(162)} three risks, but someone hid it in a shared storage ${c(163)} behind the office。这套 workaround was ${c(164)}，even the Egypt market lead from ${c(165)} and account manager ${c(166)} joined。CFO 的手一直 ${c(167)}，大家的 ${c(168)} 都像被 deadline 揪住。她打开 ${c(169)} incident board，发现 backup in a private ${c(170)}，允许 team ${c(171)} the workflow without approval。午夜前，路径终于清楚：${c(172)} sign-off、emergency ${c(173)} plan、一条 approval ${c(174)}，and the note ${c(175)} the signature line。${c(176)} that note, nobody should edit the ${c(177)}。她按 ${c(178)} checklist 找到 original ${c(179)}，把 follow-up email 草稿压在键盘下，决定 ${c(180)} one clean close。`,
-      `窗外的 fog 像黑 ${c(181)}，她把 budget ${c(182)} open，发现几 ${c(183)} vendor fees were ${c(184)} risks。最有用的 ${c(185)} 是：the flagged ${c(186)} were not random。她 was ${c(187)} who owned the decision；conference room 热得 ${c(188)}，但全 ${c(189)} 都等她开口。灯光变 ${c(190)}，第一阵 ${c(191)} wind seemed to ${c(192)} in the missing stakeholder from the lobby。${c(193)} finally beat rumor：same email ${c(194)}，same approval ${c(195)}，same unanswered ${c(196)}。Who ${c(197)} could approve payment before procurement？窗外雨点开始 ${c(198)}，Slack 里的 panic ${c(199)} into one sentence: Let's align, send the recap, and move forward。`
+      `周一早高峰，林夏的 ${c(0)} 被 Caltrain 的延误撕成碎片，手机里却跳出一封红色 ${c(1)}。她挤进电梯时，morning standup 已经被临时提前，工程经理把 ${c(2)} 开成审判现场，第一张屏幕就是空白 ${c(3)}。VP 指着白板说，每个 ${c(4)} 都要今天落地，客户的 ${c(5)} 已经逼近。真正的 ${c(6)} 不是代码，而是没人敢认的 ${c(7)}。林夏必须在十分钟内拉齐 ${c(8)}，写清 ${c(9)}，否则那个核心 ${c(10)} 会在下午演示前消失。她先发 ${c(11)}，再把 ${c(12)} 和 ${c(13)} 拆到同一张 ${c(14)} 上，标出本周 ${c(15)}。团队抱怨没有 ${c(16)}，sales 又把 ${c(17)} 往前提；她只好承认这是一次 painful ${c(18)}，然后把 ${c(19)} 写成一句很硬的英文：who owns the risk?`,
+      `她坐下写第一封 follow-up email，标题里放 ${c(20)}，正文第一段先给 ${c(21)}。客户要附件，她用 ${c(22)} 开头；老板提醒昨晚已经说过，她又补一句 ${c(23)}。那份模型必须 ${c(24)}，可她手里的 ${c(25)} 还缺三块。产品的 ${c(26)} 写得漂亮，真正麻烦的是 ${c(27)} 被人偷偷扩大；${c(28)} 被压缩，${c(29)} 却没有增加。她向 finance 要 ${c(30)}，向 vendor 要 ${c(31)}，又发现一张 ${c(32)} 对不上 ${c(33)}。没有 ${c(34)}，就没有 ${c(35)}；没有 ${c(36)}，法务不会放过 ${c(37)}。于是她把 ${c(38)} 和 ${c(39)} 都拉进线程，语气礼貌，但每一句都像在给炸弹剪线。`,
+      `十点的 ${c(40)} call 更像一场心理战。这个 ${c(41)} 原本要签三年 ${c(42)}，现在却把 ${c(43)} 暂停，说担心 ${c(44)}。sales 的 ${c(45)} 因此整排变红，新的 ${c(46)}、旧的 ${c(47)} 和最大的 ${c(48)} 都在等结果。老板只问一个词：${c(49)}。客户成功经理盯着 ${c(50)}，说上次 ${c(51)} 就已经埋雷；${c(52)} 团队手里还有七个 ${c(53)}。如果这次 ${c(54)} 处理不好，${c(55)} 会被公开质疑。林夏把 ${c(56)} 写成时间线，逼大家找 ${c(57)}，先给客户一个 ${c(58)}，再承诺下午给正式 ${c(59)}。她第一次发现，商务英语不是漂亮话，而是把责任说得别人无法躲。`,
+      `中午前，工程频道炸开。当前 ${c(60)} 的 ${c(61)} 里，一个不起眼的 ${c(62)} 被标成 P0；看起来只是小 ${c(63)}，实际会挡住关键 ${c(64)}。release manager 想按原计划 ${c(65)}，SRE 却坚持如果 ${c(66)} 失败，就必须 ${c(67)}。没人想承认昨晚的 ${c(68)}，因为月度 ${c(69)} 会变丑。林夏打开 ${c(70)}，把 ${c(71)}、${c(72)} 和原始 ${c(73)} 放在一起，才发现问题来自第三方 ${c(74)}。那条 ${c(75)} 调用没有通过 ${c(76)}，临时 ${c(77)} 又绕过了 ${c(78)}。她把会议暂停，要求先做 ${c(79)}，声音不高，却让整个 war room 安静下来。`,
+      `下午一点，客户 VP 进会就问：${c(80)} the owner? 林夏没有慌，只说 ${c(81)}，然后把事实拆成三层。她先用 ${c(82)} 拉回共同目标，又补一句 ${c(83)}，承认昨天沟通不够清楚。${c(84)}，她认为风险可以控住；她用 ${c(85)} 软着陆，接着说 ${c(86)}，确认客户真正担心的是上线后的责任。${c(87)}，所有变更都要写进记录；今天 ${c(88)} 前，必须判断项目是否 still ${c(89)}。如果再拖，就会 ${c(90)}，甚至 ${c(91)}。她给了一个 ${c(92)}，又安排技术 ${c(93)}。当有人开始吵，她说 we can ${c(94)}，同时 ${c(95)} legal，承诺稍后 ${c(96)}、明早 ${c(97)}。最后她发了一个 ${c(98)}，末尾只写 ${c(99)}，但所有人都知道这是最后通牒。`,
+      `Finance 的房间更冷。CFO 把 ${c(100)} 圈出来，说这单影响季度 ${c(101)}，不是普通 ${c(102)} 能吸收。新的 ${c(103)} 显示 ${c(104)} 会被拉紧，公司的 ${c(105)} 还剩不到一年；如果 ${c(106)} 继续上升，${c(107)} 会被推远。林夏把 ${c(108)} 摊在桌上，解释 ${c(109)} 为什么不能再乱给 ${c(110)}。客户提过 ${c(111)}，员工还在等 ${c(112)}，她自己也有一份没提交的 ${c(113)}。HR 同时提醒 ${c(114)}、${c(115)} 和下季度 ${c(116)} 都受影响。下午还要过 ${c(117)}，团队在讨论 ${c(118)} 和 ${c(119)}，每个人嘴上说冷静，眼神都像被账单追着跑。`,
+      `三点以后，真正的难题变成跨国协作。伦敦和新加坡隔着 ${c(120)}，一个 ${c(121)} 在 Zoom 里只剩半张脸，另一个坚持 ${c(122)} 的人必须到场。林夏开了临时 ${c(123)}，先解释早上的 ${c(124)}，再提醒湾区 ${c(125)} 会让演示推迟。客户要求下周 ${c(126)}，可公司的 ${c(127)} 不允许当天往返；她只能重排 ${c(128)}，查 ${c(129)}，还要确认工程师的 ${c(130)} 和可能的 ${c(131)}。${c(132)} 想直接派人，${c(133)} 说成本太高，${c(134)} 只能接夜班。她把 ${c(135)} 写进 ${c(136)}，补到 ${c(137)}，约了 ${c(138)}，又让新人做 ${c(139)}。办公室外天色还亮，她已经像过了三天。`,
+      `四点半，采购进入 ${c(140)} 模式。客户的第一个 ${c(141)} 是价格，第二个是风险，第三个才是真实恐惧。林夏没有急着 ${c(142)}，而是先找 ${c(143)}：他们的 ${c(144)} 很低，真正能拍板的是 ${c(145)}，但挡在门口的是 ${c(146)}。她请内部 ${c(147)} 出面，又找到客户方的 ${c(148)} 争取 ${c(149)}。会议越开越热，没人敢说已经有 ${c(150)}。她把所有 ${c(151)} 和 ${c(152)} 摆到一页，标出关键 ${c(153)}、不可变 ${c(154)}，以及验收时必须满足的 ${c(155)}。然后她用 ${c(156)} 定义成功，用 ${c(157)} 防止失败，用 ${c(158)} 降低损失，最后给出 ${c(159)}。客户沉默了十秒，说：send it in writing。`,
+      `写最后一封邮件时，她把语气调成 ${c(160)}，每段都尽量 ${c(161)}，但保持 ${c(162)}。她删掉太多 ${c(163)}，把假设改成清楚的 ${c(164)}。每个 ${c(165)} 前面加一个 ${c(166)}，用 ${c(167)} 降低压迫感；关键 ${c(168)} 写成 if the deployment fails, we will rollback within ten minutes。${c(169)} 不能夸张，${c(170)} 要给背景，${c(171)} 要收紧结论，${c(172)} 必须明确。她把 ${c(173)}、${c(174)}、${c(175)} 都列出来，又把 ${c(176)}、${c(177)} 和 ${c(178)} 存进 ${c(179)}。这不是作文课，这是成年人在压力下把话说清楚。`,
+      `夜里八点，CEO 终于问谁来承担 ${c(180)}。林夏没有抢功，只说这个项目需要更多 ${c(181)}，也需要团队更 ${c(182)}、更 ${c(183)}、更 ${c(184)}。架构要 ${c(185)}，流程要 ${c(186)}，判断要 ${c(187)}，执行要 ${c(188)}。她把一页 ${c(189)} 投到屏幕上，准备第二天的 ${c(190)} 和周五的 ${c(191)}。如果这次救回来，双方会讨论长期 ${c(192)}；如果救不回来，一个 ${c(193)} 就会变成公开失败案例。她用 ${c(194)} 解释打法，用 ${c(195)} 解释对手，用 ${c(196)} 解释为什么值得继续，用 ${c(197)} 提醒大家别只看功能。最后一行写着 ${c(198)}，下面只有两个词：${c(199)}。Slack 安静下来，像整栋楼终于同意明天继续打。`
     ];
     return paragraphs
       .filter((_, paragraphIndex) => items[paragraphIndex * 20])
@@ -534,7 +552,8 @@
 
   function currentLessonItems() {
     const data = lesson();
-    return data.words.map((item) => ({ ...item, day: data.day, id: `d${data.day}-${item.word}` }));
+    const course = courseKey();
+    return data.words.map((item) => ({ ...item, course, day: data.day, id: scopedWordId(course, data.day, item) }));
   }
 
   function isLowValueWord(item) {
@@ -549,6 +568,7 @@
   }
 
   function lowValueFilteredItems(data, items, count) {
+    if (courseKey() !== "campus") return items;
     if (data.day !== 1) return items;
     const selected = items.filter((item) => !isLowValueWord(item));
     const selectedWords = new Set(selected.map((item) => String(item.word).toLowerCase()));
@@ -585,8 +605,11 @@
     return difficultyBalancedItems(data, valueFiltered, count).slice(0, count);
   }
 
-  function allWords() {
-    return LESSONS.flatMap((day) => day.words.map((word) => ({ ...word, day: day.day, id: `d${day.day}-${word.word}` }))).concat(state.customWords);
+  function allWords(theme = state.theme) {
+    const course = courseKey(theme);
+    return lessonsForTheme(theme)
+      .flatMap((day) => day.words.map((word) => ({ ...word, course, day: day.day, id: scopedWordId(course, day.day, word) })))
+      .concat(state.customWords);
   }
 
   function findWord(id) {
@@ -719,11 +742,12 @@
 
   function renderDayOptions() {
     const select = document.getElementById("daySelect");
-    select.innerHTML = LESSONS.map((item) => {
+    const lessons = lessonsForTheme();
+    select.innerHTML = lessons.map((item) => {
       const meta = lessonDisplayMeta(item, state.theme);
       return `<option value="${item.day}">Day ${String(item.day).padStart(2, "0")} · ${escapeHtml(meta.titleZh)}</option>`;
     }).join("");
-    select.value = String(state.currentDay);
+    select.value = String(lesson().day);
   }
 
   function renderPreferences() {
@@ -765,7 +789,7 @@
     document.getElementById("metricSeen").textContent = seen;
     document.getElementById("metricFav").textContent = favorites;
     document.getElementById("stateSummary").textContent =
-      `文章新词已写入 ${todayItems.length}/${dailyNewCount()} 个；难词 ${difficultCount}/${todayItems.length} 个（目标至少 ${hardWordTarget(todayItems.length)} 个）；今日已互动 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；复习槽 ${reviewSlotCount()} 个；全局收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
+      `文章新词已写入 ${todayItems.length}/${dailyNewCount()} 个；难词 ${difficultCount}/${todayItems.length} 个（目标至少 ${hardWordTarget(todayItems.length)} 个）；今日已互动 ${todayEntries.filter((entry) => entry.seen > 0).length}/${todayEntries.length} 个；复习槽 ${reviewSlotCount()} 个；本线收藏 ${favorites} 个；当前到期或错词 ${due} 个；英文占比 ${state.englishDensity || DEFAULT_DENSITY}%。`;
   }
 
   function renderReview() {
@@ -804,7 +828,7 @@
     document.getElementById("wordGrid").innerHTML = words.map((item) => {
       const entry = entryFor(item);
       return `<article class="word-card">
-        <span class="meta">${item.custom ? "custom" : "day " + String(item.day).padStart(2, "0")} · ${escapeHtml(item.pos || "word")}</span>
+        <span class="meta">${item.custom ? "custom" : (item.course === "business" ? "business" : "campus") + " day " + String(item.day).padStart(2, "0")} · ${escapeHtml(item.pos || "word")}</span>
         <strong>${escapeHtml(displayWord(item))}</strong>
         <span>${escapeHtml(item.zh)}</span>
         ${phraseFor(item) ? `<span class="meta">root word: ${escapeHtml(item.word)}</span>` : ""}
@@ -852,6 +876,7 @@
       app: "StoryVocab",
       version: 1,
       mode: "optional-cloud",
+      course: courseKey(),
       day: data.day,
       titleEn: data.titleEn,
       titleZh: data.titleZh,
@@ -1070,6 +1095,7 @@
     version: "1.0.0",
     getState: () => JSON.parse(JSON.stringify(state)),
     getCurrentLesson: () => JSON.parse(JSON.stringify(lesson())),
+    getCurrentCourse: () => courseKey(),
     getCurrentWords: () => JSON.parse(JSON.stringify(currentStudyItems().map((item) => ({ ...item, display: displayWord(item) })))),
     buildConnectorPayload: () => JSON.parse(JSON.stringify(connectorPayload())),
     buildConnectorRequestExample,
@@ -1123,7 +1149,7 @@
         if (entry.interval === 0) entry.interval = 1;
         if (entry.due <= state.currentDay) entry.due = state.currentDay + entry.interval;
       });
-      state.completedDays[state.currentDay] = new Date().toISOString();
+      state.completedDays[`${courseKey()}-d${state.currentDay}`] = new Date().toISOString();
       saveAndRender(`Day ${state.currentDay} 已完成。`);
     }
     if (action === "export-progress") exportFile("storyvocab-progress.json", JSON.stringify(state, null, 2));
@@ -1181,8 +1207,11 @@
   });
 
   document.getElementById("themeSelect").addEventListener("change", (event) => {
-    state.theme = event.target.value;
-    saveAndRender("写作主题已切换。");
+    state.theme = safeTheme(event.target.value);
+    if (!lessonsForTheme().some((item) => item.day === state.currentDay)) {
+      state.currentDay = lessonsForTheme()[0]?.day || 1;
+    }
+    saveAndRender(state.theme === "business" ? "已切换到独立商务英语词表。" : "已切换到美国校园高频词表。");
   });
 
   document.getElementById("densitySelect").addEventListener("change", (event) => {
