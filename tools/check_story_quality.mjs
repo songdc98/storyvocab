@@ -27,8 +27,13 @@ const bannedSnippets = [
   "像 ${c(104)}",
   "${c(104)} 一样",
   "废弃 ${c(105)}",
+  "成群的 ${c(104)}",
+  "${c(104)} 在爬",
   "数量 ${c(142)}",
-  "佛罗里达 ${c(156)}"
+  "佛罗里达 ${c(156)}",
+  "a fake ${c(155)} in ${c(156)}",
+  "a hive of ${c(157)}",
+  "cancelled ${c(158)} plan"
 ];
 
 for (const snippet of bannedSnippets) {
@@ -38,11 +43,16 @@ for (const snippet of bannedSnippets) {
 }
 
 const requiredSnippets = [
-  "the answer is ${c(2)} the notice board",
-  "abandoned ${c(104)}",
-  "一队 ${c(105)}",
-  "The ${c(142)} did not match the receipts",
-  "in ${c(156)}"
+  "${c(2)} the bronze owl",
+  "a guard ${c(103)} at the desk",
+  "closed ${c(104)}",
+  "${c(105)} followed a trail of sugar",
+  "a mock ${c(106)} hearing",
+  "The ${c(142)} on the receipts did not match",
+  "retirement ${c(155)} in ${c(156)}",
+  "a beekeeping club called ${c(157)}",
+  "a planetarium trip to ${c(158)}",
+  "library ${c(190)} glass"
 ];
 
 for (const snippet of requiredSnippets) {

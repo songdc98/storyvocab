@@ -21,6 +21,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Authored daily episodes**: Day 02 now continues with a more coherent locked-library campus mystery while keeping all word chips interactive.
 - **Continuous-story direction**: if learners keep the same style, daily lessons should feel like chapters of one long vivid story rather than unrelated daily themes.
 - **Usage-aware contexts**: story sentences should place words in natural grammar, for example `below the notice board` instead of treating `below` as a standalone label.
+- **Semantic-fit story writing**: unusual or abstract scenes are allowed, but each word chip must still belong to the sentence logic instead of being dropped in as decoration.
 - **Story quality gate**: authored lessons are checked for word coverage, known awkward usage patterns, and repeated Chinese-English phrasing before release.
 - **Adjustable English density**: switch the story between roughly 30%, 50%, and 90% English for a gradual difficulty climb.
 - **Phrase-aware chips**: common words can appear as natural phrases such as `listen to`, `depend on`, and `according to`.
