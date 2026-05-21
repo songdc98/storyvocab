@@ -38,4 +38,6 @@ You can clear StoryVocab data by clearing browser site data for the page, or by 
 
 ## Contact
 
-For privacy questions, contact Dachuan Song at dsong25@gmu.edu.
+For privacy questions, copy this email address:
+
+`dsong25@gmu.edu`

@@ -22,4 +22,6 @@ StoryVocab welcomes constructive participation from learners, teachers, develope
 
 Maintainers may edit or remove comments, close issues, block participants, or restrict contribution access when behavior harms the project or community.
 
-For conduct concerns, contact Dachuan Song at dsong25@gmu.edu.
+For conduct concerns, copy this email address:
+
+`dsong25@gmu.edu`

@@ -279,6 +279,11 @@ p {
   padding: 10px 12px;
 }
 
+.email-copy {
+  color: var(--blue);
+  font-weight: 850;
+}
+
 .button.primary {
   color: white;
   background: var(--rose);

@@ -12,7 +12,11 @@ https://songdc98.github.io/storyvocab/
 
 Please do not open a public GitHub issue for sensitive security reports.
 
-Email Dachuan Song at dsong25@gmu.edu with:
+Copy this email address and send the report from your preferred email client:
+
+`dsong25@gmu.edu`
+
+Include:
 
 - a short description of the issue;
 - steps to reproduce;

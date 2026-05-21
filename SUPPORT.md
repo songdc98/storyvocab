@@ -6,9 +6,9 @@ Use GitHub issues for reproducible bugs, feature requests, documentation fixes, 
 
 https://github.com/songdc98/storyvocab/issues
 
-For collaboration, research/product discussion, educational use, internship/job opportunities, referrals, or professional introductions, contact Dachuan Song:
+For collaboration, research/product discussion, educational use, internship/job opportunities, referrals, or professional introductions, copy this email address:
 
-dsong25@gmu.edu
+`dsong25@gmu.edu`
 
 ## Help The Project
 

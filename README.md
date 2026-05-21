@@ -33,6 +33,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Custom theme reading**: turn imported words into a themed reading passage without external services.
 - **Optional cloud/LLM connector**: keep the app fully static by default, or connect your own endpoint to rewrite lessons with any model provider.
 - **Developer API**: `window.StoryVocabAPI` exposes lesson state, current words, connector payloads, external story rendering, and pronunciation helpers.
+- **Polite contact buttons**: contact controls copy `dsong25@gmu.edu` instead of opening the user's local mail app.
 - **GitHub Pages ready**: static files only, no build step required for deployment.
 
 ## Screenshots
@@ -158,7 +159,7 @@ This repository includes the standard public-project files people expect when co
 - [CONTRIBUTING.md](CONTRIBUTING.md): how to propose changes safely.
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md): expected behavior for public collaboration.
 - [SECURITY.md](SECURITY.md): how to report vulnerabilities or secret-handling issues.
-- [SUPPORT.md](SUPPORT.md): where to ask questions, collaborate, or contact the author.
+- [SUPPORT.md](SUPPORT.md): where to ask questions, collaborate, or copy the author's contact email.
 - [PRIVACY.md](PRIVACY.md): local-storage and optional connector privacy notes.
 
 ## Data Sources
@@ -209,9 +210,9 @@ The project name, author identity, screenshots, and contact information should n
 
 Created and maintained by Dachuan Song.
 
-For collaboration, research/product ideas, educational partnerships, internship/job opportunities, or referral conversations, contact:
+For collaboration, research/product ideas, educational partnerships, internship/job opportunities, or referral conversations, copy this email address:
 
-dsong25@gmu.edu
+`dsong25@gmu.edu`
 
 If StoryVocab helps you, please star the repository:
 

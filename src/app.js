@@ -772,6 +772,36 @@
     URL.revokeObjectURL(url);
   }
 
+  async function copyText(text, successMessage) {
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        toast(successMessage);
+        return;
+      } catch {
+        // Fall back to the older selection-based copy path below.
+      }
+    }
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.top = "0";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    textarea.setSelectionRange(0, text.length);
+    const copied = document.execCommand("copy");
+    textarea.remove();
+    if (!copied) throw new Error("Copy command was rejected.");
+    toast(successMessage);
+  }
+
+  function copyEmail(email = "dsong25@gmu.edu") {
+    copyText(email, "邮箱地址已复制。").catch(() => toast(`请手动复制：${email}`));
+  }
+
   function copyAiPrompt() {
     const customWords = state.customWords.slice(0, 200).map((item) => `${item.word}|${item.zh}|${item.pos}`).join("\n");
     const theme = document.getElementById("customTheme").value.trim() || "任意吸引人的故事主题";
@@ -914,6 +944,7 @@
     if (action === "save-connector") saveConnector();
     if (action === "clear-connector") clearConnector();
     if (action === "copy-connector-example") copyConnectorExample();
+    if (action === "copy-email") copyEmail(actionNode.dataset.email);
     if (action === "run-connector") runConnector();
   });
 
