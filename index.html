@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StoryVocab 3000 | 15 天故事化英语高频词学习</title>
+  <meta name="description" content="一个零依赖、可离线使用的互动英语 3000 高频词学习网页：15 天故事文章、200 个每日新词、100 个复习槽、美音朗读、收藏错词、遗忘曲线和自定义词本。">
+  <meta name="keywords" content="English 3000,英语单词,高频词,美音发音,spaced repetition,English vocabulary,GitHub Pages,英语学习工具">
+  <meta name="theme-color" content="#f7f3ec">
+  <meta property="og:title" content="StoryVocab 3000">
+  <meta property="og:description" content="用连续 15 天的生动故事学习 3000 个美国英语高频词。">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "StoryVocab 3000",
+      "learningResourceType": "Interactive vocabulary web app",
+      "teaches": "American English high-frequency vocabulary",
+      "inLanguage": ["zh-CN", "en-US"],
+      "license": "https://opensource.org/license/mit/"
+    }
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="kicker">StoryVocab 3000 · open source · offline first</p>
+        <h1>用故事把 3000 个英语高频词见一遍</h1>
+        <p class="hero-copy">每天 200 个新词，100 个复习槽。单击单词直接发美音，长悬停再打开收藏、错词、会了等低频操作。所有进度保存在浏览器本地，不需要登录，也不依赖 Codex。</p>
+      </div>
+      <div class="hero-card">
+        <label for="daySelect">选择课程</label>
+        <select id="daySelect" class="select"></select>
+        <div class="hero-day">
+          <span id="heroDay">Day 01</span>
+          <strong id="heroTitle">暴雨夜的假婚约</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="metrics" aria-label="学习统计">
+      <article class="metric"><strong id="metricNew">200</strong><span>今日新词</span></article>
+      <article class="metric"><strong id="metricReview">100</strong><span>复习槽</span></article>
+      <article class="metric"><strong id="metricSeen">0</strong><span>已接触</span></article>
+      <article class="metric"><strong id="metricFav">0</strong><span>收藏词</span></article>
+    </section>
+
+    <nav class="toolbar" aria-label="功能导航">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-panel="storyPanel">故事</button>
+        <button class="tab" data-panel="reviewPanel">复习</button>
+        <button class="tab" data-panel="wordbookPanel">词本</button>
+        <button class="tab" data-panel="customPanel">自定义</button>
+        <button class="tab" data-panel="aboutPanel">关于</button>
+      </div>
+      <div class="toolbar-actions">
+        <button class="button primary" data-action="complete-day">完成今天</button>
+        <button class="button" data-action="export-progress">导出进度</button>
+        <button class="button" data-action="reset-view">回到顶部</button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="panel active" id="storyPanel">
+        <div class="reader-layout">
+          <article class="story-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow" id="storyStyle">suspense romance</p>
+                <h2 id="storyHeading">Story 01: The Storm Contract</h2>
+              </div>
+              <button class="button" data-action="speak-paragraph">朗读开头</button>
+            </div>
+            <div class="theme-row">
+              <label for="themeSelect">写作主题</label>
+              <select id="themeSelect" class="select compact">
+                <option value="cinematic">电影悬疑</option>
+                <option value="campus">美国校园</option>
+                <option value="startup">科技创业</option>
+                <option value="comedy">幽默对白</option>
+                <option value="travel">公路旅行</option>
+              </select>
+            </div>
+            <div id="storyText" class="story-text"></div>
+          </article>
+          <aside class="side-stack">
+            <section class="info-box">
+              <h3>今日玩法</h3>
+              <p>直接点彩色单词听美音。鼠标停留约半秒后出现更多操作：收藏、会了、复习。收藏和错词会在后续复习里加权出现。</p>
+            </section>
+            <section class="info-box">
+              <h3>遗忘曲线</h3>
+              <div class="curve"><strong>D1</strong><span>故事中第一次见面</span></div>
+              <div class="curve"><strong>D2</strong><span>24 小时内复习</span></div>
+              <div class="curve"><strong>D4</strong><span>第三天左右激活</span></div>
+              <div class="curve"><strong>D8</strong><span>一周左右拉长间隔</span></div>
+              <div class="curve"><strong>D15</strong><span>总复盘收藏和错词</span></div>
+            </section>
+            <section class="info-box">
+              <h3>当前状态</h3>
+              <p id="stateSummary">正在读取本地进度。</p>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel" id="reviewPanel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">spaced repetition</p>
+            <h2>100 个复习槽</h2>
+          </div>
+          <button class="button" data-action="shuffle-review">重排复习</button>
+        </div>
+        <div class="review-grid" id="reviewGrid"></div>
+      </section>
+
+      <section class="panel" id="wordbookPanel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">3000 + custom words</p>
+            <h2>词本搜索</h2>
+          </div>
+          <input id="wordSearch" class="search" type="search" placeholder="搜索英文、中文、音标或标签">
+        </div>
+        <div class="filter-row">
+          <button class="pill active" data-filter="all">全部</button>
+          <button class="pill" data-filter="favorite">收藏</button>
+          <button class="pill" data-filter="review">错词</button>
+          <button class="pill" data-filter="known">已会</button>
+          <button class="pill" data-filter="custom">自定义</button>
+        </div>
+        <div class="word-grid" id="wordGrid"></div>
+      </section>
+
+      <section class="panel" id="customPanel">
+        <div class="custom-layout">
+          <section class="info-box wide">
+            <h2>自定义词本</h2>
+            <p>支持粘贴 CSV 或普通文本。格式建议：<code>word,中文释义,part-of-speech</code>。每行一个词，也可以只写英文，中文释义之后再编辑。</p>
+            <textarea id="customInput" class="textarea" placeholder="example,例子,n.&#10;privacy,隐私,n.&#10;launch,发布/发射,v."></textarea>
+            <div class="button-row">
+              <button class="button primary" data-action="import-custom">导入自定义词</button>
+              <button class="button" data-action="export-wordbook">导出词本</button>
+            </div>
+          </section>
+          <section class="info-box wide">
+            <h2>自定义主题阅读</h2>
+            <p>不接任何外部 AI，也能把你的自定义词用模板串成一篇可读短文。想要真正重写成长文，可以复制生成提示给任意 AI。</p>
+            <input id="customTheme" class="search" placeholder="例如：赛博朋克便利店、纽约校园悬疑、科研实验室冒险">
+            <div class="button-row">
+              <button class="button primary" data-action="render-custom-story">生成自定义阅读</button>
+              <button class="button" data-action="copy-ai-prompt">复制 AI 重写提示</button>
+            </div>
+            <div id="customStory" class="custom-story"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel" id="aboutPanel">
+        <div class="about-grid">
+          <section class="info-box wide">
+            <h2>项目定位</h2>
+            <p>StoryVocab 3000 是一个可公开部署到 GitHub Pages 的英语高频词学习工具。核心目标是把词放进有画面、有冲突、有情绪的文章里，而不是把词按字母表机械排列。</p>
+            <ul>
+              <li>15 天，每天 200 个混排新词。</li>
+              <li>浏览器本地保存收藏、错词、熟悉度和复习日程。</li>
+              <li>使用 Web Speech API 播放 en-US 美音，不内置音频文件。</li>
+              <li>支持自定义词本导入、导出和主题化阅读。</li>
+            </ul>
+          </section>
+          <section class="info-box wide">
+            <h2>开源数据</h2>
+            <p id="licenseSummary">正在读取数据许可。</p>
+            <p>项目代码使用 MIT License。词表和词典数据也来自 MIT 许可项目，详细见仓库的第三方声明。</p>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="src/lessons.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>
