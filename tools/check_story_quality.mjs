@@ -77,6 +77,9 @@ const dayOneCampusBlock = blockBetween("function dayOneCampusStory", "function d
 const dayOneBusinessBlock = blockBetween("function dayOneBusinessStory", "function dayTwoLockedLibraryStory");
 const dayTwoBlock = blockBetween("function dayTwoLockedLibraryStory", "function dayThreeRoadTripStory");
 const dayThreeBlock = blockBetween("function dayThreeRoadTripStory", "function buildStory");
+const buildStoryBlock = blockBetween("function buildStory", "const campusChapterPlans");
+const campusChapterPlanBlock = blockBetween("const campusChapterPlans", "const campusChapterBeats");
+const campusUsageBlock = blockBetween("const campusUsageOverrides", "function campusPlanForDay");
 
 checkCoverage("Day 01 campus", dayOneCampusBlock);
 checkCoverage("Day 01 business", dayOneBusinessBlock);
@@ -189,6 +192,52 @@ if (!app.includes("function pronunciationTitle") || !app.includes("pronunciation
 
 if (app.includes("business word ·") || app.includes("${item.pos || \"word\"} · ${item.zh")) {
   throw new Error("Hover menu title must not expose internal part-of-speech labels.");
+}
+
+if (!buildStoryBlock.includes("theme === \"campus\" && state.currentDay >= 2") || !buildStoryBlock.includes("campusChapterStory(items, density, state.currentDay)")) {
+  throw new Error("Campus Day 02-15 must use the semantic chapter story generator.");
+}
+
+for (let day = 2; day <= 15; day += 1) {
+  if (!campusChapterPlanBlock.includes(`${day}: {`)) {
+    throw new Error(`Campus semantic chapter plan missing Day ${String(day).padStart(2, "0")}.`);
+  }
+}
+
+const semanticUsageRequiredSnippets = [
+  "藏 ${word} the notice board",
+  "enter the room ${word} a witness",
+  "two dollars ${word} copy",
+  "neither the dean ${word} the treasurer",
+  "她戴上耳机 ${word} the hallway recording",
+  "three closed ${word}",
+  "糖粉旁边真的有 ${word}",
+  "奖学金 ${word} did not match the bank log",
+  "一张转账截图来自 ${word}",
+  "${word} the dean delayed again, the campus paper would publish first"
+];
+
+for (const snippet of semanticUsageRequiredSnippets) {
+  if (!campusUsageBlock.includes(snippet)) {
+    throw new Error(`Missing semantic usage clause for campus Day 02-15: ${snippet}`);
+  }
+}
+
+if (/\(word\)\s*=>[^,\n]*plan\./.test(campusUsageBlock)) {
+  throw new Error("A campus usage override references plan without accepting plan as an argument.");
+}
+
+const newCampusSemanticBlocks = [
+  campusChapterPlanBlock,
+  blockBetween("const campusChapterBeats", "const campusUsageOverrides"),
+  campusUsageBlock,
+  blockBetween("function campusUsageClause", "function campusChapterStory")
+].join("\n");
+
+for (const snippet of ["随口塞", "放进完整句子", "每个词都必须"]) {
+  if (newCampusSemanticBlocks.includes(snippet)) {
+    throw new Error(`Campus Day 02-15 semantic generator still contains meta-story wording: ${snippet}`);
+  }
 }
 
 const bannedSnippets = [

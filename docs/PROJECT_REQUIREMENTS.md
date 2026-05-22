@@ -13,6 +13,7 @@ This file records the maintainer requirements that should survive context resets
 - Stories may be romantic, scheming, dramatic, absurd, or exaggerated, but every target word must still belong naturally to the sentence logic.
 - Avoid flat narration. Prefer conflict, suspense, emotional stakes, visual scenes, memorable behavior, and coherent cause-and-effect.
 - If the learner keeps the same style, later lessons should feel like chapters of one longer story rather than unrelated daily topics.
+- American-campus Day 02-15 must not fall back to the old generic paragraph templates. They should keep a coherent case line and place chips into evidence, action, relation, or scene roles so the Chinese story and English target are connected.
 
 ## Vocabulary Policy
 
@@ -31,6 +32,7 @@ This file records the maintainer requirements that should survive context resets
 - Each chip must fit the grammar and semantics of the sentence.
 - Check for awkward isolated-preposition usage, repeated English-Chinese duplication, and unrelated word drops.
 - Abstraction is allowed only when the word still has a clear role in the scene.
+- For prepositions and relation words, include the governed object or surrounding clause when needed, for example `below the notice board`, `without a witness`, and `per copy`.
 - After generating or editing a story, run the local quality checks before release.
 
 ## Interaction Requirements

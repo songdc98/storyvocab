@@ -32,6 +32,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Hard-word quota**: Day 03 and later lessons front-load at least 30% harder words in the daily study set, so a 200-word day includes at least 60 challenge words.
 - **Continuous-story direction**: if learners keep the same style, daily lessons should feel like chapters of one long vivid story rather than unrelated daily themes.
 - **Usage-aware contexts**: story sentences should place words in natural grammar, for example `below the notice board` instead of treating `below` as a standalone label.
+- **Semantic campus chapters**: the American-campus Day 02-15 lessons now use a semantic chapter generator that keeps the scholarship mystery coherent while placing each chip into an evidence, action, relation, or scene role.
 - **Semantic-fit story writing**: unusual or abstract scenes are allowed, but each word chip must still belong to the sentence logic instead of being dropped in as decoration.
 - **Story quality gate**: authored lessons are checked for word coverage, known awkward usage patterns, and repeated Chinese-English phrasing before release.
 - **Maintainer requirements**: product/story rules are tracked in [docs/PROJECT_REQUIREMENTS.md](docs/PROJECT_REQUIREMENTS.md) so future edits preserve the same expectations.
@@ -60,6 +61,7 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **难词比例**：Day 03 及后续课程会优先保证至少 30% 的较难词，一个 200 词日里至少有 60 个挑战词。
 - **连续故事方向**：如果学习者保持同一风格，每天应像同一部长故事的新章节，而不是互不相关的主题短文。
 - **用法贴合**：单词要放在自然语法里，例如 `below the notice board`，而不是把 `below` 当孤立标签。
+- **校园语义章节**：美国校园 Day 02-15 现在使用语义章节生成器，在保持奖学金悬疑主线连贯的同时，把每个词放进证据、动作、关系或场景位置里。
 - **语义贴合**：故事可以夸张、抽象、荒诞，但每个词必须在句子逻辑里有作用，不能随便丢进去。
 - **质量检查**：发布前会检查词覆盖、已知别扭用法、中英文重复和语义不贴合问题。
 - **维护规则**：产品和故事要求记录在 [docs/PROJECT_REQUIREMENTS.md](docs/PROJECT_REQUIREMENTS.md)，方便后续修改保持一致。
