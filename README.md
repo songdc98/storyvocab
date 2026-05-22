@@ -48,8 +48,6 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **Custom theme reading**: turn imported words into a themed reading passage without external services.
 - **Optional cloud/LLM connector**: keep the app fully static by default, or connect your own endpoint to rewrite lessons with any model provider.
 - **Developer API**: `window.StoryVocabAPI` exposes lesson state, current words, connector payloads, external story rendering, and pronunciation helpers.
-- **Polite contact buttons**: contact controls copy `dsong25@gmu.edu` instead of opening the user's local mail app.
-- **GitHub Pages ready**: static files only, no build step required for deployment.
 
 - **每日学习量可调**：默认每天 200 个新词、100 个复习槽，也可以按当天状态调整。
 - **进度表达清楚**：页面会区分“文章已经写入的词”和“学习者已经点击或复习过的词”。
@@ -77,8 +75,6 @@ Most vocabulary tools make learners stare at isolated words. StoryVocab puts wor
 - **自定义主题阅读**：不接外部服务，也能把导入词生成一段主题阅读。
 - **可选云端/大模型接口**：默认完全静态；需要时可以接自己的后端，让任意模型重写故事。
 - **开发者 API**：`window.StoryVocabAPI` 暴露课程状态、当前词表、接口 payload、外部故事渲染和发音方法。
-- **礼貌联系按钮**：联系入口只复制 `dsong25@gmu.edu`，不会自动打开本地邮箱。
-- **GitHub Pages 友好**：纯静态文件，无需构建步骤即可部署。
 
 ## Screenshots / 截图
 
