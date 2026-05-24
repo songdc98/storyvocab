@@ -12,8 +12,8 @@ This file records the maintainer requirements that should survive context resets
 - Daily reading should feel like a vivid chapter, not a mechanical list of words.
 - Stories may be romantic, scheming, dramatic, absurd, or exaggerated, but every target word must still belong naturally to the sentence logic.
 - Avoid flat narration. Prefer conflict, suspense, emotional stakes, visual scenes, memorable behavior, and coherent cause-and-effect.
-- If the learner keeps the same style, later lessons should feel like chapters of one longer story rather than unrelated daily topics.
-- American-campus Day 02-15 must not fall back to the old generic paragraph templates. They should keep a coherent case line and place chips into evidence, action, relation, or scene roles so the Chinese story and English target are connected.
+- American-campus Day 02-15 should be standalone campus stories, not one forced case line. Each day needs its own setting, conflict, turn, and ending.
+- American-campus Day 02-15 must not fall back to the old generic paragraph templates or repetitive evidence-board wording. They should place chips into actions, relations, objects, and scene details so the Chinese story and English target are connected.
 
 ## Vocabulary Policy
 

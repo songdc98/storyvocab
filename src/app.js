@@ -835,7 +835,7 @@
       : state.currentDay === 1
       ? dayOneCampusStory(items, density)
       : theme === "campus" && state.currentDay >= 2
-        ? campusChapterStory(items, density, state.currentDay)
+        ? standaloneCampusStory(items, density, state.currentDay)
         : "";
     if (authored) return authored;
     const frames = storyFrames[theme] || storyFrames.cinematic;
@@ -851,396 +851,410 @@
     return paragraphs.join("");
   }
 
-  const campusChapterPlans = {
+  const standaloneCampusStories = {
     2: {
-      title: "锁住的图书馆",
-      place: "图书馆第七层",
-      caseName: "奖学金缺页",
-      ally: "Maya",
-      rival: "林夏",
-      object: "猫头鹰铜像",
-      pressure: "凌晨前必须把账本传给校报",
-      reveal: "缺页不是丢了，而是被藏进旧借书系统"
+      setting: "图书馆通宵寻宝夜",
+      hero: "苏念薇",
+      partner: "Maya",
+      rival: "穿银色雨衣的助教",
+      object: "借书卡盒",
+      goal: "在闭馆前找到被藏起来的学生奖学金名单",
+      tension: "所有灯每隔十分钟熄一次，队伍必须靠线索卡继续走",
+      turn: "最后一张卡没有指向坏人，而是指向一个想保护室友的实习馆员",
+      ending: "名单被找回，苏念薇把夜宵分给所有人，图书馆第一次像一座会呼吸的城堡",
+      places: ["阅览室", "地下书库", "玻璃楼梯", "咖啡角", "旧地图柜"],
+      props: ["借书卡", "荧光笔", "书车", "投影幕", "纸杯"],
+      actions: ["贴上便签", "翻开年鉴", "推着书车", "对暗号", "按下计时器"],
+      moods: ["quiet", "warm", "strange", "certain", "dark"]
     },
     3: {
-      title: "消失的公路旅行",
-      place: "海边研究站",
-      caseName: "奖学金转账路线",
-      ally: "顾凛",
-      rival: "匿名司机",
-      object: "旧校车",
-      pressure: "州警封路前必须找到证人",
-      reveal: "路线上每个停车点都对应一笔被拆散的捐款"
+      setting: "春假前的校车公路旅行",
+      hero: "苏念薇",
+      partner: "顾凛",
+      rival: "总是改导航的摄影社社长",
+      object: "贴满贴纸的旧校车",
+      goal: "把新生电影节的胶片送到海边分校",
+      tension: "导航把他们带进雾气很重的海岸公路，后备箱还少了一卷胶片",
+      turn: "失踪的不是胶片，而是社长偷偷剪掉的告白片段",
+      ending: "影片在沙滩上放映，所有人终于听见那段被剪掉的真心话",
+      places: ["加油站", "海岸桥", "汽车旅馆", "码头", "露天银幕"],
+      props: ["地图", "胶片盒", "车钥匙", "咖啡杯", "折叠椅"],
+      actions: ["重设导航", "检查后备箱", "听录音", "换轮胎", "追上校车"],
+      moods: ["wide", "warm", "late", "strong", "real"]
     },
     4: {
-      title: "午夜法庭",
-      place: "学生荣誉法庭",
-      caseName: "伪造听证记录",
-      ally: "辩论队队长",
-      rival: "纪律委员会主席",
-      object: "木槌和投影机",
-      pressure: "听证直播开始前必须证明证词被换过",
-      reveal: "真正的签名藏在旧判例的背面"
+      setting: "午夜模拟法庭",
+      hero: "法学院新生林乔",
+      partner: "辩论队队长 Nora",
+      rival: "故意装冷静的反方一辩",
+      object: "木槌和一张错印地图",
+      goal: "在模拟庭审中救回被误判作弊的朋友",
+      tension: "陪审团全是同学，大家既想赢比赛，又怕得罪教授",
+      turn: "反方一辩突然承认自己也被规则误导，庭审从比赛变成公开道歉",
+      ending: "林乔赢下比赛，但更重要的是让朋友重新回到课堂",
+      places: ["模拟法庭", "走廊长椅", "教授办公室", "证人席", "空教室"],
+      props: ["木槌", "地图", "录音笔", "白板", "课程表"],
+      actions: ["整理陈述", "画出路线", "询问证人", "递交纸条", "关掉投影"],
+      moods: ["deep", "simple", "fresh", "sharp", "quiet"]
     },
     5: {
-      title: "办公室泄密案",
-      place: "学生会办公室",
-      caseName: "泄露的预算表",
-      ally: "校报编辑",
-      rival: "学生会财务官",
-      object: "碎纸机",
-      pressure: "竞选辩论前必须找出谁改了附件",
-      reveal: "泄密人故意留下了一个可追踪的打印页码"
+      setting: "学生会办公室泄密风波",
+      hero: "校报编辑安然",
+      partner: "摄影记者 Leo",
+      rival: "急着竞选主席的财务官",
+      object: "被咖啡泡皱的预算复印件",
+      goal: "查清泄密邮件是谁发的，避免无辜助理背锅",
+      tension: "竞选辩论还有一小时开始，办公室里每个人都在删聊天记录",
+      turn: "真正泄密的人不是对手，而是想阻止浪费预算的志愿者",
+      ending: "辩论变成公开预算会，安然第一次觉得新闻可以救人而不是伤人",
+      places: ["学生会办公室", "打印室", "食堂厨房", "辩论礼堂", "校报角落"],
+      props: ["复印件", "咖啡杯", "相机", "白板笔", "钥匙串"],
+      actions: ["核对附件", "采访志愿者", "擦干纸页", "暂停辩论", "公开预算"],
+      moods: ["soft", "clean", "slow", "interested", "finished"]
     },
     6: {
-      title: "社区节日信号",
-      place: "校园社区节",
-      caseName: "舞台信号",
-      ally: "志愿者哥哥",
-      rival: "赞助商代表",
+      setting: "校园社区节",
+      hero: "转学生夏禾",
+      partner: "她的哥哥 Ben",
+      rival: "把赞助牌挂错位置的活动经理",
       object: "银色扩音器",
-      pressure: "烟火表演前必须阻止错误信号",
-      reveal: "音乐节节目单其实是一张转账索引"
+      goal: "让社区节按时开场，并找回丢失的合唱名单",
+      tension: "舞台信号错乱，乐队、农夫市场和儿童区全被叫到同一个入口",
+      turn: "所谓事故其实是小朋友把频道调成了寻宝游戏模式",
+      ending: "夏禾临时改成全场寻宝，社区节反而成了学校最热闹的一天",
+      places: ["中央草坪", "森林步道", "志愿者帐篷", "银行赞助摊", "北门舞台"],
+      props: ["扩音器", "银色气球", "节目单", "急救箱", "小船模型"],
+      actions: ["重新分区", "比较地图", "描述路线", "分享食物", "完成合唱"],
+      moods: ["interesting", "bad", "opposite", "alike", "northern"]
     },
     7: {
-      title: "医院夜班窗口",
-      place: "校园健康中心",
-      caseName: "夜班报告",
-      ally: "值班医生",
-      rival: "保安主管",
-      object: "急诊窗口",
-      pressure: "病历系统自动清空前必须保存录像",
-      reveal: "病历编号对应学生宿舍的门禁时间"
+      setting: "校园健康中心夜班",
+      hero: "护理预科生 Elaine",
+      partner: "值班医生 Sam",
+      rival: "把小病说成大事故的校园博主",
+      object: "急诊窗口旁的蓝色瓶子",
+      goal: "安抚排队学生，找出让大家恐慌的假消息来源",
+      tension: "暴雨夜里十几个学生同时来问诊，走廊像临时车站",
+      turn: "假消息来自一张被裁掉标题的健康课截图",
+      ending: "Elaine 用一场即兴小讲座让大家安心，窗外的雨也终于停了",
+      places: ["急诊窗口", "候诊区", "药房门口", "护士站", "雨中的车站"],
+      props: ["蓝色瓶子", "体温计", "轮椅", "乐器盒", "报告单"],
+      actions: ["填写表格", "挑出谣言", "触摸额头", "标记名单", "解释报告"],
+      moods: ["cool", "careful", "quick", "alive", "electric"]
     },
     8: {
-      title: "创业公司的公开道歉",
-      place: "校园创业实验室",
-      caseName: "公开道歉稿",
-      ally: "工程社社长",
-      rival: "投资人助理",
-      object: "演示大屏",
-      pressure: "Demo Day 开始前必须决定是否公开漏洞",
-      reveal: "漏洞不是技术事故，而是有人用它洗掉奖学金记录"
+      setting: "校园创业 Demo Day",
+      hero: "工程社女生 Ivy",
+      partner: "产品经理 Miles",
+      rival: "只想赢奖金的联合创始人",
+      object: "突然黑屏的演示大屏",
+      goal: "决定要不要在投资人面前公开产品漏洞",
+      tension: "倒计时还剩五十秒，奖金、面子和用户安全撞到一起",
+      turn: "Ivy 主动道歉，反而赢得愿意继续试用的第一批用户",
+      ending: "团队没有赢最大奖，却拿到真正愿意帮他们改产品的人",
+      places: ["创业实验室", "后台走廊", "投资人席", "屋顶露台", "共享办公桌"],
+      props: ["演示屏", "键盘", "道歉稿", "美元支票", "咖啡壶"],
+      actions: ["回滚版本", "写声明", "扔掉花哨话术", "观察用户", "重新计分"],
+      moods: ["angry", "ordinary", "easier", "current", "completely"]
     },
     9: {
-      title: "小镇选举风波",
-      place: "大学城选举大厅",
-      caseName: "学生投票异常",
-      ally: "社区志愿者",
-      rival: "候选人助理",
-      object: "折叠椅",
-      pressure: "投票箱封存前必须复原缺失名单",
-      reveal: "选票顺序和奖学金名单使用了同一套编号"
+      setting: "大学城学生投票日",
+      hero: "政治课学生 Mia",
+      partner: "志愿者叔叔 Ray",
+      rival: "总想插队演讲的候选人助理",
+      object: "折叠椅下面的绿色投票袋",
+      goal: "让投票站在暴雪前顺利关门",
+      tension: "圣诞灯还没拆，镇民、学生和记者全挤在体育馆入口",
+      turn: "被怀疑撒谎的农夫其实只是饿到说不清地址",
+      ending: "Mia 把最后一张票送进箱子，也学会了温柔地维护规则",
+      places: ["体育馆入口", "镇图书馆", "农夫市场", "南门停车场", "投票桌"],
+      props: ["折叠椅", "投票袋", "热可可", "姓名牌", "圣诞灯"],
+      actions: ["排队登记", "回复质疑", "喂小孩饼干", "抬高标牌", "安静计票"],
+      moods: ["hungry", "regular", "silent", "sweet", "smooth"]
     },
     10: {
-      title: "晚点列车上的手提包",
-      place: "回校列车",
-      caseName: "遗失手提包",
-      ally: "列车员",
-      rival: "沉默乘客",
+      setting: "晚点列车上的手提包",
+      hero: "交换生 Ada",
+      partner: "列车员 Marcus",
+      rival: "拿错包还不敢承认的音乐系男孩",
       object: "木制手提包",
-      pressure: "列车进站前必须找出包的主人",
-      reveal: "包里不是钱，而是一份被拆开的合作协议"
+      goal: "在回校列车到站前找到包的主人",
+      tension: "列车沿河慢慢向东开，期末前的学生都急着回宿舍",
+      turn: "包里没有贵重物，只有一封写给失联家人的信",
+      ending: "Ada 帮男孩把信发出，列车晚点却让一段关系重新开始",
+      places: ["列车车厢", "东边河谷", "小镇站台", "餐车吧台", "宿舍门口"],
+      props: ["木制手提包", "旧信", "车票", "花束", "怀表"],
+      actions: ["数座位", "加入寻找", "分开询问", "敲响铃", "交还手提包"],
+      moods: ["narrow", "final", "popular", "wooden", "late"]
     },
     11: {
-      title: "公寓火灾之后",
-      place: "校外公寓",
-      caseName: "火灾后的硬盘",
-      ally: "消防志愿者",
-      rival: "房东代理",
-      object: "烧焦电线",
-      pressure: "保险公司到场前必须抢救原始备份",
-      reveal: "火灾时间和远程登录时间完全重合"
+      setting: "校外公寓火灾之后",
+      hero: "建筑系学生 Nora",
+      partner: "消防志愿者 Diego",
+      rival: "想推卸责任的房东代理",
+      object: "烧焦的电线",
+      goal: "帮室友找回重要硬盘，并弄清火从哪里开始",
+      tension: "清晨的公寓楼还在冒烟，大家穿着睡衣站在院子里",
+      turn: "火源不是厨房，而是一只被错误接线的旧灯",
+      ending: "住户一起搬进临时宿舍，Nora 画下新的安全逃生图",
+      places: ["公寓院子", "烧黑的厨房", "临时宿舍", "消防车旁", "社区大厅"],
+      props: ["电线", "金属门牌", "早餐袋", "硬盘", "轮子坏掉的行李箱"],
+      actions: ["关掉电源", "找回硬盘", "直接穿过水流", "整理名单", "画逃生图"],
+      moods: ["original", "rare", "wonderful", "softly", "bigger"]
     },
     12: {
-      title: "学校里的谣言",
-      place: "主楼走廊",
-      caseName: "谣言截图",
-      ally: "新生 William",
-      rival: "匿名账号",
+      setting: "学校里的谣言",
+      hero: "新生 William",
+      partner: "戏剧社女孩 Rose",
+      rival: "匿名八卦账号",
       object: "玫瑰贴纸",
-      pressure: "处分邮件发出前必须证明截图被剪辑",
-      reveal: "谣言扩散路线暴露了真正操作者的设备"
+      goal: "证明被疯传的照片是被剪辑过的",
+      tension: "午休时走廊到处都是截图，没人愿意先听当事人解释",
+      turn: "真正制造谣言的人只是想把自己的失败甩给别人",
+      ending: "William 没有报复，而是在广播里讲清楚了照片背后的完整故事",
+      places: ["主楼走廊", "化学教室", "广播室", "果汁摊", "剧场后台"],
+      props: ["玫瑰贴纸", "试管", "水果盒", "截图", "校内广播稿"],
+      actions: ["放大照片", "继续排练", "提供原图", "闻到烟味", "迅速关麦"],
+      moods: ["proper", "proud", "dangerous", "serious", "nearby"]
     },
     13: {
-      title: "最后一场比赛",
-      place: "体育馆",
-      caseName: "决赛名单",
-      ally: "替补队员",
-      rival: "对手经理",
-      object: "希腊队服",
-      pressure: "终场哨响前必须公开替换名单",
-      reveal: "比赛名单上的顺序就是最后一串密码"
+      setting: "最后一场校内比赛",
+      hero: "替补球员 Ann",
+      partner: "队长 James",
+      rival: "一直挑衅的对手经理",
+      object: "希腊风格队服",
+      goal: "在决赛最后十分钟证明自己配得上上场",
+      tension: "看台挤满人，队里最强的前锋却突然扭伤脖子",
+      turn: "Ann 不追求漂亮进球，而是用一次安静传球救下整场比赛",
+      ending: "她没有成为海报中心，却成了全队最信任的人",
+      places: ["体育馆", "更衣室", "棉花糖摊", "市场街", "计分台"],
+      props: ["队服", "水杯", "诗社传单", "哨子", "球鞋"],
+      actions: ["热身练习", "爬上看台", "骑车赶到", "安静考虑", "继续防守"],
+      moods: ["useful", "quietly", "clearly", "highest", "extra"]
     },
     14: {
-      title: "重聚时发现的旧信",
-      place: "校友重聚会",
-      caseName: "旧信",
-      ally: "退休教授",
-      rival: "首席校友代表",
-      object: "一捆细绳",
-      pressure: "捐赠晚宴结束前必须读出旧信",
-      reveal: "信里记录了第一笔被挪走的基金"
+      setting: "校友重聚晚宴",
+      hero: "研究生乔然",
+      partner: "退休教授 Ellis",
+      rival: "不想谈过去的校友会主席",
+      object: "用细绳捆住的旧信",
+      goal: "在晚宴结束前读懂一封写给全校的旧信",
+      tension: "大厅很吵，所有人都忙着合影和谈工作，没人想碰那段历史",
+      turn: "旧信没有控诉任何人，只把当年学生互相帮助的细节写得很清楚",
+      ending: "乔然把信放进公开展柜，晚宴忽然从炫耀变成真正的重逢",
+      places: ["校友大厅", "展柜旁", "卡车卸货区", "蔬菜花园", "铁路模型室"],
+      props: ["旧信", "细绳", "铅笔", "云形灯", "谷物面包"],
+      actions: ["解开绳结", "立即安静", "发现签名", "等待掌声停下", "记录细节"],
+      moods: ["tired", "empty", "loud", "rough", "public"]
     },
     15: {
-      title: "记忆游行",
-      place: "毕业游行",
-      caseName: "最终公开证词",
-      ally: "整个校报小组",
-      rival: "最后的幕后签字人",
-      object: "游行乐队",
-      pressure: "校长致辞前必须把证据投到大屏",
-      reveal: "所有故事终于回到第一夜那封黑信"
+      setting: "毕业记忆游行",
+      hero: "毕业生苏念薇",
+      partner: "校报小组",
+      rival: "故意把队伍带错路的游行司机",
+      object: "游行乐队的铜鼓",
+      goal: "把十五天里学到的词和故事做成一场毕业游行",
+      tension: "山坡下人群太多，乐队、棒球队和国际学生方阵全挤在一起",
+      turn: "司机带错路不是恶作剧，而是为了绕开被雨水冲坏的桥",
+      ending: "游行没有按原计划走，却把每个人的故事带到了湖边舞台",
+      places: ["毕业草坪", "山坡", "湖边舞台", "面包摊", "国家旗阵"],
+      props: ["铜鼓", "面包篮", "棒球手套", "小刀", "屋顶旗帜"],
+      actions: ["唱校歌", "聚集队伍", "接过名单", "贴近湖边", "发出信号"],
+      moods: ["scientific", "plain", "national", "closely", "fair"]
     }
   };
 
-  const campusChapterBeats = [
-    {
-      open: (plan) => `第一个小时，苏念薇站在${plan.place}，把 Day 01 留下的黑信摊开。今天的案子是“${plan.caseName}”，她和${plan.ally}先确认每条线索都有来源。`,
-      close: (plan) => `这一段结束时，${plan.object}第一次指向${plan.rival}，但证据还不够。`
-    },
-    {
-      open: (plan) => `第二组线索来自监控和留言。${plan.pressure}，所以他们不再猜，而是把每个动作写成可验证的句子。`,
-      close: () => "白板上的箭头开始变少，真正可疑的人却变得更近。"
-    },
-    {
-      open: (plan) => `第三段推进到${plan.place}的背面通道，空气里有打印纸、雨水和一点心虚的沉默。`,
-      close: (plan) => `${plan.ally}提醒她：如果线索放错位置，整条调查就会带错方向。`
-    },
-    {
-      open: () => "第四组证据来自一场突然插进来的对话。有人想用漂亮借口把事情讲圆，可每个细节都需要能落地。",
-      close: (plan) => `苏念薇没有急着质问${plan.rival}，因为她知道真正有用的是下一批证据。`
-    },
-    {
-      open: (plan) => `第五段像校园版心理战。${plan.rival}表现得太镇定，仿佛早知道他们会追到这里。`,
-      close: () => "她把情绪压下去，只留下可以被复查的事实。"
-    },
-    {
-      open: () => "第六组线索开始变得危险。故事可以离奇，但每条证据都必须像一颗螺丝，拧在它该在的位置。",
-      close: (plan) => `${plan.pressure}这句话不再是背景，而成了倒计时。`
-    },
-    {
-      open: (plan) => `第七段，${plan.ally}带来新的证人。证人说话很慢，每个短句都像怕被人删掉。`,
-      close: () => "到这里，线索不再散，开始围成一个可以收紧的圈。"
-    },
-    {
-      open: (plan) => `第八组证据回到${plan.object}。表面上它只是道具，实际上它把前面几个场景接到了一起。`,
-      close: (plan) => `苏念薇终于看见${plan.reveal}。`
-    },
-    {
-      open: () => "第九段是反转。有人承认了一半真相，故意把另一半藏进听起来无害的词里。",
-      close: () => "她没有被带偏，因为证据之间的真实关系已经暴露出来。"
-    },
-    {
-      open: (plan) => `最后一段，${plan.place}的灯一盏盏亮起。苏念薇把所有证据按顺序排开，准备把今天的故事交给公众。`,
-      close: (plan) => `她收起笔记，确认今天的结论：${plan.reveal}。下一天，案子继续。`
-    }
-  ];
-
-  const campusUsageOverrides = {
-    "don't": (word, plan) => `纸条上直接写着 "${word} tell ${plan.rival} yet"，这句否定警告让他们暂时保持沉默`,
-    "didn't": (word) => `她 ${word} trust the easy answer，因为过于顺滑的解释往往是陷阱`,
-    "can't": (word, plan) => `"I ${word} sign this," ${plan.ally}低声说，拒绝给假记录背书`,
-    "couldn't": (word) => `她 ${word} ignore the timestamp；那个时间点正好卡住整条线索`,
-    "wasn't": (word) => `那份文件 ${word} finished，页脚还留着没删干净的修订痕迹`,
-    "wouldn't": (word) => `证人 ${word} answer on camera，除非他们先保证他的名字不会曝光`,
-    "hadn't": (word) => `门禁记录显示她 ${word} left the building，说明所谓外出证明站不住`,
-    "isn't": (word) => `Maya 指着屏幕说，"This ${word} random"，于是大家重新看那串编号`,
-    "let's": (word) => `"${word} compare the timestamps," 苏念薇说，把争吵拉回证据`,
-    "there's": (word, plan) => `"${word} another copy," ${plan.ally}说，这让整个案子突然有了备份`,
-    "we'll": (word) => `"${word} keep the original file," 她说，避免证据被二次篡改`,
-    "we're": (word) => `"${word} close," 顾凛提醒她，但还差最后一个能公开的证人`,
-    "i've": (word) => `"${word} seen this code before," 证人说完就把手机反扣在桌上`,
-    "you've": (word) => `"${word} got the wrong suspect," 对方说，试图把他们引到另一条路`,
-    "what's": (word) => `"${word} missing?" 她问，逼大家把问题从情绪拉回事实`,
-    below: (word, plan) => `答案不是写在告示牌上，而是藏 ${word} the notice board 的盒子里`,
-    beneath: (word, plan) => `最后一张照片显示钥匙压在 ${word} the parade stage 的木板下`,
-    behind: (word, plan) => `真正的摄像头装在 ${word} ${plan.object}，刚好拍到换文件的人`,
-    without: (word) => `她拒绝 enter the room ${word} a witness，因为单独进去会让证据失效`,
-    per: (word) => `收据写着 two dollars ${word} copy，说明复印费被人按页数拆开报销`,
-    nor: (word) => `记录里 neither the dean ${word} the treasurer signed，责任被故意悬空`,
-    shall: (word) => `旧校规写着 students ${word} report missing funds within one day，给了她公开追问的依据`,
-    tell: (word, plan) => `她必须 ${word} the dean the truth，但要先保护交出证据的人`,
-    ask: (word) => `她没有急着 ${word} a confession，而是先让对方解释时间线`,
-    tells: (word) => `监控里的一个停顿 ${word} them who was lying，比任何口供都直接`,
-    listen: (word) => `她戴上耳机 ${word} the hallway recording，终于听见被剪掉的脚步声`,
-    according: (word) => `他们 ${word} the access log 重排路线，发现门禁顺序被改过`,
-    based: (word) => `她把判断 ${word} receipts, not rumors，才没有被情绪带偏`,
-    factories: (word) => `税务附件列出 three closed ${word}，它们是洗钱路径里的空壳地址`,
-    ants: (word) => `糖粉旁边真的有 ${word}，证明有人从通风口搬过甜点盒，不是随口乱写`,
-    amounts: (word) => `奖学金 ${word} did not match the bank log，差额正好等于被拆走的那笔钱`,
-    florida: (word) => `一张转账截图来自 ${word}，把校园案子连到校外账户`,
-    of: (word) => `the corner ${word} the page 被折过，说明有人反复翻到同一处`,
-    with: (word, plan) => `她 ${word} ${plan.ally} checked the log，一起核对比单独猜更可靠`,
-    what: (word) => `她问 ${word} was missing，让问题直接指向缺口`,
-    each: (word) => `${word} receipt carried the same tiny stamp，所以它们属于同一条线`,
-    who: (word) => `关键是 ${word} changed the file，而不是谁在走廊里声音最大`,
-    around: (word, plan) => `摄像头线缠 ${word} ${plan.object}，解释了为什么镜头角度会偏`,
-    anything: (word) => `她没有移动 ${word} before taking photos，保证现场顺序不被破坏`,
-    herself: (word) => `她让证人 ${word} point to the screen，而不是替他说结论`,
-    provided: (word) => `${word} the witness kept a copy，他们就能公开下一页证据`,
-    plus: (word) => `名单上多出 ${word} one false signature，正好解释差额从哪里来`,
-    and: (word) => `门禁 ${word} receipt 指向同一个时间点，两个证据终于接上`,
-    his: (word) => `监控里 ${word} badge flashed once，足够确认经过的人是谁`,
-    all: (word) => `${word} four cameras went dark together，不可能只是线路故障`,
-    about: (word) => `那封邮件 was ${word} scholarship money，不是普通社团通知`,
-    now: (word) => `${word} the timeline made sense，苏念薇终于敢提出下一步`,
-    another: (word) => `${word} copy was hidden in the drawer，证明原件并不是唯一证据`,
-    against: (word) => `这条证词 worked ${word} the official story，让校方版本开始松动`,
-    onto: (word) => `她把时间线投 ${word} the screen，让每个人都能看见顺序`,
-    including: (word) => `附件列出 all accounts, ${word} the one under a fake club name`,
-    somebody: (word) => `${word} opened the cabinet after midnight，门禁却被删过`,
-    "weren't": (word) => `那些脚印 ${word} random；每一步都避开了摄像头`,
-    they: (word) => `${word} signed in as guests，却用的是学生会旧账号`,
-    her: (word) => `顾凛把 ${word} name kept off the public slide，先保护证人`,
-    after: (word) => `${word} midnight, the printer started again，时间点直接暴露异常`,
-    something: (word) => `${word} clicked inside the wall，像隐藏读卡器被重新启动`,
-    once: (word) => `${word} the dean entered, everyone stopped joking，压力突然变真`,
-    near: (word, plan) => `第二张照片拍到 the badge ${word} ${plan.object}，位置刚好对上`,
-    cannot: (word) => `系统提示 the file ${word} be restored，反而证明有人清过缓存`,
-    throughout: (word) => `同一个编号 appeared ${word} the report，从第一页跟到最后一页`,
-    besides: (word) => `${word} the receipt, she found a login token，说明还有第二条入口`,
-    seeing: (word) => `${word} the red stamp, Maya stopped arguing and opened the archive`,
-    "they're": (word) => `"${word} not donors," 苏念薇说，"they are shell accounts."`,
-    "he'd": (word) => `证人承认 ${word} copied the file before leaving，这是他自保的方式`,
-    to: (word) => `这条 hallway led ${word} the archive room，路线终于清楚`,
-    at: (word) => `监控停 ${word} 11:47，这个时间不能被口供抹掉`,
-    when: (word) => `${word} the alarm rang, only one badge was active，嫌疑范围立刻缩小`,
-    up: (word) => `她 looked ${word} the old account，才发现用户名还活着`,
-    my: (word) => `"${word} copy is gone," 证人说，声音抖得很轻`,
-    our: (word) => `"${word} story needs proof," Maya 提醒她，不要只靠直觉`,
-    under: (word) => `原始表格藏 ${word} the desk pad，和截图版本完全不同`,
-    in: (word) => `那串编号 appeared ${word} the backup folder，不在公开系统里`,
-    we: (word) => `${word} need the original file，苏念薇把这句话写到白板顶端`,
-    out: (word) => `打印机 spit ${word} one extra page，正好是他们缺的那一页`,
-    both: (word) => `${word} witnesses gave the same time，口供开始互相支撑`,
-    among: (word) => `那个账号 hid ${word} ordinary club accounts，看起来才不显眼`,
-    except: (word) => `所有门都锁了，${word} the service entrance，说明有人知道内部路线`,
-    whatever: (word) => `${word} happened next, she saved the file first，先保住证据`,
-    whenever: (word) => `${word} the system rebooted, the same account appeared，规律终于暴露`,
-    this: (word) => `${word} note mattered because it named a real room，不能被当作涂鸦`,
-    them: (word) => `她 asked ${word} to repeat the story，第二遍终于露出矛盾`,
-    him: (word) => `镜头 caught ${word} at the side door，解释了为什么他一直沉默`,
-    over: (word) => `她 placed a clear folder ${word} the receipt，避免指纹被抹掉`,
-    me: (word) => `"Trust ${word} for five minutes," 顾凛说，但她只信证据`,
-    someone: (word) => `${word} used the old password，说明嫌疑人知道校史系统`,
-    whose: (word) => `她问 ${word} signature was missing，问题一下变得具体`,
-    neither: (word) => `${word} witness wanted money；他们害怕的是处分记录`,
-    myself: (word) => `"I checked it ${word}," 苏念薇说，拒绝让别人替她背锅`,
-    whom: (word) => `表格问 to ${word} the money was sent，转账对象终于浮出来`,
-    you: (word) => `"${word} know the code," 她对顾凛说，逼他解释第一夜的沉默`,
-    from: (word) => `转账 came ${word} a private account，不是学校官方渠道`,
-    can: (word) => `她 ${word} recover one backup，但只有十分钟窗口`,
-    then: (word) => `门禁先亮，${word} the camera died，顺序证明是人为操作`,
-    where: (word) => `她问 ${word} the original file was stored，目标变成具体房间`,
-    those: (word) => `${word} numbers matched the donor list，巧合变成证据`,
-    until: (word) => `她 waited ${word} the upload finished，才把屏幕转向众人`,
-    across: (word) => `红线 ran ${word} the map，把宿舍、图书馆和办公室连起来`,
-    "i'm": (word) => `"${word} not guessing," 她说，然后打开原始日志`,
-    although: (word) => `${word} the story sounded strange, the timestamps were clean`,
-    "you're": (word) => `"${word} hiding one more page," Maya 说，对方终于不再笑`,
-    "doesn't": (word) => `这个解释 ${word} match the video，所以必须被划掉`,
-    everybody: (word) => `${word} saw the public slide，没人还能说自己不知道`,
-    unlike: (word) => `${word} the fake screenshot, the backup kept its edit history`,
-    that: (word) => `${word} clause changed the whole contract，证明有人动过文字`,
-    down: (word) => `她 wrote ${word} the exact minute，避免后来被人改口`,
-    must: (word) => `证据 ${word} stay public，否则明早又会消失`,
-    between: (word) => `差额 sat ${word} two accounts，像故意留出来的缝`,
-    us: (word) => `"They used ${word} as cover," 顾凛说，终于承认自己也被利用`,
-    during: (word) => `${word} the hearing, the system logged a new edit，幕后人还在动手`,
-    it: (word) => `${word} looked like a mistake until she checked the backup`,
-    have: (word) => `他们 ${word} one clean copy left，必须马上上传`,
-    your: (word) => `"Check ${word} phone," 她提醒证人，录音就在里面`,
-    many: (word) => `${word} small transfers replaced one large theft，手法因此更隐蔽`,
-    could: (word) => `一个备份 ${word} still exist，如果他们先找到旧服务器`,
-    only: (word) => `the ${word} open door was the archive room，嫌疑路线被锁定`,
-    any: (word) => `她 refused to change ${word} word in the statement，避免被抓住漏洞`,
-    because: (word) => `她公开证据 ${word} silence would help the thief，原因很直接`,
-    upon: (word) => `校徽 stamped ${word} the file，让伪造版本显得很正式`,
-    "i'll": (word) => `"${word} take the risk," 苏念薇说，把证据推上屏幕`,
-    within: (word) => `日志显示 edit happened ${word} eight seconds，速度快得不自然`,
-    ourselves: (word) => `他们 checked it ${word}，不再把判断交给传闻`,
-    he: (word) => `${word} entered through the side door，录像给出完整答案`,
-    or: (word) => `要么公开证据 ${word} watch it vanish，选择只剩这两个`,
-    which: (word) => `她标出 ${word} account moved first，转账顺序终于清楚`,
-    some: (word) => `${word} records were real，正因为如此假记录更难发现`,
-    should: (word) => `听证会 ${word} wait for evidence，而不是先定罪`,
-    others: (word) => `${word} tried to leave, but the locked door kept everyone inside`,
-    toward: (word) => `脚印 led ${word} the service stairs，方向和口供相反`,
-    beside: (word) => `钥匙 lay ${word} the projector，不在抽屉里`,
-    anyone: (word) => `她不让 ${word} touch the laptop，直到备份完成`,
-    nobody: (word) => `${word} spoke for ten seconds，因为证据已经替他们说话`,
-    for: (word) => `这份备份 was ${word} the hearing，不是私人报复`,
-    by: (word) => `文件 was changed ${word} an admin account，权限来源终于出现`,
-    their: (word) => `${word} signatures lined up perfectly，假签名反而太整齐`,
-    so: (word) => `门禁坏了，${word} the thief used a paper pass，逻辑终于接上`,
-    through: (word) => `他们 walked ${word} the basement tunnel，找到了原始服务器`,
-    same: (word) => `两个账号 used the ${word} password，关系不再能否认`,
-    along: (word) => `红线 ran ${word} the floor，带他们走到隐藏柜`,
-    above: (word) => `摄像头 mounted ${word} the exit sign，刚好拍到徽章`,
-    however: (word) => `${word} clean the story sounded, the numbers still failed`,
-    yet: (word) => `证人 had not spoken ${word}，但她的备份已经足够`,
-    everyone: (word) => `${word} in the room saw the edit history，沉默变得很重`,
-    yourself: (word) => `"Read it ${word}," 她说，让对方无法继续装傻`,
-    "won't": (word) => `系统 ${word} delete a locked backup，给了他们最后机会`,
-    none: (word) => `${word} of the excuses matched the receipt，借口全部失效`,
-    till: (word) => `她 waited ${word} the projector warmed up，再公开最后一页`,
-    one: (word) => `${word} badge appeared twice，说明有人借用了身份`,
-    these: (word) => `${word} notes belong together，单看任何一张都会误判`,
-    than: (word) => `差额 was larger ${word} expected，说明偷钱持续更久`,
-    while: (word) => `${word} others argued, she saved the logs，行动比争辩更重要`,
-    since: (word) => `${word} the first storm, the same account had appeared every night`,
-    several: (word) => `${word} files shared the same footer，伪造来源终于统一`,
-    whether: (word) => `问题不是 ${word} she was brave，而是证据能不能公开`,
-    itself: (word) => `the system ${word} exposed the edit，机器比人诚实`,
-    "he's": (word) => `"${word} not the source," Maya 说，把嫌疑从顾凛身上移开`,
-    "you'll": (word) => `"${word} see the pattern," 苏念薇说，然后放大收据`,
-    beyond: (word) => `这条线索 went ${word} campus，牵出校外账户`,
-    "haven't": (word) => `"They ${word} erased everything," 她说，因为备份还在`,
-    yours: (word) => `"Is this copy ${word}?" 她问证人，确认文件来源`,
-    anybody: (word) => `如果 ${word} else touched the laptop，证据链就会断`,
-    on: (word) => `原始文件 sat ${word} the old server，不在共享盘`,
-    if: (word) => `${word} the dean delayed again, the campus paper would publish first`,
-    would: (word) => `假签名 ${word} have worked，除非他们找到原件`,
-    may: (word) => `这条规则 ${word} protect the witness，给了他们公开的空间`,
-    might: (word) => `那个小错误 ${word} expose the whole fraud，值得继续追`,
-    himself: (word) => `顾凛 ${word} admitted the first lie，故事终于能往前走`,
-    either: (word) => `${word} copy proved the same thing，伪造版本再也站不住`,
-    everything: (word) => `${word} pointed back to the first black letter，十五天的线索开始合拢`,
-    "business": (word) => `这不是普通 ${word} dispute，而是有人把校园基金当成私人交易`,
-    "subject": (word) => `邮件的 ${word} line 被改过，原本写的是 emergency hearing`,
-    "difference": (word) => `新旧两张表的 ${word} 只有一列，却足够证明有人动手`,
-    "record": (word) => `她保存 the original ${word}，因为截图可以伪造，原始记录更难抵赖`,
-    "records": (word) => `那些 ${word} show a repeated pattern，每次都少同样的金额`,
-    "pattern": (word) => `她画出 the payment ${word}，终于看出钱被分成小额转走`,
-    "question": (word) => `关键 ${word} 不是谁拿了钱，而是谁有权限改门禁`,
-    "reason": (word) => `她找到 a clear ${word} for the delay：有人在等系统自动覆盖日志`,
-    "result": (word) => `最终 ${word} 出现在投影上，所有人第一次看懂这不是误会`,
-    "evidence": (word) => `她把 the ${word} copied twice，一份交校报，一份留给听证会`,
-    line: (word) => `她沿着 red ${word} 追到书架背面，发现它不是装饰线，而是路线图`,
+  const standaloneFunctionUses = {
+    "don't": (word, plan) => `门口贴着 "${word} touch the ${plan.object}"，这句警告让所有人先停手`,
+    "didn't": (word, plan) => `${plan.hero} ${word} believe the first excuse，于是继续追问真正原因`,
+    "can't": (word, plan) => `"I ${word} leave yet," ${plan.partner}说，因为${plan.goal}`,
+    "couldn't": (word) => `她 ${word} explain the silence，直到第二个人也承认听见了同一句话`,
+    "wasn't": (word) => `那件事 ${word} finished，桌角还留着没收好的东西`,
+    "wouldn't": (word) => `对方 ${word} answer directly，只把目光移向门口`,
+    "hadn't": (word) => `如果她 ${word} checked twice，就会错过最关键的一分钟`,
+    "isn't": (word) => `"This ${word} funny," 有人低声说，玩笑一下变成了真正的问题`,
+    "let's": (word, plan) => `"${word} start over," ${plan.partner}说，把混乱重新拉回正轨`,
+    "there's": (word, plan) => `"${word} one more way," ${plan.hero}说，气氛立刻亮了一点`,
+    "we'll": (word) => `"${word} handle it together," 这句话让队伍终于不再互相指责`,
+    "we're": (word, plan) => `"${word} almost there," ${plan.partner}提醒她，最后一步反而最难`,
+    "i've": (word) => `"${word} seen enough," 她说，然后做出当天最果断的选择`,
+    "you've": (word) => `"${word} got five minutes," 对方提醒她，倒计时开始变得真实`,
+    "what's": (word, plan) => `"${word} the plan?" 有人问，所有目光都落到${plan.hero}身上`,
+    below: (word) => `真正的提示贴在 ${word} the notice board 的位置，新生一低头就能看见`,
+    beneath: (word) => `最后一张纸压在 ${word} the stage board，差一点被鞋跟踢走`,
+    behind: (word, plan) => `笑声来自 ${word} the ${plan.object}，大家才发现有人一直躲在那里`,
+    without: (word) => `她不肯 start ${word} a witness，因为没人应该独自承担误会`,
+    per: (word) => `摊位牌写着 two tickets ${word} person，队伍终于排得公平`,
+    nor: (word) => `neither the captain ${word} the coach wanted drama，只想把事情讲清楚`,
+    shall: (word) => `老校规写着 students ${word} return borrowed keys before midnight，正好救了他们一次`,
+    provided: (word) => `${word} the last bus waited, everyone still had a chance to fix the mess`,
+    plus: (word) => `名单多出 ${word} one name，原本紧张的局面突然有了转机`,
+    according: (word) => `${word} the schedule, they still had ten minutes before the doors closed`,
+    based: (word) => `她的判断 ${word} on what people actually did, not what they promised`,
+    if: (word) => `${word} the plan failed, they would apologize in front of everyone`,
+    because: (word) => `她选择留下 ${word} running away would hurt someone else`,
+    although: (word) => `${word} the scene looked absurd, every person had a clear reason to be there`,
+    whether: (word) => `问题不是 ${word} she wanted attention，而是她能不能把话说完整`,
+    while: (word, plan) => `${word} others argued, ${plan.hero} kept the group moving`,
+    until: (word) => `她 waited ${word} the last student crossed the door，才终于松手`,
+    through: (word, plan) => `他们 walked ${word} ${plan.places[0]}，一路把笑声和麻烦都带过去`,
+    around: (word, plan) => `队伍绕 ${word} the ${plan.object} 转了一圈，场面突然像临时舞台`,
+    across: (word) => `消息 ran ${word} campus，比任何广播都快`,
+    between: (word) => `误会卡在 ${word} two friends，谁先开口都很难`,
+    beside: (word, plan) => `${plan.hero} sat ${word} ${plan.partner}，终于把真话说出来`,
+    under: (word) => `那张纸滑到 ${word} the table，差点被清洁车卷走`,
+    above: (word) => `横幅挂在 ${word} the entrance，所有人一进门就看见`,
+    against: (word) => `这个决定 went ${word} the easy choice，却救下了真正重要的人`,
+    toward: (word) => `她 walked ${word} the crowd，没有再躲到朋友身后`,
+    upon: (word) => `名字 stamped ${word} the card，看起来正式得让人不敢乱改`,
+    within: (word) => `答案必须出现 ${word} ten minutes，否则活动就会失控`,
+    beyond: (word) => `这件小事 went ${word} one classroom，影响到整条走廊`,
+    about: (word) => `他们终于 talked ${word} the real problem，而不是继续绕弯`,
+    where: (word) => `她问 ${word} everyone should meet，先把混乱变成路线`,
+    when: (word) => `${word} the lights changed, the whole room held its breath`,
+    who: (word) => `大家真正想知道 ${word} had the courage to apologize first`,
+    whose: (word) => `她问 ${word} bag was missing，问题终于有了具体对象`,
+    whom: (word) => `表格写着 to ${word} the letter belonged，答案藏在称呼里`,
+    what: (word) => `她问 ${word} mattered most，才发现大家争的不是同一件事`,
+    each: (word) => `${word} person carried one small task，活动终于动起来`,
+    every: (word) => `${word} chair in the room turned toward the same voice`,
+    all: (word) => `${word} the noise stopped for one second，真话才有地方落下`,
+    both: (word) => `${word} friends were embarrassed, but neither wanted to leave`,
+    some: (word) => `${word} students laughed first, then quietly started helping`,
+    many: (word) => `${word} small choices made the ending better than the plan`,
+    several: (word) => `${word} people changed their minds after hearing the whole story`,
+    another: (word) => `${word} chance appeared when the door opened again`,
+    those: (word) => `${word} words sounded ordinary, yet they repaired the room`,
+    these: (word) => `${word} cards belonged together，拼起来才像完整地图`,
+    anyone: (word) => `${word} could have walked away, but nobody did`,
+    anybody: (word) => `如果 ${word} needed help, the group agreed to stop and wait`,
+    everybody: (word) => `${word} heard the same announcement，误会再也藏不住`,
+    everyone: (word) => `${word} got a role, even the quiet students in the back`,
+    someone: (word) => `${word} finally raised a hand，承认自己弄错了第一步`,
+    somebody: (word) => `${word} had moved the sign，不是恶意，只是太紧张`,
+    nobody: (word) => `${word} wanted to be cruel，事情却差点变得很伤人`,
+    nothing: (word) => `${word} looked important at first，直到她看见背面的名字`,
+    anything: (word) => `她没有 promise ${word} impossible，只答应把事情讲清楚`,
+    everything: (word) => `${word} became easier after the first honest sentence`,
+    themselves: (word) => `他们让 freshmen introduce ${word}，尴尬很快变成笑声`,
+    herself: (word, plan) => `${plan.hero} made the call ${word}，没有再把责任推给别人`,
+    himself: (word) => `他 ${word} admitted the mistake，气氛反而松了一点`,
+    ourselves: (word) => `我们 checked it ${word}，才敢把结果贴出去`,
+    myself: (word) => `"I will say it ${word}," 她说，声音不大但很稳`,
+    yourself: (word) => `"Read it ${word}," 对方说，终于把纸递回来`,
+    it: (word) => `${word} looked small, but the whole day turned on it`,
+    they: (word) => `${word} arrived late, carrying the one thing everyone needed`,
+    them: (word) => `她 asked ${word} to wait, because the ending should include everyone`,
+    him: (word) => `大家看见 ${word} standing alone，才知道玩笑开过了头`,
+    her: (word, plan) => `${plan.hero} kept ${word} voice calm，先让对方说完`,
+    his: (word) => `${word} notebook held the missing order of events`,
+    their: (word) => `${word} plan finally sounded less like panic and more like teamwork`,
+    my: (word) => `"${word} mistake," 她说，先把最难听的话讲出来`,
+    our: (word, plan) => `"${word} turn," ${plan.hero} said，大家一起往前走`,
+    your: (word) => `"Check ${word} pocket," 朋友提醒他，答案真的就在里面`,
+    yours: (word) => `"This seat is ${word}," 她说，把被抢走的位置还给对方`,
+    me: (word) => `"Trust ${word} for one minute," 他说，但她仍然先看事实`,
+    us: (word) => `"They are watching ${word}," 队长说，于是大家更认真了`,
+    you: (word) => `"${word} started this," 对方说得太重，她却没有立刻反击`,
+    he: (word) => `${word} stepped forward first，替大家承担了最尴尬的一句道歉`,
+    she: (word) => `${word} held the room with one sentence，连后排都安静下来`,
+    "he's": (word) => `"${word} not lying," 有人终于替他说话`,
+    "she's": (word) => `"${word} trying," 朋友说，别把她逼到角落`,
+    "they're": (word) => `"${word} waiting outside," 这句话让所有人加快动作`,
+    "you're": (word) => `"${word} not alone," 这句安慰比解释更有用`,
+    "i'm": (word) => `"${word} ready," 她说完就推开门`,
+    "i'll": (word) => `"${word} go first," 她说，替紧张的人开了路`,
+    "won't": (word) => `门 ${word} open unless everyone stops pushing，队伍终于安静`,
+    "haven't": (word) => `"We ${word} lost yet," 队长说，把大家从沮丧里拉回来`,
+    "doesn't": (word) => `这个解释 ${word} match what people saw，所以他们重来一次`,
+    cannot: (word) => `门口的机器提示 the card ${word} be read，麻烦立刻升级`,
+    can: (word) => `她 ${word} still fix it，只要先承认真相`,
+    could: (word) => `他们 ${word} hear music from the next room，知道时间快到了`,
+    would: (word) => `如果没人开口，误会 ${word} get worse before dinner`,
+    may: (word) => `这个小选择 ${word} save the event，虽然看起来不起眼`,
+    might: (word) => `她知道一句真话 ${word} hurt first, then help`,
+    must: (word) => `他们 ${word} choose kindness before winning，故事才没有走偏`,
+    should: (word) => `每个人 ${word} hear the full story before judging`,
+    rather: (word) => `她 ${word} lose the prize than let a friend be blamed`,
+    however: (word) => `${word} bright the room looked, the silence still felt heavy`,
+    yet: (word) => `没人 was ready ${word}, but the announcement had already begun`,
+    now: (word) => `${word} the truth was out, even the rival looked relieved`,
+    then: (word) => `音乐先停，${word} everyone laughed，紧张终于散开`,
+    else: (word) => `someone ${word} had taken the wrong path，才让误会绕了一圈`,
+    once: (word) => `${word} she heard the whole story, she stopped blaming people`,
+    down: (word) => `她 wrote ${word} the new order，贴在大家都看得见的地方`,
+    up: (word) => `他 looked ${word} at the balcony，终于看见挥手的人`,
+    out: (word) => `打印机 spit ${word} one last page，大家同时松了口气`,
+    over: (word) => `她 pulled a chair ${word} and asked everyone to sit`,
+    on: (word) => `名字 written ${word} the card explained the whole mix-up`,
+    off: (word) => `灯 went ${word} for three seconds，足够让全场屏住呼吸`,
+    to: (word) => `这条路 led ${word} the courtyard，结尾终于有了方向`,
+    from: (word) => `短信 came ${word} the one person who had stayed quiet`,
+    into: (word) => `他们 turned panic ${word} a plan，动作终于顺了`,
+    onto: (word) => `她 stepped ${word} the stage，先说了最简单的实话`,
+    in: (word) => `答案 was hidden ${word} the ordinary schedule，没人一开始注意`,
+    at: (word) => `他们 agreed to meet ${word} six，至少时间不再混乱`,
+    by: (word) => `问题 was solved ${word} listening first，没人再抢话`,
+    for: (word) => `她 saved a seat ${word} the student who nearly left`,
+    with: (word, plan) => `她 stood ${word} ${plan.partner}，终于不需要一个人硬撑`,
+    among: (word) => `答案 hid ${word} ordinary names，越普通越容易被忽略`,
+    except: (word) => `所有人都到了，${word} the person everyone most needed`,
+    before: (word) => `她 spoke ${word} the rumor spread farther，抢回了主动权`,
+    after: (word) => `${word} the apology, even the back row started clapping`,
+    during: (word) => `${word} the quietest minute, she finally heard the important detail`,
+    throughout: (word) => `同一首歌 played ${word} the event，把散乱的人重新拉到一起`,
+    since: (word) => `${word} morning, every small mistake had been piling up`,
+    beyond: (word) => `这件事 went ${word} one club，变成整个校园都在讨论的选择`,
+    either: (word) => `${word} answer would hurt someone，所有人都明白不能乱猜`,
+    neither: (word) => `${word} side was completely right，故事才有继续讲下去的空间`,
+    none: (word) => `${word} of the jokes sounded funny after the truth came out`,
+    or: (word) => `他们可以继续吵 ${word} finally listen，答案其实很明显`,
+    same: (word) => `两张卡 used the ${word} stamp，说明它们来自同一个桌子`,
+    such: (word) => `${word} a small detail changed the whole ending`,
+    only: (word) => `the ${word} thing left was to say sorry in public`,
+    than: (word) => `友情 mattered more ${word} winning the argument`,
+    so: (word) => `大家终于安静，${word} the shy student could finish`,
+    "business": (word) => `社团摊位把 ${word} 写在招牌上，原来他们真的在教学生卖手工饼干`,
+    factories: (word) => `建筑社模型里有 three old ${word}，解释了城市规划作业为什么摆在这里`,
+    ants: (word) => `生物社的 ${word} 从透明盒子里排成一条线，惹得旁边同学又笑又躲`,
+    amounts: (word) => `白板上的 ${word} 对不上，负责预算的同学立刻红了脸`,
+    florida: (word) => `来自 ${word} 的交换生拿出照片，证明海边分校真的长那样`,
+    record: (word) => `她保存 the original ${word}，因为每个人的记忆都会吵架`,
+    records: (word) => `旧 ${word} show the same name twice，问题终于有了形状`,
+    pattern: (word) => `她看出 a clear ${word}，原来混乱每隔十分钟重复一次`,
+    question: (word) => `真正的 ${word} 不是谁赢，而是谁愿意先道歉`,
+    reason: (word) => `她终于听见 a clear ${word}，气也消了一半`,
+    result: (word) => `最后的 ${word} 出乎意料：大家没有散场，反而留下帮忙`,
+    evidence: (word) => `这次 the ${word} 只是一张普通照片，却足够还原误会`,
+    subject: (word) => `邮件的 ${word} line 写得太吓人，难怪大家会误会`,
+    difference: (word) => `两份名单的 ${word} 只有一个名字，却改变了谁该上台`,
+    line: (word) => `她沿着 red ${word} 走到终点，发现路线本来就画得很清楚`,
     page: (word) => `缺失的 ${word} 被夹在旧年鉴里，页角还沾着雨水`,
     paper: (word) => `那张 ${word} 的水印来自学生会办公室，来源终于变得具体`,
-    try: (word) => `第一次 ${word} 失败后，她换成紫外灯，才看见隐藏编号`,
-    sea: (word) => `海边研究站地图上标着 ${word}，说明转账路线经过校外码头`,
+    try: (word) => `第一次 ${word} 失败后，她换了更笨但更诚实的办法`,
+    sea: (word) => `海报上的 ${word} 把大家的注意力带到海边分校`,
     cut: (word) => `封口处有一道 clean ${word}，像有人用刀拆开后又重新贴上`,
-    kinds: (word) => `表格把 three ${word} of payments 分开列出，手法突然清楚`,
-    idea: (word) => `Maya 提出一个 risky ${word}：先公开页码，再逼对方交原件`,
-    places: (word) => `名单上的 three ${word} 对应三台旧打印机，路线不再散`,
-    class: (word) => `那门 night ${word} 的签到表证明顾凛当时不在办公室`,
-    dark: (word) => `走廊突然 went ${word}，摄像头却在黑屏前多录了三秒`,
-    winter: (word) => `旧 ${word} break 的维修记录解释了为什么地下室门禁一直离线`,
-    fact: (word) => `她只保留 one hard ${word}：原始日志比截图早三分钟`,
-    writing: (word) => `纸边的 ${word} 歪得很轻，和林夏平时的笔迹完全不同`,
-    length: (word) => `录音的 ${word} 多出七秒，正好藏着一句被剪掉的话`,
-    following: (word) => `她翻到 the ${word} page，下一页正好列出被删掉的名字`,
-    seen: (word) => `她 had ${word} the same stamp before，所以立刻认出这不是新错误`,
-    grew: (word) => `走廊里的 rumor ${word} louder，每个人都开始躲开校报镜头`,
-    wrote: (word) => `有人 ${word} the note by hand，笔迹和电子档完全不同`,
-    else: (word) => `someone ${word} had used the printer，打印队列里多出陌生账号`
+    kinds: (word) => `老师把 three ${word} of mistakes 写在黑板上，大家终于不再乱怪人`,
+    idea: (word, plan) => `${plan.hero} 提出一个 risky ${word}：先讲真话，再想办法补救`,
+    places: (word) => `名单上的 three ${word} 对应三条不同路线，队伍终于知道往哪走`,
+    class: (word) => `那门 night ${word} 的签到表证明他没有故意迟到`,
+    dark: (word) => `走廊突然 went ${word}，反而让大家听见了角落里的声音`,
+    winter: (word) => `旧 ${word} break 的照片让故事多了一点温柔`,
+    fact: (word) => `她只保留 one hard ${word}：所有人都需要一个重新解释的机会`,
+    writing: (word) => `纸边的 ${word} 歪得很轻，像写的人当时手在发抖`,
+    length: (word) => `录音的 ${word} 多出七秒，正好藏着一句被打断的道歉`,
+    following: (word) => `她翻到 the ${word} page，下一页正好写着集合地点`,
+    seen: (word) => `她 had ${word} the same stamp before，所以立刻认出这张卡`,
+    grew: (word) => `走廊里的 laughter ${word} louder，尴尬却慢慢变成轻松`,
+    wrote: (word) => `有人 ${word} the note by hand，笨拙但真诚`,
+    tell: (word) => `她必须 ${word} the truth before the room chose a side`,
+    ask: (word) => `她没有急着 ${word} a confession，而是先问对方需不需要帮助`,
+    tells: (word) => `一个停顿 ${word} them who felt guilty，比争吵更清楚`,
+    listen: (word) => `她戴上耳机 ${word} the hallway recording，终于听见完整句子`
   };
 
-  function campusPlanForDay(day) {
-    return campusChapterPlans[day] || campusChapterPlans[2];
+  function standaloneCampusPlan(day) {
+    return standaloneCampusStories[day] || standaloneCampusStories[2];
   }
 
   function campusWordRole(item) {
@@ -1274,62 +1288,84 @@
     return `${campusArticleFor(raw)} ${wordHtml}`;
   }
 
-  function campusUsageClause(item, plan, absoluteIndex, density) {
+  function campusBeforeChinese(text) {
+    return /[A-Za-z0-9]$/.test(String(text || "")) ? `${text} ` : text;
+  }
+
+  function standaloneCampusClause(item, plan, absoluteIndex, density) {
     const wordHtml = chip(item);
     const raw = String(item.word || "").toLowerCase();
-    const override = campusUsageOverrides[raw];
+    const override = standaloneFunctionUses[raw];
     if (override) return override(wordHtml, plan, absoluteIndex);
 
     const role = campusWordRole(item);
     const nounPhrase = campusNounPhrase(item, wordHtml);
-    const witness = absoluteIndex % 2 === 0 ? plan.ally : "顾凛";
-    const nounEvidenceFrames = [
-      `案卷把 ${nounPhrase} 列为证据名，她在旁边写下页码和来源`,
-      `白板上新增 ${nounPhrase}，它对应一张照片或一份记录，来源清楚`,
-      `证据袋标签写着 ${nounPhrase}，说明这条线索来自案卷里的具体物品、地点或概念`
+    const place = plan.places[absoluteIndex % plan.places.length];
+    const prop = plan.props[absoluteIndex % plan.props.length];
+    const action = plan.actions[absoluteIndex % plan.actions.length];
+    const mood = plan.moods[absoluteIndex % plan.moods.length];
+    const hero = campusBeforeChinese(plan.hero);
+    const partner = campusBeforeChinese(plan.partner);
+    const nounFrames = [
+      `${place}里出现 ${nounPhrase}，它和${plan.goal}直接有关`,
+      `${partner}把 ${nounPhrase} 放到${prop}旁边，场面一下具体起来`,
+      `有人提到 ${nounPhrase}，不是为了凑数，而是因为${plan.tension}`,
+      `${action}时，${nounPhrase}突然派上用场，大家才没继续乱下去`
     ];
 
     if (role === "number") {
-      return `数量 ${wordHtml} 出现在收据角落，和门禁时间正好对上`;
+      return `数量 ${wordHtml} 写在${prop}旁边，正好决定他们该分成几组`;
     }
     if (role === "code") {
-      return `字母 ${wordHtml} 是档案柜的分区码，不是无意义的装饰`;
+      return `字母 ${wordHtml} 是临时分组的代号，拿到的人要先去${place}`;
     }
     if (role === "possessive") {
-      return `文件标题里的 ${wordHtml} label 标出归属关系，让账户主人无法再躲`;
+      return `${wordHtml} label 贴在${prop}上，说明东西终于回到主人手里`;
     }
     if (role === "function") {
-      return `关键关系由 ${wordHtml} 标出，前后两条线索因此连成一段完整证词`;
+      return `${wordHtml} 把前后两句话接住，大家终于听懂对方真正想说什么`;
     }
     if (role === "verb") {
-      if (density >= 90) return `she had to ${wordHtml} the clue before the record disappeared`;
-      return `她必须 ${wordHtml} the clue before the record disappeared，这个动作直接推进调查`;
+      if (density >= 90) return `${plan.hero} had to ${wordHtml} the next step before the room lost patience`;
+      return `${hero}必须 ${wordHtml} the next step before the room lost patience，这个动作让故事继续往前`;
     }
     if (role === "adjective") {
-      if (density >= 90) return `the ${wordHtml} detail made the witness stop pretending`;
-      return `那个 ${wordHtml} detail 让${witness}停下，因为它描述的状态刚好吻合现场`;
+      if (density >= 90) return `the ${wordHtml} detail made the whole scene feel honest`;
+      return `那个 ${wordHtml} detail 改变了气氛，连${plan.rival}都没法继续装作无所谓`;
     }
     if (role === "adverb") {
-      if (density >= 90) return `she moved ${wordHtml} through the hallway so the camera would keep recording`;
-      return `她 ${wordHtml} moved through the hallway，让摄像头连续拍到她的路线`;
+      if (density >= 90) return `${plan.hero} moved ${wordHtml}, careful not to embarrass anyone`;
+      return `${hero}${wordHtml} moved through ${place}，尽量不让任何人难堪`;
     }
-    if (density >= 90) return `the file named ${nounPhrase} as a tracked clue with a page number and a source`;
-    return nounEvidenceFrames[absoluteIndex % nounEvidenceFrames.length];
+    if (density >= 90) return `${nounPhrase} gave the scene a concrete detail instead of an empty label`;
+    return nounFrames[absoluteIndex % nounFrames.length].replace("气氛", mood);
   }
 
-  function campusChapterStory(items, density, day) {
-    const plan = campusPlanForDay(day);
+  function standaloneCampusStory(items, density, day) {
+    const plan = standaloneCampusPlan(day);
     const paragraphs = [];
+    const setting = campusBeforeChinese(plan.setting);
+    const hero = campusBeforeChinese(plan.hero);
+    const partner = campusBeforeChinese(plan.partner);
     for (let i = 0; i < items.length; i += 20) {
       const group = items.slice(i, i + 20);
       const paragraphIndex = i / 20;
-      const beat = campusChapterBeats[paragraphIndex % campusChapterBeats.length];
-      const clauses = group.map((item, offset) => campusUsageClause(item, plan, i + offset, density));
+      const place = plan.places[paragraphIndex % plan.places.length];
+      const opener = paragraphIndex === 0
+        ? `${setting}开始时，${hero}站在${place}，目标很清楚：${plan.goal}。${plan.tension}。`
+        : paragraphIndex === 4
+          ? `故事走到中段，${plan.rival}终于露面。${hero}不想把事情闹大，只想先把混乱讲顺。`
+          : paragraphIndex === 8
+            ? `${plan.turn}。场面突然安静下来，前面看似不搭的细节开始变得合理。`
+            : paragraphIndex === 9
+              ? `最后一段，${plan.ending}。`
+              : `他们来到${place}，${partner}负责${plan.actions[paragraphIndex % plan.actions.length]}，${hero}负责稳住大家的情绪。`;
+      const clauses = group.map((item, offset) => standaloneCampusClause(item, plan, i + offset, density));
       const sentences = [];
-      for (let j = 0; j < clauses.length; j += 5) {
-        sentences.push(`${clauses.slice(j, j + 5).join("；")}。`);
+      for (let j = 0; j < clauses.length; j += 4) {
+        sentences.push(`${clauses.slice(j, j + 4).join("；")}。`);
       }
-      paragraphs.push(`<p>${beat.open(plan)} ${sentences.join(" ")} ${beat.close(plan)}</p>`);
+      paragraphs.push(`<p>${opener} ${sentences.join(" ")}</p>`);
     }
     return paragraphs.join("");
   }

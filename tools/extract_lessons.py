@@ -150,20 +150,20 @@ SUPPLEMENTAL_WORDS = [
 
 THEMES = [
     ("The Storm Contract", "暴雨夜的假婚约", "storm-contract", "suspense romance", "a storm-night fake engagement exposes a family debt and a hidden video"),
-    ("The Locked Library", "锁住的图书馆", "locked-library", "campus mystery", "a campus library locks down during a scholarship ceremony"),
-    ("The Vanishing Road Trip", "消失的公路旅行", "road-trip", "road mystery", "friends cross the country after finding a witness map"),
-    ("The Midnight Court", "午夜法庭", "courtroom", "legal reversal", "a young witness changes a courtroom in one night"),
-    ("The Office Leak", "办公室泄密案", "workplace", "workplace comedy thriller", "a small team turns a product launch into a fraud chase"),
-    ("The Festival Signal", "社区节日信号", "festival", "neighborhood rescue", "a neighborhood festival hides a missing child clue"),
-    ("The Hospital Window", "医院夜班窗口", "hospital", "medical night shift", "a strange diagnosis links patients, memory, and an old promise"),
-    ("The Startup Apology", "创业公司的公开道歉", "startup", "tech drama", "a startup launch breaks when a data leak reaches the public screen"),
-    ("The Small-Town Election", "小镇选举风波", "election", "civic mystery", "a forged video changes a local election"),
-    ("The Train Bag", "晚点列车上的手提包", "train", "stranger ensemble", "a delayed train traps strangers with one stolen bag"),
-    ("The Apartment Fire", "公寓火灾之后", "rescue", "rescue drama", "a fire reveals a betrayal inside a quiet apartment block"),
+    ("The Overnight Library Hunt", "图书馆通宵寻宝夜", "overnight-library-hunt", "campus adventure", "students follow library clue cards to recover a hidden scholarship list"),
+    ("The Spring Break Bus Trip", "春假前的校车公路旅行", "spring-break-bus-trip", "campus road story", "a film-club bus trip turns into a confession before spring break"),
+    ("The Midnight Mock Trial", "午夜模拟法庭", "mock-trial", "campus courtroom", "a student mock trial becomes a public apology and a second chance"),
+    ("The Student Office Leak", "学生会办公室泄密风波", "student-office-leak", "campus politics", "a newspaper editor investigates a leaked budget before a debate"),
+    ("The Campus Community Festival", "校园社区节", "community-festival", "campus festival", "a broken stage signal turns a campus festival into a treasure hunt"),
+    ("The Health Center Night Shift", "校园健康中心夜班", "health-center-night-shift", "campus health story", "a rainy health-center line calms down after students trace a rumor"),
+    ("The Campus Demo Day", "校园创业 Demo Day", "campus-demo-day", "student startup drama", "a student team chooses honesty over prize money during demo day"),
+    ("The College Town Vote", "大学城学生投票日", "college-town-vote", "campus civic story", "students keep a snowstorm voting station fair and calm"),
+    ("The Delayed Train Bag", "晚点列车上的手提包", "delayed-train-bag", "campus travel story", "a delayed train gives an exchange student time to return a missing bag"),
+    ("The Apartment Fire Aftermath", "校外公寓火灾之后", "apartment-fire-aftermath", "campus safety story", "students recover a hard drive and learn where an apartment fire began"),
     ("The School Rumor", "学校里的谣言", "school", "social conflict", "a rumor nearly destroys a friendship before the truth comes out"),
-    ("The Final Game", "最后一场比赛", "sports", "sports decision", "a final game, an injury, and a choice nobody expected"),
-    ("The Buried Letter", "重聚时发现的旧信", "family-reunion", "family road drama", "a family reunion uncovers a letter buried for years"),
-    ("The Memory Parade", "记忆游行", "grand-review", "review adventure", "all favorites and wrong words return in a citywide final challenge"),
+    ("The Final Campus Game", "最后一场校内比赛", "final-campus-game", "campus sports story", "a campus final game becomes a lesson in loyalty and public truth"),
+    ("The Alumni Dinner Letter", "校友重聚晚宴", "alumni-dinner-letter", "campus reunion story", "an alumni dinner changes when an old letter is read aloud"),
+    ("The Graduation Memory Parade", "毕业记忆游行", "graduation-memory-parade", "campus graduation story", "a graduation parade gathers fifteen days of campus memories"),
 ]
 
 

@@ -77,9 +77,9 @@ const dayOneCampusBlock = blockBetween("function dayOneCampusStory", "function d
 const dayOneBusinessBlock = blockBetween("function dayOneBusinessStory", "function dayTwoLockedLibraryStory");
 const dayTwoBlock = blockBetween("function dayTwoLockedLibraryStory", "function dayThreeRoadTripStory");
 const dayThreeBlock = blockBetween("function dayThreeRoadTripStory", "function buildStory");
-const buildStoryBlock = blockBetween("function buildStory", "const campusChapterPlans");
-const campusChapterPlanBlock = blockBetween("const campusChapterPlans", "const campusChapterBeats");
-const campusUsageBlock = blockBetween("const campusUsageOverrides", "function campusPlanForDay");
+const buildStoryBlock = blockBetween("function buildStory", "const standaloneCampusStories");
+const standaloneCampusPlanBlock = blockBetween("const standaloneCampusStories", "const standaloneFunctionUses");
+const standaloneCampusUsageBlock = blockBetween("const standaloneFunctionUses", "function standaloneCampusPlan");
 
 checkCoverage("Day 01 campus", dayOneCampusBlock);
 checkCoverage("Day 01 business", dayOneBusinessBlock);
@@ -144,6 +144,30 @@ for (const target of requiredBusinessTargets) {
   }
 }
 
+const expectedStandaloneCampusTitles = new Map([
+  [2, ["The Overnight Library Hunt", "图书馆通宵寻宝夜"]],
+  [3, ["The Spring Break Bus Trip", "春假前的校车公路旅行"]],
+  [4, ["The Midnight Mock Trial", "午夜模拟法庭"]],
+  [5, ["The Student Office Leak", "学生会办公室泄密风波"]],
+  [6, ["The Campus Community Festival", "校园社区节"]],
+  [7, ["The Health Center Night Shift", "校园健康中心夜班"]],
+  [8, ["The Campus Demo Day", "校园创业 Demo Day"]],
+  [9, ["The College Town Vote", "大学城学生投票日"]],
+  [10, ["The Delayed Train Bag", "晚点列车上的手提包"]],
+  [11, ["The Apartment Fire Aftermath", "校外公寓火灾之后"]],
+  [12, ["The School Rumor", "学校里的谣言"]],
+  [13, ["The Final Campus Game", "最后一场校内比赛"]],
+  [14, ["The Alumni Dinner Letter", "校友重聚晚宴"]],
+  [15, ["The Graduation Memory Parade", "毕业记忆游行"]]
+]);
+
+for (const [day, [titleEn, titleZh]] of expectedStandaloneCampusTitles) {
+  const lessonInfo = lessons.find((item) => item.day === day);
+  if (!lessonInfo || lessonInfo.titleEn !== titleEn || lessonInfo.titleZh !== titleZh) {
+    throw new Error(`Campus Day ${String(day).padStart(2, "0")} lesson title is stale.`);
+  }
+}
+
 const dayOneRequiredSnippets = [
   "West Hall",
   "missing scholarship ${c(7)}",
@@ -194,49 +218,60 @@ if (app.includes("business word ·") || app.includes("${item.pos || \"word\"} ·
   throw new Error("Hover menu title must not expose internal part-of-speech labels.");
 }
 
-if (!buildStoryBlock.includes("theme === \"campus\" && state.currentDay >= 2") || !buildStoryBlock.includes("campusChapterStory(items, density, state.currentDay)")) {
-  throw new Error("Campus Day 02-15 must use the semantic chapter story generator.");
+if (!buildStoryBlock.includes("theme === \"campus\" && state.currentDay >= 2") || !buildStoryBlock.includes("standaloneCampusStory(items, density, state.currentDay)")) {
+  throw new Error("Campus Day 02-15 must use the standalone campus story generator.");
 }
 
 for (let day = 2; day <= 15; day += 1) {
-  if (!campusChapterPlanBlock.includes(`${day}: {`)) {
-    throw new Error(`Campus semantic chapter plan missing Day ${String(day).padStart(2, "0")}.`);
+  if (!standaloneCampusPlanBlock.includes(`${day}: {`)) {
+    throw new Error(`Standalone campus story plan missing Day ${String(day).padStart(2, "0")}.`);
   }
 }
 
-const semanticUsageRequiredSnippets = [
-  "藏 ${word} the notice board",
-  "enter the room ${word} a witness",
-  "two dollars ${word} copy",
-  "neither the dean ${word} the treasurer",
+const standaloneStoryRequiredSnippets = [
+  "图书馆通宵寻宝夜",
+  "春假前的校车公路旅行",
+  "午夜模拟法庭",
+  "学生会办公室泄密风波",
+  "校园社区节",
+  "毕业记忆游行",
+  "the notice board",
+  "start ${word} a witness",
+  "two tickets ${word} person",
+  "neither the captain ${word} the coach",
   "她戴上耳机 ${word} the hallway recording",
-  "three closed ${word}",
-  "糖粉旁边真的有 ${word}",
-  "奖学金 ${word} did not match the bank log",
-  "一张转账截图来自 ${word}",
-  "${word} the dean delayed again, the campus paper would publish first"
+  "three old ${word}",
+  "生物社的 ${word}",
+  "白板上的 ${word} 对不上",
+  "来自 ${word} 的交换生"
 ];
 
-for (const snippet of semanticUsageRequiredSnippets) {
-  if (!campusUsageBlock.includes(snippet)) {
-    throw new Error(`Missing semantic usage clause for campus Day 02-15: ${snippet}`);
+for (const snippet of standaloneStoryRequiredSnippets) {
+  if (!standaloneCampusPlanBlock.includes(snippet) && !standaloneCampusUsageBlock.includes(snippet)) {
+    throw new Error(`Missing standalone campus story or usage clause: ${snippet}`);
   }
 }
 
-if (/\(word\)\s*=>[^,\n]*plan\./.test(campusUsageBlock)) {
-  throw new Error("A campus usage override references plan without accepting plan as an argument.");
+if (/\(word\)\s*=>[^,\n]*plan\./.test(standaloneCampusUsageBlock)) {
+  throw new Error("A standalone usage override references plan without accepting plan as an argument.");
 }
 
-const newCampusSemanticBlocks = [
-  campusChapterPlanBlock,
-  blockBetween("const campusChapterBeats", "const campusUsageOverrides"),
-  campusUsageBlock,
-  blockBetween("function campusUsageClause", "function campusChapterStory")
+const standaloneCampusBlocks = [
+  standaloneCampusPlanBlock,
+  standaloneCampusUsageBlock,
+  blockBetween("function standaloneCampusClause", "function standaloneCampusStory"),
+  blockBetween("function standaloneCampusStory", "function currentLessonItems")
 ].join("\n");
 
-for (const snippet of ["随口塞", "放进完整句子", "每个词都必须"]) {
-  if (newCampusSemanticBlocks.includes(snippet)) {
-    throw new Error(`Campus Day 02-15 semantic generator still contains meta-story wording: ${snippet}`);
+for (const snippet of ["案卷把", "证据袋", "每条线索", "证据名", "下一天，案子继续", "所有故事终于回到第一夜", "洗钱路径", "转账路线"]) {
+  if (standaloneCampusBlocks.includes(snippet)) {
+    throw new Error(`Standalone campus stories still contain old case-board wording: ${snippet}`);
+  }
+}
+
+for (const snippet of ["图书馆通宵寻宝夜", "春假前的校车公路旅行", "午夜模拟法庭", "学生会办公室泄密风波", "校园社区节", "校园健康中心夜班", "校园创业 Demo Day", "大学城学生投票日", "晚点列车上的手提包", "校外公寓火灾之后", "学校里的谣言", "最后一场校内比赛", "校友重聚晚宴", "毕业记忆游行"]) {
+  if (!standaloneCampusBlocks.includes(snippet)) {
+    throw new Error(`Missing independent campus story setting: ${snippet}`);
   }
 }
 
