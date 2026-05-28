@@ -727,6 +727,52 @@
     });
   }
 
+  const STORY_WORD_PLACEHOLDER_RE = /\{\{([^|}]+)\|([^}]+)\}\}/g;
+
+  function renderStoryTemplate(storyTemplate, renderedItems) {
+    if (!storyTemplate || !renderedItems?.length) return "";
+    const lookup = new Map();
+    renderedItems.forEach((item) => {
+      lookup.set(String(item.word || "").trim().toLowerCase(), item);
+    });
+
+    const renderParagraph = (text) => {
+      let cursor = 0;
+      let output = "";
+      let match;
+      while ((match = STORY_WORD_PLACEHOLDER_RE.exec(text)) !== null) {
+        const before = text.slice(cursor, match.index);
+        if (before) output += escapeHtml(before);
+        const term = String(match[1] || "").trim();
+        const zh = String(match[2] || "").trim();
+        const item = lookup.get(term.toLowerCase());
+        if (item) {
+          output += chip(item);
+        } else {
+          const fallback = {
+            word: term,
+            zh,
+            pos: "word",
+            id: `missing-term:${term}`,
+            phonetic: "",
+            course: courseKey(),
+            day: lesson().day
+          };
+          output += chip(fallback);
+        }
+        cursor = match.index + match[0].length;
+      }
+      if (cursor < text.length) {
+        output += escapeHtml(text.slice(cursor));
+      }
+      return output.replace(/\r?\n/g, "<br>");
+    };
+
+    const paragraphs = String(storyTemplate).split(/\r?\n{2,}/).filter(Boolean);
+    const htmlParagraphs = paragraphs.map((paragraph) => `<p>${renderParagraph(paragraph)}</p>`);
+    return htmlParagraphs.join("");
+  }
+
   function chineseParagraph(group, selectedTheme, paragraphIndex) {
     const beat = chapterBeats[paragraphIndex % chapterBeats.length];
     const profile = themeProfiles[selectedTheme] || themeProfiles.cinematic;
@@ -830,6 +876,13 @@
   function buildStory(items, selectedTheme, selectedDensity = state.englishDensity) {
     const theme = MAINTAINED_THEMES.has(selectedTheme) ? selectedTheme : "campus";
     const density = Number(selectedDensity) || DEFAULT_DENSITY;
+    const data = lesson();
+    const templateStory = data?.storyZhWithInsertedWords;
+    if (templateStory) {
+      const course = courseKey();
+      const storyItems = data.words.map((item) => ({ ...item, course, day: data.day, id: scopedWordId(course, data.day, item) }));
+      return renderStoryTemplate(templateStory, storyItems);
+    }
     const authored = state.currentDay === 1 && theme === "business"
       ? dayOneBusinessStory(items, density)
       : state.currentDay === 1
@@ -1292,7 +1345,30 @@
     return /[A-Za-z0-9]$/.test(String(text || "")) ? `${text} ` : text;
   }
 
-  function standaloneCampusClause(item, plan, absoluteIndex, density) {
+  function standaloneSceneFrame(plan, paragraphIndex) {
+    const hero = campusBeforeChinese(plan.hero);
+    const partner = campusBeforeChinese(plan.partner);
+    const rival = campusBeforeChinese(plan.rival);
+    const place = plan.places[paragraphIndex % plan.places.length];
+    const prop = plan.props[paragraphIndex % plan.props.length];
+    const action = plan.actions[paragraphIndex % plan.actions.length];
+    const followAction = plan.actions[(paragraphIndex + 1) % plan.actions.length];
+    const scenes = [
+      `${hero}站到${place}，先把${plan.object}清点，给今天的${plan.goal}开一个序幕。`,
+      `她让${partner}带着${prop}按${action}推进，同时对照${plan.tension}。`,
+      `${partner}和${rival}在${place}发生争执，${hero}先把每一条线索按顺序贴到${prop}上。`,
+      `${hero}把最关键的点写进${prop}，并要求每个人以同一动作复核${plan.goal}。`,
+      `当第三个确认人到齐后，${hero}把注意力给${rival}，要求把问题拆成可以处理的单位。`,
+      `${hero}再看一遍${plan.tension}，把${rival}最晚的说法放回${followAction}前的备选表。`,
+      `${partner}发现${action}里有缺口，${hero}决定用${plan.turn}重新安排流程。`,
+      `节奏快到极限时，${hero}要求暂停半分钟，把${plan.object}和对话记录再回放一次。`,
+      `现在只剩最后一轮，${hero}把${plan.turn}转成清晰的收口口令。`,
+      `${hero}宣布${plan.ending}，${plan.object}也终于回到该去的地方。`
+    ];
+    return scenes[paragraphIndex % scenes.length];
+  }
+
+  function standaloneCampusClause(item, plan, absoluteIndex, scene, density) {
     const wordHtml = chip(item);
     const raw = String(item.word || "").toLowerCase();
     const override = standaloneFunctionUses[raw];
@@ -1300,45 +1376,47 @@
 
     const role = campusWordRole(item);
     const nounPhrase = campusNounPhrase(item, wordHtml);
-    const place = plan.places[absoluteIndex % plan.places.length];
-    const prop = plan.props[absoluteIndex % plan.props.length];
-    const action = plan.actions[absoluteIndex % plan.actions.length];
-    const mood = plan.moods[absoluteIndex % plan.moods.length];
-    const hero = campusBeforeChinese(plan.hero);
-    const partner = campusBeforeChinese(plan.partner);
+    const place = scene.place;
+    const prop = scene.prop;
+    const action = scene.action;
+    const followAction = scene.followAction;
+    const hero = scene.hero;
+    const partner = scene.partner;
+    const rival = scene.rival;
+    const sceneHint = scene.sceneHint;
     const nounFrames = [
-      `${place}里出现 ${nounPhrase}，它和${plan.goal}直接有关`,
-      `${partner}把 ${nounPhrase} 放到${prop}旁边，场面一下具体起来`,
-      `有人提到 ${nounPhrase}，不是为了凑数，而是因为${plan.tension}`,
-      `${action}时，${nounPhrase}突然派上用场，大家才没继续乱下去`
+      `${hero}在${place}把 ${nounPhrase} 记录到 ${prop}，这一步和${sceneHint}有关。`,
+      `${partner}把 ${nounPhrase} 放在 ${prop} 上，先看它和${action}是否冲突。`,
+      `${rival}抓住 ${nounPhrase} 质疑流程，${hero}让它先回到 ${followAction} 环节复核。`,
+      `${hero}把 ${nounPhrase} 贴到${prop}，再把 ${plan.object} 里最容易错的点标清楚。`
     ];
 
     if (role === "number") {
-      return `数量 ${wordHtml} 写在${prop}旁边，正好决定他们该分成几组`;
+      return `把 ${wordHtml} 份信息写在 ${prop} 旁边，帮助他们决定今天走到第几个关键点。`;
     }
     if (role === "code") {
-      return `字母 ${wordHtml} 是临时分组的代号，拿到的人要先去${place}`;
+      return `代号 ${wordHtml} 是场务调度的临时标记，拿到的人先去${place}核对。`;
     }
     if (role === "possessive") {
-      return `${wordHtml} label 贴在${prop}上，说明东西终于回到主人手里`;
+      return `这条 ${wordHtml} 标签贴到 ${prop} 上，说明线索仍在自己人可控范围。`;
     }
     if (role === "function") {
-      return `${wordHtml} 把前后两句话接住，大家终于听懂对方真正想说什么`;
+      return `${wordHtml} 让这句说明有了衔接，现场先把争执先放一边。`;
     }
     if (role === "verb") {
       if (density >= 90) return `${plan.hero} had to ${wordHtml} the next step before the room lost patience`;
-      return `${hero}必须 ${wordHtml} the next step before the room lost patience，这个动作让故事继续往前`;
+      return `${hero}先 ${wordHtml}，再把 ${followAction} 的结果回填给 ${partner}。`;
     }
     if (role === "adjective") {
       if (density >= 90) return `the ${wordHtml} detail made the whole scene feel honest`;
-      return `那个 ${wordHtml} detail 改变了气氛，连${plan.rival}都没法继续装作无所谓`;
+      return `这个 ${wordHtml} 细节直接支持 ${sceneHint}，把判断从猜测变成事实。`;
     }
     if (role === "adverb") {
       if (density >= 90) return `${plan.hero} moved ${wordHtml}, careful not to embarrass anyone`;
-      return `${hero}${wordHtml} moved through ${place}，尽量不让任何人难堪`;
+      return `${hero}${wordHtml} 处理了这段流程，${plan.rival}才停下对峙。`;
     }
     if (density >= 90) return `${nounPhrase} gave the scene a concrete detail instead of an empty label`;
-    return nounFrames[absoluteIndex % nounFrames.length].replace("气氛", mood);
+    return nounFrames[absoluteIndex % nounFrames.length];
   }
 
   function standaloneCampusStory(items, density, day) {
@@ -1347,20 +1425,33 @@
     const setting = campusBeforeChinese(plan.setting);
     const hero = campusBeforeChinese(plan.hero);
     const partner = campusBeforeChinese(plan.partner);
+    const rival = campusBeforeChinese(plan.rival);
+    const target = plan.goal;
     for (let i = 0; i < items.length; i += 20) {
       const group = items.slice(i, i + 20);
       const paragraphIndex = i / 20;
       const place = plan.places[paragraphIndex % plan.places.length];
+      const frame = standaloneSceneFrame(plan, paragraphIndex);
       const opener = paragraphIndex === 0
-        ? `${setting}开始时，${hero}站在${place}，目标很清楚：${plan.goal}。${plan.tension}。`
+        ? `${setting}开始时，${hero}站在${place}，目标很清楚：${target}。${plan.tension}。`
         : paragraphIndex === 4
-          ? `故事走到中段，${plan.rival}终于露面。${hero}不想把事情闹大，只想先把混乱讲顺。`
-          : paragraphIndex === 8
+          ? `故事走到中段，${rival}终于露面。${hero}不想把事情闹大，只想先把混乱讲顺。`
+        : paragraphIndex === 8
             ? `${plan.turn}。场面突然安静下来，前面看似不搭的细节开始变得合理。`
             : paragraphIndex === 9
-              ? `最后一段，${plan.ending}。`
-              : `他们来到${place}，${partner}负责${plan.actions[paragraphIndex % plan.actions.length]}，${hero}负责稳住大家的情绪。`;
-      const clauses = group.map((item, offset) => standaloneCampusClause(item, plan, i + offset, density));
+              ? `最后一段，${frame}。`
+              : `${frame}`;
+      const scene = {
+        hero,
+        partner,
+        rival,
+        place,
+        prop: plan.props[paragraphIndex % plan.props.length],
+        action: plan.actions[paragraphIndex % plan.actions.length],
+        followAction: plan.actions[(paragraphIndex + 1) % plan.actions.length],
+        sceneHint: `${plan.object}`
+      };
+      const clauses = group.map((item, offset) => standaloneCampusClause(item, plan, i + offset, scene, density));
       const sentences = [];
       for (let j = 0; j < clauses.length; j += 4) {
         sentences.push(`${clauses.slice(j, j + 4).join("；")}。`);
